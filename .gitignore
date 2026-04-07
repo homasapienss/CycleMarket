@@ -1,5 +1,14 @@
 HELP.md
 target/
+mvnw
+.mvn
+.mvnm
+.codex
+mvnw.cmd
+mvnw/
+mvn/
+PROJECT_CONTEXT.md
+HELP.md
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
