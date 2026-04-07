@@ -2,6 +2,7 @@ HELP.md
 target/
 PROJECT_CONTEXT.md
 .codex
+.env
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
