@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1775656729388-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: DATETIME
+            tableName: users
+  - changeSet:
+      id: 1775656729388-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: uc_users_email
+            tableName: users
+
