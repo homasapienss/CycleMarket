@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1775661099104-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_roles
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: roles
+  - changeSet:
+      id: 1775661099104-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users_roles
+                  name: role_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users_roles
+                  name: user_id
+                  type: BIGINT
+            tableName: users_roles
+  - changeSet:
+      id: 1775661099104-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uc_roles_name
+            tableName: roles
+  - changeSet:
+      id: 1775661099104-6
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: users_roles
+            constraintName: fk_userol_on_role
+            referencedColumnNames: id
+            referencedTableName: roles
