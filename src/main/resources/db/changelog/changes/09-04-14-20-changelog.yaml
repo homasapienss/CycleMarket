@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1775733543699-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_products
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: product_name
+                  type: VARCHAR(255)
+              - column:
+                  name: product_description
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_price
+                  type: INT
+            tableName: products
+  - changeSet:
+      id: 1775733543699-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: product_name
+            constraintName: uc_products_productname
+            tableName: products
+

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "products")
 @AllArgsConstructor
@@ -16,7 +18,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String productName;
     private String productDescription;
-    private String productPrice;
+    @Column(nullable = false) //максиммум 9 999 999руб precision = 7, scale = 0
+    private Integer productPrice;
 }
