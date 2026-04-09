@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1775744279915-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_manufacturers
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: manufacturer_name
+                  type: VARCHAR(255)
+            tableName: manufacturers
+  - changeSet:
+      id: 1775744279915-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_product_images
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: image_url
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: is_main
+                  type: BOOLEAN
+            tableName: product_images
+  - changeSet:
+      id: 1775744279915-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: manufacturer_id
+                  type: BIGINT
+            tableName: products
+  - changeSet:
+      id: 1775744279915-5
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: manufacturer_id
+            tableName: products
+  - changeSet:
+      id: 1775744279915-6
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: manufacturer_name
+            constraintName: uc_manufacturers_manufacturername
+            tableName: manufacturers
+  - changeSet:
+      id: 1775744279915-7
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: manufacturer_id
+            baseTableName: products
+            constraintName: FK_PRODUCTS_ON_MANUFACTURER
+            referencedColumnNames: id
+            referencedTableName: manufacturers
+  - changeSet:
+      id: 1775744279915-8
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: product_images
+            constraintName: FK_PRODUCT_IMAGES_ON_PRODUCT
+            referencedColumnNames: id
+            referencedTableName: products
+  - changeSet:
+      id: 1775744279915-9
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: users_roles
+            constraintName: fk_userol_on_user
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1775744279915-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: VARCHAR(255)
+            columnName: product_name
+            tableName: products
+            validate: true
+
