@@ -1,26 +1,62 @@
--- Test DML for manual product seeding.
--- Expected table: products
--- Expected columns from current Product entity:
--- product_name, product_description, product_price
+-- Manual seed data for the current product model.
+-- Tables:
+-- manufacturers(manufacturer_name)
+-- products(product_name, product_description, product_price, manufacturer_id)
+-- product_images(product_id, image_url, is_main)
 
-INSERT INTO products (product_name, product_description, product_price) VALUES
-('Горный велосипед TrailStorm 27.5', 'Алюминиевая рама, 21 скорость, дисковые тормоза. Подходит для города и легкого бездорожья.', 45990),
-('Шоссейный велосипед AeroLine R2', 'Легкая рама, спортивная посадка и трансмиссия для скоростных поездок по асфальту.', 82990),
-('Городской велосипед CityRide Classic', 'Комфортный велосипед для ежедневных поездок, с прямой посадкой и багажником.', 38990),
-('Детский велосипед Junior Flash 20', 'Модель для детей с прочной рамой, защитой цепи и ярким дизайном.', 19990),
-('Электровелосипед VoltPath E-Motion', 'Электропривод для комфортных поездок по городу и пригороду, запас хода до 60 км.', 129990),
-('Велошлем SafeRide Urban', 'Легкий шлем с вентиляцией и регулировкой размера для городских поездок.', 4990),
-('Велошлем TrailGuard Pro', 'Усиленная модель для MTB с глубоким охватом затылка и хорошей вентиляцией.', 6990),
-('Велоперчатки GripFlex', 'Перчатки с антискользящими вставками и амортизацией для длительных поездок.', 1890),
-('Фонарь передний NightBeam 800', 'Яркий светодиодный фонарь с USB-зарядкой и несколькими режимами свечения.', 3490),
-('Фонарь задний RedPulse', 'Компактный задний фонарь для повышения видимости в темное время суток.', 1290),
-('Насос напольный AirForce Max', 'Напольный насос с манометром, подходит для Schrader и Presta.', 2790),
-('Камера 27.5 x 2.10', 'Камера для горных велосипедов с надежным ниппелем Schrader.', 590),
-('Покрышка TrailGrip 29 x 2.25', 'Агрессивный протектор для пересеченной местности и уверенного сцепления.', 2490),
-('Цепь SpeedLink 9s', 'Износостойкая цепь для 9-скоростных трансмиссий.', 1590),
-('Кассета GearDrive 11-32 9s', 'Кассета для универсального катания с хорошим диапазоном передач.', 3290),
-('Дисковый тормоз RotorSet 160 мм', 'Комплект тормозного ротора для надежного торможения в любых условиях.', 1790),
-('Седло ComfortRide Gel', 'Мягкое седло с гелевыми вставками для комфортных городских поездок.', 2290),
-('Фляга HydroFlow 750 мл', 'Легкая фляга для воды с удобным клапаном и надежной фиксацией.', 690),
-('Флягодержатель Alloy Cage', 'Алюминиевый держатель для стандартной велосипедной фляги.', 790),
-('Велосумка FramePack Compact', 'Компактная сумка на раму для телефона, ключей и мелких аксессуаров.', 2190);
+INSERT INTO manufacturers (manufacturer_name) VALUES
+('Trek'),
+('Specialized'),
+('Giant'),
+('Merida'),
+('Scott'),
+('Shimano'),
+('Continental'),
+('Topeak'),
+('Abus'),
+('Lezyne');
+
+INSERT INTO products (product_name, product_description, product_price, manufacturer_id) VALUES
+('Горный велосипед Trek Marlin 7', 'Универсальный MTB для города, парков и легких трейлов. Алюминиевая рама и надежная трансмиссия.', 68990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Trek')),
+('Горный велосипед Specialized Rockhopper', 'Хардтейл начального среднего класса для уверенного старта в кросс-кантри и активных поездках.', 73490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
+('Шоссейный велосипед Giant Contend AR 2', 'Комфортная шоссейная модель для тренировок, фитнеса и длительных асфальтовых маршрутов.', 89990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Giant')),
+('Городской велосипед Merida Crossway 100', 'Практичный гибрид для города и парковых дорожек с удобной посадкой.', 52990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Merida')),
+('Детский велосипед Scott Roxter 20', 'Яркая и надежная модель для детей с безопасной геометрией и хорошим накатом.', 28990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Scott')),
+('Велошлем Abus Urban-I 3.0', 'Городской шлем с хорошей вентиляцией, регулировкой посадки и высокой заметностью.', 6490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Abus')),
+('Велошлем Abus MoDrop', 'Шлем для трейлового катания с увеличенной защитой затылочной зоны.', 7990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Abus')),
+('Передний фонарь Lezyne Hecto Drive 500XL', 'Компактный фонарь с USB-зарядкой и несколькими режимами свечения.', 4290, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Lezyne')),
+('Задний фонарь Lezyne Strip Drive', 'Яркий задний фонарь для повышения заметности на дороге в темное время.', 2390, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Lezyne')),
+('Напольный насос Topeak JoeBlow Sport', 'Удобный насос с манометром для точной накачки велосипедных колес.', 3590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+('Мультитул Topeak Mini 9', 'Компактный набор инструментов для настройки велосипеда в дороге.', 1890, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+('Камера 29 x 2.10', 'Камера для горных велосипедов с автониппелем и повышенной износостойкостью.', 690, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
+('Покрышка Continental Race King 29 x 2.20', 'Быстрая покрышка для сухих трасс и универсального кросс-кантри.', 3290, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
+('Покрышка Continental Contact Urban 700x42', 'Городская покрышка с хорошим сцеплением и защитой от проколов.', 2890, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
+('Цепь Shimano CN-HG53 9-speed', 'Надежная цепь для 9-скоростной трансмиссии с плавным переключением.', 1990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
+('Кассета Shimano CS-HG400 11-32', 'Кассета для 9-скоростных систем с универсальным диапазоном передач.', 3790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
+('Задний переключатель Shimano Alivio RD-M3100', 'Переключатель для MTB-трансмиссий с точной работой и хорошим ресурсом.', 4590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
+('Седло Giant Connect Comfort', 'Комфортное седло для прогулочных и городских велосипедов.', 2490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Giant')),
+('Флягодержатель Specialized Zee Cage II', 'Легкий и прочный флягодержатель с надежной фиксацией бутылки.', 1590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
+('Велосумка Topeak Aero Wedge Pack', 'Подседельная сумка для камеры, мультитула и мелких аксессуаров.', 2790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak'));
+
+INSERT INTO product_images (product_id, image_url, is_main) VALUES
+((SELECT id FROM products WHERE product_name = 'Горный велосипед Trek Marlin 7'), '/images/products/trek-marlin-7-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Горный велосипед Trek Marlin 7'), '/images/products/trek-marlin-7-side.jpg', false),
+((SELECT id FROM products WHERE product_name = 'Горный велосипед Specialized Rockhopper'), '/images/products/specialized-rockhopper-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Шоссейный велосипед Giant Contend AR 2'), '/images/products/giant-contend-ar2-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Городской велосипед Merida Crossway 100'), '/images/products/merida-crossway-100-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Детский велосипед Scott Roxter 20'), '/images/products/scott-roxter-20-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Велошлем Abus Urban-I 3.0'), '/images/products/abus-urban-i-3-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Велошлем Abus MoDrop'), '/images/products/abus-modrop-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Передний фонарь Lezyne Hecto Drive 500XL'), '/images/products/lezyne-hecto-500xl-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Задний фонарь Lezyne Strip Drive'), '/images/products/lezyne-strip-drive-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Напольный насос Topeak JoeBlow Sport'), '/images/products/topeak-joeblow-sport-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Мультитул Topeak Mini 9'), '/images/products/topeak-mini-9-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Камера 29 x 2.10'), '/images/products/camera-29x210-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Покрышка Continental Race King 29 x 2.20'), '/images/products/continental-race-king-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Покрышка Continental Contact Urban 700x42'), '/images/products/continental-contact-urban-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Цепь Shimano CN-HG53 9-speed'), '/images/products/shimano-cnhg53-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Кассета Shimano CS-HG400 11-32'), '/images/products/shimano-cshg400-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Задний переключатель Shimano Alivio RD-M3100'), '/images/products/shimano-alivio-rdm3100-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Седло Giant Connect Comfort'), '/images/products/giant-connect-comfort-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Флягодержатель Specialized Zee Cage II'), '/images/products/specialized-zee-cage-2-main.jpg', true),
+((SELECT id FROM products WHERE product_name = 'Велосумка Topeak Aero Wedge Pack'), '/images/products/topeak-aero-wedge-main.jpg', true);
