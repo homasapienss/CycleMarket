@@ -217,7 +217,7 @@
                 <img
                         class="product-image"
                         th:if="${product.productImages != null and !#lists.isEmpty(product.productImages)}"
-                        th:src="${product.productImages[0].imageUrl}"
+                        th:src="@{'/uploads' + ${product.productImages[0].getImageUrl()}}"
                         th:alt="${product.productName}">
                 <div
                         class="product-image-fallback"
