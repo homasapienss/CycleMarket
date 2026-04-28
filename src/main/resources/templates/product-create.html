@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый товар | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/product-create.css}">
+</head>
+<body>
+<main class="page">
+    <section class="intro-card">
+        <div class="intro-copy">
+            <span class="intro-kicker">CycleMarket Admin</span>
+            <h1>Добавление нового товара</h1>
+            <p>
+                Заполни карточку товара, загрузи главное изображение и сохрани запись.
+                Форма уже подготовлена под <code>multipart/form-data</code> и путь вида
+                <code>/products/filename.jpg</code> в базе данных.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/products}">Вернуться в каталог</a>
+    </section>
+
+    <section class="content-grid">
+        <form class="product-form" th:action="@{/products/new}" method="post" enctype="multipart/form-data">
+            <div class="form-block">
+                <label class="field-label" for="productName">Название товара</label>
+                <input
+                        class="field-input"
+                        id="productName"
+                        name="productName"
+                        type="text"
+                        maxlength="255"
+                        placeholder="Например, Trek Marlin 7"
+                        th:value="${productForm != null ? productForm.productName : ''}"
+                        required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="productPrice">Цена</label>
+                    <input
+                            class="field-input"
+                            id="productPrice"
+                            name="productPrice"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="74990"
+                            th:value="${productForm != null ? productForm.productPrice : ''}"
+                            required>
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="manufacturerId">Производитель</label>
+                    <select class="field-input field-select" id="manufacturerId" name="manufacturerId" required>
+                        <option value="">Выбери производителя</option>
+                        <option
+                                th:each="manufacturer : ${manufacturers}"
+                                th:value="${manufacturer.id}"
+                                th:text="${manufacturer.manufacturerName}"
+                                th:selected="${productForm != null and productForm.manufacturerId == manufacturer.id}">
+                            Производитель
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="productDescription">Описание</label>
+                <textarea
+                        class="field-input field-textarea"
+                        id="productDescription"
+                        name="productDescription"
+                        rows="7"
+                        placeholder="Коротко опиши характеристики, назначение и сильные стороны товара"
+                        th:text="${productForm != null ? productForm.productDescription : ''}"></textarea>
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="image">Главное изображение</label>
+                <label class="upload-zone" for="image">
+                    <span class="upload-title">Перетащи файл сюда или выбери вручную</span>
+                    <span class="upload-subtitle">Поддерживаются JPG, PNG, WEBP. Изображение станет главным для товара.</span>
+                </label>
+                <input class="file-input" id="image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" required>
+            </div>
+
+            <div class="message message-error" th:if="${errorMessage != null}" th:text="${errorMessage}">
+                Ошибка сохранения
+            </div>
+
+            <div class="message message-success" th:if="${successMessage != null}" th:text="${successMessage}">
+                Товар успешно сохранен
+            </div>
+
+            <div class="form-actions">
+                <button class="submit-button" type="submit">Сохранить товар</button>
+                <span class="form-note">Сначала сохраняется товар, затем файл на диск и путь к нему в БД.</span>
+            </div>
+        </form>
+
+        <aside class="side-panel">
+            <div class="panel-card">
+                <h2>Что ожидает backend</h2>
+                <ul class="tips-list">
+                    <li><code>GET /products/new</code> должен положить в модель <code>manufacturers</code>.</li>
+                    <li><code>POST /products/new</code> должен принимать <code>MultipartFile image</code>.</li>
+                    <li>В базу лучше сохранять относительный путь, например <code>/products/abc.jpg</code>.</li>
+                    <li>Файл лучше класть в <code>${spring.images.dir}/products</code>.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Минимальный набор полей</h2>
+                <p>Название, цена, производитель, описание и главное изображение уже заложены в форму.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>
