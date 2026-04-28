@@ -38,8 +38,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(form -> form
+                        .loginPage("/auth/sign-in")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/products", true)
+                        .failureUrl("/auth/sign-in?error")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/auth/sign-in?logout")
+                )
                 .authorizeHttpRequests(authReq -> authReq
-                        .anyRequest().permitAll())
+                        .requestMatchers("/auth/sign-in","/auth/sign-up").permitAll()
+                        .requestMatchers("/static/**","/css/**", "/uploads/**").permitAll()
+                        .anyRequest().authenticated())
+
                 .build();
     }
 }

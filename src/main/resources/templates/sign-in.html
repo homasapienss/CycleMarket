@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="auth-page auth-page-sign-in">
+    <section class="auth-shell">
+        <div class="auth-aside">
+            <span class="auth-kicker">CycleMarket</span>
+            <h1>Вход в аккаунт</h1>
+            <p>
+                Авторизуйся, чтобы управлять корзиной, оформлять заказы и видеть историю покупок.
+            </p>
+
+            <div class="auth-feature-list">
+                <div class="auth-feature">
+                    <span class="auth-feature-title">Корзина</span>
+                    <span class="auth-feature-text">Товары будут привязаны к твоему аккаунту, а не к случайной сессии.</span>
+                </div>
+                <div class="auth-feature">
+                    <span class="auth-feature-title">Заказы</span>
+                    <span class="auth-feature-text">Сможешь хранить историю покупок и отслеживать статус каждого заказа.</span>
+                </div>
+                <div class="auth-feature">
+                    <span class="auth-feature-title">Профиль</span>
+                    <span class="auth-feature-text">Позже сюда можно будет подключить адрес доставки и контакты покупателя.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-card-head">
+                <a class="back-link" th:href="@{/products}">К каталогу</a>
+                <h2>С возвращением</h2>
+                <p>Используй email и пароль от своей учетной записи.</p>
+            </div>
+
+            <div class="message message-error" th:if="${param.error != null}">
+                Неверный email или пароль.
+            </div>
+
+            <div class="message message-success" th:if="${param.logout != null}">
+                Сеанс завершен. Ты успешно вышел из аккаунта.
+            </div>
+
+            <form class="auth-form" th:action="@{/login}" method="post">
+                <div class="form-block">
+                    <label class="field-label" for="username">Email</label>
+                    <input
+                            class="field-input"
+                            id="username"
+                            name="username"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="name@example.com"
+                            required>
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="password">Пароль</label>
+                    <input
+                            class="field-input"
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            placeholder="Введите пароль"
+                            required>
+                </div>
+
+                <button class="primary-button" type="submit">Войти</button>
+            </form>
+
+            <div class="auth-footer">
+                <span>Еще нет аккаунта?</span>
+                <a th:href="@{/auth/sign-up}">Создать аккаунт</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

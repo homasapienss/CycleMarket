@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+<main class="auth-page auth-page-sign-up">
+    <section class="auth-shell">
+        <div class="auth-aside">
+            <span class="auth-kicker">CycleMarket</span>
+            <h1>Создание аккаунта</h1>
+            <p>
+                Зарегистрируй учетную запись, чтобы сохранять корзину, оформлять заказы и в дальнейшем
+                управлять своим профилем покупателя.
+            </p>
+
+            <div class="auth-highlight">
+                <h2>Минимальная регистрация</h2>
+                <p>
+                    На первом этапе достаточно только email и пароля. Остальные данные пользователя
+                    можно добавить позже, когда появится полноценный профиль покупателя.
+                </p>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-card-head">
+                <a class="back-link" th:href="@{/auth/sign-in}">Уже есть аккаунт?</a>
+                <h2>Регистрация</h2>
+                <p>Минимальная форма под начальный этап авторизации.</p>
+            </div>
+
+            <div class="message message-error" th:if="${errorMessage != null}" th:text="${errorMessage}">
+                Не удалось создать аккаунт.
+            </div>
+
+            <div class="message message-success" th:if="${successMessage != null}" th:text="${successMessage}">
+                Аккаунт создан.
+            </div>
+
+            <form class="auth-form" th:action="@{/auth/sign-up}" method="post">
+                <div class="form-block">
+                    <label class="field-label" for="username">Email</label>
+                    <input
+                            class="field-input"
+                            id="username"
+                            name="username"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="name@example.com"
+                            required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-block">
+                        <label class="field-label" for="password">Пароль</label>
+                        <input
+                                class="field-input"
+                                id="password"
+                                name="password"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="Минимум 6 символов"
+                                required>
+                    </div>
+
+                    <div class="form-block">
+                        <label class="field-label" for="confirmPassword">Повтори пароль</label>
+                        <input
+                                class="field-input"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                autocomplete="new-password"
+                                placeholder="Повтори пароль"
+                                required>
+                    </div>
+                </div>
+
+                <button class="primary-button" type="submit">Создать аккаунт</button>
+            </form>
+
+            <div class="auth-footer">
+                <span>Уже есть аккаунт?</span>
+                <a th:href="@{/auth/sign-in}">Перейти ко входу</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

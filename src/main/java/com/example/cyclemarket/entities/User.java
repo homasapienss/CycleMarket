@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,6 +26,7 @@ public class User {
     @Column(unique = true)
     private String email;
     private String passwordHash;
+    @Column(insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
