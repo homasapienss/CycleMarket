@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1777377380042-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnDataType: DATETIME
+            columnName: created_at
+            tableName: users
+            validate: true
+        - addDefaultValue:
+            tableName: users
+            columnName: created_at
+            defaultValueComputed: CURRENT_TIMESTAMP
