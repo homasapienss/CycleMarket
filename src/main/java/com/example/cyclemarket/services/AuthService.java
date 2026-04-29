@@ -2,8 +2,8 @@ package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.entities.Role;
 import com.example.cyclemarket.entities.User;
+import com.example.cyclemarket.exception.alreadyxists.UserAlreadyExists;
 import com.example.cyclemarket.exception.notfound.RoleNotFoundException;
-import com.example.cyclemarket.exception.notfound.UserNotFoundException;
 import com.example.cyclemarket.repos.RoleRepo;
 import com.example.cyclemarket.repos.UserRepo;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class AuthService {
     @Transactional
     public void register(String username, String password) {
         if (userRepo.existsByEmail(username)) {
-            throw new UserNotFoundException();
+            throw new UserAlreadyExists();
         }
         User user = new User();
         user.setEmail(username);

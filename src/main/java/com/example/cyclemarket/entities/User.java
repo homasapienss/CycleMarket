@@ -1,12 +1,7 @@
 package com.example.cyclemarket.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
