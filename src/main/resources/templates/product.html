@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product != null ? product.productName + ' | CycleMarket' : 'Карточка товара | CycleMarket'}">
+        Карточка товара | CycleMarket
+    </title>
+    <link rel="stylesheet" th:href="@{/css/product.css}">
+</head>
+<body>
+<main class="page">
+    <section class="breadcrumbs">
+        <a class="breadcrumb-link" th:href="@{/products}">Каталог</a>
+        <span class="breadcrumb-divider">/</span>
+        <span class="breadcrumb-current" th:text="${product != null ? product.productName : 'Карточка товара'}">
+            Карточка товара
+        </span>
+    </section>
+
+    <section class="product-layout" th:if="${product != null}">
+        <div class="product-gallery-card">
+            <div class="product-main-media">
+                <img
+                        class="product-main-image"
+                        th:if="${product.productImages != null and !#lists.isEmpty(product.productImages)}"
+                        th:src="@{'/uploads' + ${product.productImages[0].imageUrl}}"
+                        th:alt="${product.productName}">
+                <div
+                        class="product-main-fallback"
+                        th:if="${product.productImages == null or #lists.isEmpty(product.productImages)}">
+                    Изображение товара пока не загружено
+                </div>
+            </div>
+
+            <div class="product-thumbs" th:if="${product.productImages != null and !#lists.isEmpty(product.productImages)}">
+                <div class="product-thumb" th:each="image : ${product.productImages}">
+                    <img
+                            class="product-thumb-image"
+                            th:src="@{'/uploads' + ${image.imageUrl}}"
+                            th:alt="${product.productName}">
+                </div>
+            </div>
+        </div>
+
+        <div class="product-info-card">
+            <span class="product-chip">CycleMarket</span>
+            <h1 class="product-title" th:text="${product.productName}">Название товара</h1>
+
+            <div class="product-meta">
+                <div class="meta-block">
+                    <span class="meta-label">Производитель</span>
+                    <span class="meta-value" th:text="${product.manufacturer != null ? product.manufacturer.manufacturerName : 'Не указан'}">
+                        Производитель
+                    </span>
+                </div>
+                <div class="meta-block">
+                    <span class="meta-label">Артикул в системе</span>
+                    <span class="meta-value" th:text="${product.id != null ? '#' + product.id : 'Появится после сохранения'}">
+                        #0
+                    </span>
+                </div>
+            </div>
+
+            <div class="price-card">
+                <span class="price-label">Цена</span>
+                <span class="price-value" th:text="${product.productPrice + ' ₽'}">0 ₽</span>
+                <p class="price-note">Позже здесь можно будет показать наличие по складам и скидки.</p>
+            </div>
+
+            <div class="action-panel">
+                <a class="primary-action" th:href="@{/auth/sign-in}">Войти, чтобы добавить в корзину</a>
+                <a class="secondary-action" th:href="@{/products}">Вернуться в каталог</a>
+            </div>
+
+            <section class="description-card">
+                <h2>Описание товара</h2>
+                <p
+                        class="description-text"
+                        th:if="${product.productDescription != null and !#strings.isEmpty(product.productDescription)}"
+                        th:text="${product.productDescription}">
+                    Описание товара
+                </p>
+                <p
+                        class="description-text description-text-muted"
+                        th:if="${product.productDescription == null or #strings.isEmpty(product.productDescription)}">
+                    Описание для этого товара пока не заполнено.
+                </p>
+            </section>
+        </div>
+    </section>
+
+    <section class="empty-card" th:if="${product == null}">
+        <h1>Товар не найден</h1>
+        <p>Контроллер не передал объект <code>product</code> в модель или товар с таким идентификатором не существует.</p>
+        <a class="secondary-action" th:href="@{/products}">Вернуться в каталог</a>
+    </section>
+</main>
+</body>
+</html>

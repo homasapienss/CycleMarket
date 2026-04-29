@@ -17,6 +17,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String product(@PathVariable String id, Model model) {
+        model.addAttribute("product", productManagementService.getProductById(Long.valueOf(id)));
         return "product";
     }
     @GetMapping("/new")

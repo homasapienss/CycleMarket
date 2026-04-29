@@ -4,6 +4,7 @@ import com.example.cyclemarket.dto.ProductCreateRequest;
 import com.example.cyclemarket.entities.Manufacturer;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.ProductImage;
+import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ManufacturerRepo;
 import com.example.cyclemarket.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,5 +71,10 @@ public class ProductManagementService {
         Files.write(targetFile, bytes);
 
         return "/products/" + generatedFileName;
+    }
+
+    @Transactional
+    public Product getProductById(Long id) {
+        return productRepo.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 }

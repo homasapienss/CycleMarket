@@ -4,6 +4,7 @@ import com.example.cyclemarket.dto.auth.AuthReq;
 import com.example.cyclemarket.services.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -24,8 +25,13 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public String registerUser(@ModelAttribute AuthReq authReq) {
-        authService.register(authReq.getUsername(), authReq.getPassword());
+    public String registerUser(@ModelAttribute AuthReq authReq, Model model) {
+        try {
+            authService.register(authReq.getUsername(), authReq.getPassword());
+        } catch (Exception e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "sign-up";
+        }
         return "redirect:/";
     }
 }
