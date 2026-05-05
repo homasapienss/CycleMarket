@@ -239,6 +239,10 @@ body {
     margin-top: 22px;
 }
 
+.action-panel form {
+    margin: 0;
+}
+
 .primary-action,
 .secondary-action {
     display: inline-flex;
@@ -246,9 +250,12 @@ body {
     justify-content: center;
     min-height: 50px;
     padding: 0 18px;
+    border: 0;
     border-radius: 16px;
     text-decoration: none;
+    font: inherit;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .primary-action {

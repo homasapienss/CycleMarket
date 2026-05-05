@@ -75,7 +75,12 @@
             </div>
 
             <div class="action-panel">
-                <a class="primary-action" th:href="@{/auth/sign-in}">Войти, чтобы добавить в корзину</a>
+                <form th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
+                    <input type="hidden" name="quantity" value="1">
+                    <button class="primary-action" type="submit">
+                        Добавить в корзину
+                    </button>
+                </form>
                 <a class="secondary-action" th:href="@{/products}">Вернуться в каталог</a>
             </div>
 

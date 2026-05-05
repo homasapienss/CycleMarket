@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/cart.css}">
+</head>
+<body>
+<main class="page">
+    <div class="page-toolbar" sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post">
+            <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+        </form>
+    </div>
+
+    <section class="breadcrumbs">
+        <a class="breadcrumb-link" th:href="@{/products}">Каталог</a>
+        <span class="breadcrumb-divider">/</span>
+        <span class="breadcrumb-current">Корзина</span>
+    </section>
+
+    <section class="cart-layout" th:if="${cartInfo != null and !#lists.isEmpty(cartInfo.items)}">
+        <div class="cart-items-card">
+            <div class="section-heading">
+                <h1>Корзина</h1>
+                <p>Проверьте товары перед переходом к оформлению заказа.</p>
+            </div>
+
+            <div class="cart-item" th:each="item : ${cartInfo.items}">
+                <a class="item-media" th:href="@{/products/{id}(id=${item.productId})}">
+                    <img
+                            class="item-image"
+                            th:if="${item.imageUrl != null}"
+                            th:src="@{'/uploads' + ${item.imageUrl}}"
+                            th:alt="${item.productName}">
+                    <div class="item-fallback" th:if="${item.imageUrl == null}">
+                        Нет изображения
+                    </div>
+                </a>
+
+                <div class="item-content">
+                    <a class="item-title" th:href="@{/products/{id}(id=${item.productId})}" th:text="${item.productName}">
+                        Название товара
+                    </a>
+
+                    <div class="item-meta">
+                        <span th:text="${item.price + ' ₽ за штуку'}">0 ₽ за штуку</span>
+                        <span th:text="${'Количество: ' + item.quantity}">Количество: 1</span>
+                    </div>
+
+                    <div class="item-actions">
+                        <span class="item-total" th:text="${item.lineTotal + ' ₽'}">0 ₽</span>
+
+                        <form th:action="@{/cart/item/{productId}/remove(productId=${item.productId})}" method="post">
+                            <button class="danger-button" type="submit">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="summary-card">
+            <h2>Сводка</h2>
+
+            <div class="summary-row">
+                <span>Позиций в корзине</span>
+                <span th:text="${#lists.size(cartInfo.items)}">0</span>
+            </div>
+
+            <div class="summary-row summary-row-total">
+                <span>Итого</span>
+                <span th:text="${cartInfo.totalAmount + ' ₽'}">0 ₽</span>
+            </div>
+
+            <a class="primary-action" th:href="@{/auth/sign-in}" sec:authorize="isAnonymous()">
+                Войти для оформления заказа
+            </a>
+            <a class="primary-action" href="#" sec:authorize="isAuthenticated()">
+                Перейти к оформлению
+            </a>
+            <a class="secondary-action" th:href="@{/products}">Продолжить покупки</a>
+
+            <form th:action="@{/cart/clear}" method="post">
+                <button class="ghost-action" type="submit">Очистить корзину</button>
+            </form>
+        </aside>
+    </section>
+
+    <section class="empty-card" th:if="${cartInfo == null or #lists.isEmpty(cartInfo.items)}">
+        <h1>Корзина пуста</h1>
+        <p>Добавьте товары из каталога, и они появятся здесь.</p>
+        <a class="primary-action" th:href="@{/products}">Перейти в каталог</a>
+    </section>
+</main>
+</body>
+</html>

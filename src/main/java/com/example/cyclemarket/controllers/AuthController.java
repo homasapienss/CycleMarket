@@ -34,7 +34,7 @@ public class AuthController {
             model.addAttribute("errorMessage", e.getMessage());
             return "sign-up";
         }
-        return "redirect:/";
+        return "redirect:/sign-in";
     }
     private boolean isAuthenticated(Authentication authentication) {
         return authentication != null
