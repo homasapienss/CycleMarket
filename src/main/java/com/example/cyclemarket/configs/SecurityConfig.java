@@ -50,8 +50,12 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authReq -> authReq
                         .requestMatchers("/auth/sign-in","/auth/sign-up").permitAll()
-                        .requestMatchers("/products","/products/*").permitAll()
+                        .requestMatchers("/products","/products/*","/").permitAll()
                         .requestMatchers("/static/**","/css/**", "/uploads/**").permitAll()
+
+                        .requestMatchers("/manager/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+
                         .anyRequest().authenticated())
 
                 .build();

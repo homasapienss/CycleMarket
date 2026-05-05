@@ -26,7 +26,7 @@ public class AuthService {
         User user = new User();
         user.setEmail(username);
         user.setPasswordHash(passwordEncoder.encode(password));
-        Role role = roleRepo.findByName("ROLE_USER").orElseThrow(RoleNotFoundException::new);
+        Role role = roleRepo.findByName("ROLE_CUSTOMER").orElseThrow(RoleNotFoundException::new);
         user.getRoles().add(role);
         userRepo.save(user);
     }
