@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,12 @@
 </head>
 <body>
 <main class="page">
+    <div class="page-toolbar" sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post">
+            <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+        </form>
+    </div>
+
     <section class="breadcrumbs">
         <a class="breadcrumb-link" th:href="@{/products}">Каталог</a>
         <span class="breadcrumb-divider">/</span>

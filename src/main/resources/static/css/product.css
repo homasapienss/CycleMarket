@@ -30,6 +30,33 @@ body {
     padding: 34px 0 56px;
 }
 
+.page-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.page-toolbar form {
+    margin: 0;
+}
+
+.toolbar-button {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.toolbar-button:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+}
+
 .breadcrumbs {
     display: flex;
     align-items: center;

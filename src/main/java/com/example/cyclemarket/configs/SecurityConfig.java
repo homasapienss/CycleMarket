@@ -50,6 +50,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authReq -> authReq
                         .requestMatchers("/auth/sign-in","/auth/sign-up").permitAll()
+                        .requestMatchers("/products","/products/*").permitAll()
                         .requestMatchers("/static/**","/css/**", "/uploads/**").permitAll()
                         .anyRequest().authenticated())
 
