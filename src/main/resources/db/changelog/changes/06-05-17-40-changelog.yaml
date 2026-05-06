@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1778078290698-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_order_items
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: order_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price_snapshot
+                  type: INT
+            tableName: order_items
+  - changeSet:
+      id: 1778078290698-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_orders
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_at
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: total_price
+                  type: INT
+            tableName: orders
+  - changeSet:
+      id: 1778078290698-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: orders
+            constraintName: FK_ORDERS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1778078290698-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: order_items
+            constraintName: FK_ORDER_ITEMS_ON_ORDER
+            referencedColumnNames: id
+            referencedTableName: orders
+  - changeSet:
+      id: 1778078290698-5
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: order_items
+            constraintName: FK_ORDER_ITEMS_ON_PRODUCT
+            referencedColumnNames: id
+            referencedTableName: products
+  - changeSet:
+      id: 1778078290698-6
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addDefaultValue:
+            columnDataType: DATETIME
+            columnName: created_at
+            defaultValueComputed: CURRENT_TIMESTAMP
+            tableName: orders
+
