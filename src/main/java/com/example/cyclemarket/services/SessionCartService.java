@@ -29,7 +29,21 @@ public class SessionCartService {
     }
 
     public void clearCart(HttpSession session) {
-        session.removeAttribute(CART_ATTRIBUTE);
+        getOrCreateCart(session).clear();
+    }
+
+    public void changeItemQuantity(Long productId, Integer delta, HttpSession session) {
+        Map<Long, Integer> cart = getOrCreateCart(session);
+
+        Integer currentQuantity = cart.get(productId);
+        if (currentQuantity == null) {return;}
+
+        int newQuantity = currentQuantity + delta;
+        if (newQuantity <= 0) {
+            cart.remove(productId);
+            return;
+        }
+        cart.put(productId, newQuantity);
     }
 
     public CartView getCartInfo(HttpSession session) {

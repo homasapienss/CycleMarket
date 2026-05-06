@@ -46,10 +46,23 @@
 
                     <div class="item-meta">
                         <span th:text="${item.price + ' ₽ за штуку'}">0 ₽ за штуку</span>
-                        <span th:text="${'Количество: ' + item.quantity}">Количество: 1</span>
                     </div>
 
                     <div class="item-actions">
+                        <div class="quantity-controls">
+                            <form th:action="@{/cart/item/{productId}/quantity(productId=${item.productId})}" method="post">
+                                <input type="hidden" name="delta" value="-1">
+                                <button class="quantity-button" type="submit" aria-label="Уменьшить количество">-</button>
+                            </form>
+
+                            <span class="quantity-value" th:text="${item.quantity}">1</span>
+
+                            <form th:action="@{/cart/item/{productId}/quantity(productId=${item.productId})}" method="post">
+                                <input type="hidden" name="delta" value="1">
+                                <button class="quantity-button" type="submit" aria-label="Увеличить количество">+</button>
+                            </form>
+                        </div>
+
                         <span class="item-total" th:text="${item.lineTotal + ' ₽'}">0 ₽</span>
 
                         <form th:action="@{/cart/item/{productId}/remove(productId=${item.productId})}" method="post">

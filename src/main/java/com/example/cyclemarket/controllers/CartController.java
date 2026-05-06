@@ -27,6 +27,14 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @PostMapping("/item/{productId}/quantity")
+    public String changeQuantity(@PathVariable Long productId,
+                                 @RequestParam Integer delta,
+                                 HttpSession session) {
+        sessionCartService.changeItemQuantity(productId, delta, session);
+        return "redirect:/cart";
+    }
+
     @PostMapping("/item/{productId}/remove")
     public String removeItem(@PathVariable Long productId, HttpSession session) {
         sessionCartService.removeItem(productId, session);
