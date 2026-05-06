@@ -10,10 +10,13 @@
 </head>
 <body>
 <main class="page">
-    <div class="page-toolbar" sec:authorize="isAuthenticated()">
-        <form th:action="@{/logout}" method="post">
-            <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
-        </form>
+    <div class="page-toolbar">
+        <div class="toolbar-actions">
+            <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+            </form>
+        </div>
     </div>
 
     <section class="breadcrumbs">

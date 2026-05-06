@@ -8,10 +8,13 @@
 </head>
 <body>
 <main class="page">
-    <div class="page-toolbar" sec:authorize="isAuthenticated()">
-        <form th:action="@{/logout}" method="post">
-            <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
-        </form>
+    <div class="page-toolbar">
+        <div class="toolbar-actions">
+            <a class="toolbar-link toolbar-link-active" th:href="@{/cart}">Корзина</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+            </form>
+        </div>
     </div>
 
     <section class="breadcrumbs">
@@ -89,9 +92,9 @@
             <a class="primary-action" th:href="@{/auth/sign-in}" sec:authorize="isAnonymous()">
                 Войти для оформления заказа
             </a>
-            <a class="primary-action" href="#" sec:authorize="isAuthenticated()">
-                Перейти к оформлению
-            </a>
+            <button class="primary-action" type="button" sec:authorize="isAuthenticated()">
+                Оформить заказ
+            </button>
             <a class="secondary-action" th:href="@{/products}">Продолжить покупки</a>
 
             <form th:action="@{/cart/clear}" method="post">

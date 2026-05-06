@@ -36,11 +36,21 @@ body {
     margin-bottom: 16px;
 }
 
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .page-toolbar form {
     margin: 0;
 }
 
+.toolbar-link,
 .toolbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 44px;
     padding: 0 16px;
     border: 1px solid var(--line);
@@ -49,9 +59,11 @@ body {
     color: var(--text);
     font: inherit;
     font-weight: 700;
+    text-decoration: none;
     cursor: pointer;
 }
 
+.toolbar-link:hover,
 .toolbar-button:hover {
     border-color: var(--accent);
     color: var(--accent-dark);

@@ -38,15 +38,25 @@ body {
     margin-bottom: 16px;
 }
 
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .page-toolbar form,
 .item-actions form,
 .summary-card form {
     margin: 0;
 }
 
+.toolbar-link,
 .toolbar-button,
 .danger-button,
 .ghost-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 44px;
     padding: 0 16px;
     border-radius: 12px;
@@ -61,6 +71,18 @@ body {
     color: var(--text);
 }
 
+.toolbar-link {
+    border: 1px solid var(--line);
+    text-decoration: none;
+}
+
+.toolbar-link-active {
+    border-color: rgba(184, 101, 42, 0.3);
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+}
+
+.toolbar-link:hover,
 .toolbar-button:hover {
     border-color: var(--accent);
     color: var(--accent-dark);
@@ -285,6 +307,7 @@ body {
     text-decoration: none;
     font: inherit;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .primary-action {
