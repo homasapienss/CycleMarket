@@ -1,9 +1,9 @@
 package com.example.cyclemarket.services;
 
-import com.example.cyclemarket.dto.CartSnapshot;
-import com.example.cyclemarket.dto.CartSnapshotItem;
-import com.example.cyclemarket.dto.CartView;
-import com.example.cyclemarket.dto.CartItemView;
+import com.example.cyclemarket.dto.cart.CartSnapshot;
+import com.example.cyclemarket.dto.cart.CartSnapshotItem;
+import com.example.cyclemarket.dto.cart.CartView;
+import com.example.cyclemarket.dto.cart.CartItemView;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.repos.ProductRepo;
 import jakarta.servlet.http.HttpSession;

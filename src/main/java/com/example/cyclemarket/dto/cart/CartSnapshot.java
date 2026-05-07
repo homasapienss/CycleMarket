@@ -1,4 +1,4 @@
-package com.example.cyclemarket.dto;
+package com.example.cyclemarket.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

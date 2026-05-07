@@ -1,6 +1,10 @@
 package com.example.cyclemarket.services;
 
-import com.example.cyclemarket.dto.*;
+import com.example.cyclemarket.dto.cart.CartSnapshot;
+import com.example.cyclemarket.dto.cart.CartSnapshotItem;
+import com.example.cyclemarket.dto.order.OrderDetailsView;
+import com.example.cyclemarket.dto.order.OrderItemView;
+import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.Order;
 import com.example.cyclemarket.entities.OrderItem;
 import com.example.cyclemarket.entities.Product;

@@ -1,16 +1,18 @@
-package com.example.cyclemarket.dto;
+package com.example.cyclemarket.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartSnapshotItem {
+@Getter
+@Setter
+public class OrderItemView {
     private Long productId;
+    private String productName;
     private Integer quantity;
-    private Integer unitPrice;
+    private Integer priceSnapshot;
+    private Integer lineTotal;
 }
