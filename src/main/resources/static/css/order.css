@@ -146,6 +146,7 @@ body {
 }
 
 .item-media {
+    display: block;
     border-radius: 18px;
     overflow: hidden;
     background:
@@ -182,6 +183,15 @@ body {
 .item-title {
     margin: 0;
     font-size: 1.15rem;
+}
+
+.item-title-link {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.item-title-link:hover .item-title {
+    color: var(--accent-dark);
 }
 
 .item-meta {

@@ -34,7 +34,7 @@
             </div>
 
             <div class="order-item" th:each="item : ${orderView.items}">
-                <div class="item-media">
+                <a class="item-media" th:href="@{/products/{id}(id=${item.productId})}">
                     <img
                             class="item-image"
                             th:if="${item.imageUrl != null}"
@@ -43,10 +43,12 @@
                     <div class="item-fallback" th:if="${item.imageUrl == null}">
                         Нет изображения
                     </div>
-                </div>
+                </a>
 
                 <div class="item-content">
-                    <h2 class="item-title" th:text="${item.productName}">Название товара</h2>
+                    <a class="item-title-link" th:href="@{/products/{id}(id=${item.productId})}">
+                        <h2 class="item-title" th:text="${item.productName}">Название товара</h2>
+                    </a>
                     <div class="item-meta">
                         <span th:text="${item.priceSnapshot + ' ₽ за штуку'}">0 ₽ за штуку</span>
                         <span th:text="${'Количество: ' + item.quantity}">Количество: 1</span>
