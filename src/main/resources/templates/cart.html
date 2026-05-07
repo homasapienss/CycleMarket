@@ -92,9 +92,7 @@
             <a class="primary-action" th:href="@{/auth/sign-in}" sec:authorize="isAnonymous()">
                 Войти для оформления заказа
             </a>
-            <form th:action="@{/orders}" method="post" sec:authorize="isAuthenticated()">
-                <button class="primary-action" type="submit">Оформить заказ</button>
-            </form>
+            <a class="primary-action" th:href="@{/checkout}" sec:authorize="isAuthenticated()">Оформить заказ</a>
             <a class="secondary-action" th:href="@{/products}">Продолжить покупки</a>
 
             <form th:action="@{/cart/clear}" method="post">

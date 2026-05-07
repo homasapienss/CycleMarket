@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+<body>
+<main class="page">
+    <div class="page-toolbar">
+        <div class="toolbar-actions">
+            <a class="toolbar-link" th:href="@{/products}">Каталог</a>
+            <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
+            <a class="toolbar-link toolbar-link-active" th:href="@{/checkout}">Оформление</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+            </form>
+        </div>
+    </div>
+
+    <section class="breadcrumbs">
+        <a class="breadcrumb-link" th:href="@{/cart}">Корзина</a>
+        <span class="breadcrumb-divider">/</span>
+        <span class="breadcrumb-current">Оформление заказа</span>
+    </section>
+
+    <section class="checkout-layout" th:if="${cartInfo != null and !#lists.isEmpty(cartInfo.items)}">
+        <div class="checkout-form-card">
+            <div class="section-heading">
+                <span class="section-chip">Шаг 2</span>
+                <h1>Данные для доставки</h1>
+                <p>Заполните контактные данные получателя и адрес, после чего заказ можно будет подтвердить.</p>
+            </div>
+
+            <form class="checkout-form" th:action="@{/orders}" th:object="${checkoutForm}" method="post">
+                <label class="field">
+                    <span class="field-label">ФИО получателя</span>
+                    <input class="field-input" type="text" th:field="*{recipientFullName}" placeholder="Иванов Иван Иванович">
+                </label>
+
+                <label class="field">
+                    <span class="field-label">Телефон</span>
+                    <input class="field-input" type="text" th:field="*{recipientPhone}" placeholder="+7 (900) 123-45-67">
+                </label>
+
+                <label class="field">
+                    <span class="field-label">Адрес доставки</span>
+                    <textarea class="field-textarea" th:field="*{deliveryAddress}" rows="4" placeholder="Город, улица, дом, квартира, подъезд, этаж"></textarea>
+                </label>
+
+                <label class="field">
+                    <span class="field-label">Комментарий к заказу</span>
+                    <textarea class="field-textarea" th:field="*{comment}" rows="3" placeholder="Например: позвонить за 30 минут, не звонить в домофон и т.д."></textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button class="primary-action" type="submit">Подтвердить заказ</button>
+                    <a class="secondary-action" th:href="@{/cart}">Вернуться в корзину</a>
+                </div>
+            </form>
+        </div>
+
+        <aside class="summary-card">
+            <h2>Ваш заказ</h2>
+
+            <div class="summary-items">
+                <div class="summary-item" th:each="item : ${cartInfo.items}">
+                    <div class="summary-item-media">
+                        <img
+                                class="summary-item-image"
+                                th:if="${item.imageUrl != null}"
+                                th:src="@{'/uploads' + ${item.imageUrl}}"
+                                th:alt="${item.productName}">
+                        <div class="summary-item-fallback" th:if="${item.imageUrl == null}">
+                            Нет изображения
+                        </div>
+                    </div>
+
+                    <div class="summary-item-content">
+                        <div class="summary-item-title" th:text="${item.productName}">Название товара</div>
+                        <div class="summary-item-meta">
+                            <span th:text="${item.quantity + ' шт.'}">1 шт.</span>
+                            <span th:text="${item.price + ' ₽'}">0 ₽</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-item-total" th:text="${item.lineTotal + ' ₽'}">0 ₽</div>
+                </div>
+            </div>
+
+            <div class="summary-row">
+                <span>Позиций в корзине</span>
+                <span th:text="${#lists.size(cartInfo.items)}">0</span>
+            </div>
+
+            <div class="summary-row summary-row-total">
+                <span>Итого</span>
+                <span th:text="${cartInfo.totalAmount + ' ₽'}">0 ₽</span>
+            </div>
+        </aside>
+    </section>
+
+    <section class="empty-card" th:if="${cartInfo == null or #lists.isEmpty(cartInfo.items)}">
+        <h1>Корзина пуста</h1>
+        <p>Оформлять пока нечего. Сначала добавьте товары в корзину.</p>
+        <a class="primary-action" th:href="@{/products}">Перейти в каталог</a>
+    </section>
+</main>
+</body>
+</html>
