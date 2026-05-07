@@ -49,6 +49,11 @@ public class OrderService {
                 .collect(Collectors.toMap(Product::getId, product -> product));
 
         Order order = new Order();
+        order.setDeliveryAddress(checkoutRequest.getDeliveryAddress());
+        order.setRecipientFullName(checkoutRequest.getRecipientFullName());
+        order.setRecipientPhone(checkoutRequest.getRecipientPhone());
+        order.setComment(checkoutRequest.getComment());
+        order.setStatus("NEW");
         order.setUser(userRepo.findByEmail(email).orElseThrow(UserNotFoundException::new));
         order.setTotalPrice(cartSnapshot.getTotalPrice());
         List<OrderItem> orderItems = cartSnapshot.getItems()
