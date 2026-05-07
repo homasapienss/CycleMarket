@@ -17,4 +17,8 @@ public class OrderDetailsView {
     private LocalDateTime createdAt;
     private Integer totalPrice;
     private List<OrderItemView> items;
+    private String recipientFullName;
+    private String recipientPhone;
+    private String deliveryAddress;
+    private String comment;
 }

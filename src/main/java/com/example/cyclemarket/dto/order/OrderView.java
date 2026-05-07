@@ -16,4 +16,5 @@ public class OrderView {
     private LocalDateTime createdAt;
     private Integer totalPrice;
     private Integer itemsCount;
+    private String recipientFullName;
 }

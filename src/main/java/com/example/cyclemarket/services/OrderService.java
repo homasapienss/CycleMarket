@@ -98,7 +98,11 @@ public class OrderService {
                                     orderItem.getQuantity() * orderItem.getPriceSnapshot(),
                                     imageUrl
                             );
-                        }).toList()
+                        }).toList(),
+                order.getRecipientFullName(),
+                order.getRecipientPhone(),
+                order.getDeliveryAddress(),
+                order.getComment()
         );
     }
 
@@ -111,7 +115,8 @@ public class OrderService {
                         order.getId(),
                         order.getCreatedAt(),
                         order.getTotalPrice(),
-                        order.getItems().size()
+                        order.getItems().size(),
+                        order.getRecipientFullName()
                 )
         ).toList();
     }
