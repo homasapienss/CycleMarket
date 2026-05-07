@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои заказы | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/orders.css}">
+</head>
+<body>
+<main class="page">
+    <div class="page-toolbar">
+        <div class="toolbar-actions">
+            <a class="toolbar-link" th:href="@{/products}">Каталог</a>
+            <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
+            <a class="toolbar-link toolbar-link-active" th:href="@{/orders}">Заказы</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+            </form>
+        </div>
+    </div>
+
+    <section class="hero">
+        <span class="hero-kicker">CycleMarket</span>
+        <h1>Мои заказы</h1>
+        <p>Здесь отображается история оформленных заказов текущего пользователя.</p>
+    </section>
+
+    <section class="orders-list" th:if="${ordersViews != null and !#lists.isEmpty(ordersViews)}">
+        <article class="order-card" th:each="order : ${ordersViews}">
+            <div class="order-main">
+                <div class="order-label">Заказ</div>
+                <h2 th:text="${'#' + order.orderId}">#1</h2>
+                <p class="order-date" th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026 10:00</p>
+            </div>
+
+            <div class="order-meta">
+                <div class="meta-block">
+                    <span class="meta-title">Позиций</span>
+                    <span class="meta-value" th:text="${order.itemsCount}">0</span>
+                </div>
+                <div class="meta-block">
+                    <span class="meta-title">Сумма</span>
+                    <span class="meta-value" th:text="${order.totalPrice + ' ₽'}">0 ₽</span>
+                </div>
+            </div>
+
+            <a class="order-link" th:href="@{/orders/{id}(id=${order.orderId})}">Открыть заказ</a>
+        </article>
+    </section>
+
+    <section class="empty-state" th:if="${ordersViews == null or #lists.isEmpty(ordersViews)}">
+        <h2>Заказов пока нет</h2>
+        <p>После оформления корзины здесь появится история ваших покупок.</p>
+        <a class="primary-action" th:href="@{/products}">Перейти в каталог</a>
+    </section>
+</main>
+</body>
+</html>

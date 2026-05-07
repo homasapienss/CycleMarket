@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${orderView != null ? 'Заказ #' + orderView.orderId + ' | CycleMarket' : 'Заказ | CycleMarket'}">Заказ | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/order.css}">
+</head>
+<body>
+<main class="page">
+    <div class="page-toolbar">
+        <div class="toolbar-actions">
+            <a class="toolbar-link" th:href="@{/products}">Каталог</a>
+            <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
+            <a class="toolbar-link" th:href="@{/orders}">Заказы</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
+            </form>
+        </div>
+    </div>
+
+    <section class="breadcrumbs">
+        <a class="breadcrumb-link" th:href="@{/orders}">Заказы</a>
+        <span class="breadcrumb-divider">/</span>
+        <span class="breadcrumb-current" th:text="${orderView != null ? '#' + orderView.orderId : 'Детали заказа'}">#1</span>
+    </section>
+
+    <section class="order-layout" th:if="${orderView != null}">
+        <div class="order-items-card">
+            <div class="section-heading">
+                <div class="order-label">Детали заказа</div>
+                <h1 th:text="${'#' + orderView.orderId}">#1</h1>
+                <p th:text="${#temporals.format(orderView.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026 10:00</p>
+            </div>
+
+            <div class="order-item" th:each="item : ${orderView.items}">
+                <div class="item-content">
+                    <h2 class="item-title" th:text="${item.productName}">Название товара</h2>
+                    <div class="item-meta">
+                        <span th:text="${item.priceSnapshot + ' ₽ за штуку'}">0 ₽ за штуку</span>
+                        <span th:text="${'Количество: ' + item.quantity}">Количество: 1</span>
+                    </div>
+                </div>
+                <div class="item-total" th:text="${item.lineTotal + ' ₽'}">0 ₽</div>
+            </div>
+        </div>
+
+        <aside class="summary-card">
+            <h2>Сводка заказа</h2>
+
+            <div class="summary-row">
+                <span>Номер</span>
+                <span th:text="${'#' + orderView.orderId}">#1</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Позиций</span>
+                <span th:text="${#lists.size(orderView.items)}">0</span>
+            </div>
+
+            <div class="summary-row summary-row-total">
+                <span>Итого</span>
+                <span th:text="${orderView.totalPrice + ' ₽'}">0 ₽</span>
+            </div>
+
+            <a class="secondary-action" th:href="@{/orders}">Вернуться к списку</a>
+            <a class="ghost-action" th:href="@{/products}">Продолжить покупки</a>
+        </aside>
+    </section>
+
+    <section class="empty-card" th:if="${orderView == null}">
+        <h1>Заказ не найден</h1>
+        <p>Либо заказа с таким идентификатором не существует, либо контроллер не передал модель для страницы.</p>
+        <a class="secondary-action" th:href="@{/orders}">Вернуться к списку заказов</a>
+    </section>
+</main>
+</body>
+</html>
