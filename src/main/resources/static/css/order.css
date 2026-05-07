@@ -215,6 +215,31 @@ body {
     font-weight: 600;
 }
 
+.details-block {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(221, 209, 191, 0.75);
+}
+
+.details-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.details-value {
+    display: block;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.details-value-multiline {
+    white-space: pre-line;
+    line-height: 1.55;
+}
+
 .summary-row-total {
     margin-top: 20px;
     padding-top: 20px;

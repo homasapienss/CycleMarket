@@ -69,6 +69,30 @@
                 <span th:text="${#lists.size(orderView.items)}">0</span>
             </div>
 
+            <div class="details-block">
+                <span class="details-label">Получатель</span>
+                <span class="details-value" th:text="${orderView.recipientFullName}">Иванов Иван Иванович</span>
+            </div>
+
+            <div class="details-block">
+                <span class="details-label">Телефон</span>
+                <span class="details-value" th:text="${orderView.recipientPhone}">+7 (900) 123-45-67</span>
+            </div>
+
+            <div class="details-block">
+                <span class="details-label">Адрес доставки</span>
+                <span class="details-value details-value-multiline" th:text="${orderView.deliveryAddress}">
+                    Город, улица, дом, квартира
+                </span>
+            </div>
+
+            <div class="details-block" th:if="${orderView.comment != null and !#strings.isEmpty(orderView.comment)}">
+                <span class="details-label">Комментарий</span>
+                <span class="details-value details-value-multiline" th:text="${orderView.comment}">
+                    Комментарий к заказу
+                </span>
+            </div>
+
             <div class="summary-row summary-row-total">
                 <span>Итого</span>
                 <span th:text="${orderView.totalPrice + ' ₽'}">0 ₽</span>

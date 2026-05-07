@@ -39,6 +39,10 @@
                     <span class="meta-value" th:text="${order.itemsCount}">0</span>
                 </div>
                 <div class="meta-block">
+                    <span class="meta-title">Получатель</span>
+                    <span class="meta-value" th:text="${order.recipientFullName}">Иванов Иван</span>
+                </div>
+                <div class="meta-block">
                     <span class="meta-title">Сумма</span>
                     <span class="meta-value" th:text="${order.totalPrice + ' ₽'}">0 ₽</span>
                 </div>
