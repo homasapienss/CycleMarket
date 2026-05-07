@@ -78,8 +78,11 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDetailsView getOrder(Long id) {
+    public OrderDetailsView getOrder(Long id, String email) {
         Order order = orderRepo.findById(id).orElseThrow(OrderNotFoundException::new);
+        if (!order.getUser().getEmail().equals(email)) {
+            throw new OrderNotFoundException();
+        }
         return new OrderDetailsView(
                 order.getId(),
                 order.getCreatedAt(),

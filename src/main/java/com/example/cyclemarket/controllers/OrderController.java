@@ -23,8 +23,9 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public String order(@PathVariable Long id, Model model) {
-        model.addAttribute("orderView", orderService.getOrder(id));
+    public String order(@PathVariable Long id, Model model,
+                        Authentication authentication) {
+        model.addAttribute("orderView", orderService.getOrder(id, authentication.getName()));
         return "order";
     }
 
