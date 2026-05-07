@@ -15,7 +15,7 @@ public class CartController {
 
     @GetMapping
     public String getCartItems(HttpSession session, Model model) {
-        model.addAttribute("cartInfo", sessionCartService.getCartInfo(session));
+        model.addAttribute("cartInfo", sessionCartService.getCartView(session));
         return "cart";
     }
 

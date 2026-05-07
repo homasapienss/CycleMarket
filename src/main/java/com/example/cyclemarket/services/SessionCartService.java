@@ -1,5 +1,7 @@
 package com.example.cyclemarket.services;
 
+import com.example.cyclemarket.dto.CartSnapshot;
+import com.example.cyclemarket.dto.CartSnapshotItem;
 import com.example.cyclemarket.dto.CartView;
 import com.example.cyclemarket.dto.CartItemView;
 import com.example.cyclemarket.entities.Product;
@@ -46,7 +48,28 @@ public class SessionCartService {
         cart.put(productId, newQuantity);
     }
 
-    public CartView getCartInfo(HttpSession session) {
+    public CartSnapshot getCartSnapshot(HttpSession session) {
+        Map<Long, Integer> cart = getOrCreateCart(session);
+        if (cart.isEmpty()) {
+            return new CartSnapshot(List.of(), 0);
+        }
+        List<Product> products = productRepo.findAllById(cart.keySet());
+        List<CartSnapshotItem> cartItems = products.stream()
+                .map(product -> {
+                    Integer quantity = cart.get(product.getId());
+                    return new CartSnapshotItem(
+                            product.getId(),
+                            quantity,
+                            product.getProductPrice()
+                    );
+                }).toList();
+        Integer total = cartItems.stream()
+                .mapToInt(item -> item.getUnitPrice() * item.getQuantity())
+                .sum();
+        return new CartSnapshot(cartItems, total);
+    }
+
+    public CartView getCartView(HttpSession session) {
         Map<Long, Integer> cart = getOrCreateCart(session);
 
         if (cart.isEmpty()) {
