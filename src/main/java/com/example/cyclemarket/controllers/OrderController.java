@@ -1,5 +1,6 @@
 package com.example.cyclemarket.controllers;
 
+import com.example.cyclemarket.dto.CheckoutRequest;
 import com.example.cyclemarket.services.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class OrderController {
 
     @PostMapping
     public String createOrder(HttpSession session,
-                              Authentication authentication) {
-        orderService.createOrder(authentication.getName(), session);
+                              Authentication authentication,
+                              @ModelAttribute("checkoutForm") CheckoutRequest checkoutRequest) {
+        orderService.createOrder(authentication.getName(), session, checkoutRequest);
         return "redirect:/orders";
     }
 

@@ -1,5 +1,6 @@
 package com.example.cyclemarket.services;
 
+import com.example.cyclemarket.dto.CheckoutRequest;
 import com.example.cyclemarket.dto.cart.CartSnapshot;
 import com.example.cyclemarket.dto.cart.CartSnapshotItem;
 import com.example.cyclemarket.dto.order.OrderDetailsView;
@@ -33,7 +34,7 @@ public class OrderService {
     private final OrderRepo orderRepo;
 
     @Transactional
-    public void createOrder(String email, HttpSession session) {
+    public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest) {
         CartSnapshot cartSnapshot = sessionCartService.getCartSnapshot(session);
 
         if (cartSnapshot.getItems().isEmpty()) {

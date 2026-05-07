@@ -29,4 +29,14 @@ public class Order {
     private Integer totalPrice;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
+    @Column(nullable = false)
+    private String recipientFullName;
+    @Column(nullable = false)
+    private String recipientPhone;
+    @Column(nullable = false)
+    private String deliveryAddress;
+    private String comment;
+    @Column(nullable = false)
+    private String status;
+
 }
