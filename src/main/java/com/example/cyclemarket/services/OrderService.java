@@ -8,6 +8,7 @@ import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.Order;
 import com.example.cyclemarket.entities.OrderItem;
 import com.example.cyclemarket.entities.Product;
+import com.example.cyclemarket.entities.ProductImage;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.exception.notfound.UserNotFoundException;
@@ -78,13 +79,20 @@ public class OrderService {
                 order.getCreatedAt(),
                 order.getTotalPrice(),
                 order.getItems().stream()
-                        .map(orderItem -> new OrderItemView(
-                                orderItem.getProduct().getId(),
-                                orderItem.getProduct().getProductName(),
-                                orderItem.getQuantity(),
-                                orderItem.getPriceSnapshot(),
-                                orderItem.getQuantity() * orderItem.getPriceSnapshot()
-                        )).toList()
+                        .map(orderItem -> {
+                            List<ProductImage> productImages = orderItem.getProduct().getProductImages();
+                            String imageUrl = productImages != null && !productImages.isEmpty()
+                                    ? productImages.get(0).getImageUrl()
+                                    : null;
+                            return new OrderItemView(
+                                    orderItem.getProduct().getId(),
+                                    orderItem.getProduct().getProductName(),
+                                    orderItem.getQuantity(),
+                                    orderItem.getPriceSnapshot(),
+                                    orderItem.getQuantity() * orderItem.getPriceSnapshot(),
+                                    imageUrl
+                            );
+                        }).toList()
         );
     }
 

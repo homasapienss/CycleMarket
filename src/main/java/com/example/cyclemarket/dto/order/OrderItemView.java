@@ -15,4 +15,5 @@ public class OrderItemView {
     private Integer quantity;
     private Integer priceSnapshot;
     private Integer lineTotal;
+    private String imageUrl;
 }

@@ -34,6 +34,17 @@
             </div>
 
             <div class="order-item" th:each="item : ${orderView.items}">
+                <div class="item-media">
+                    <img
+                            class="item-image"
+                            th:if="${item.imageUrl != null}"
+                            th:src="@{'/uploads' + ${item.imageUrl}}"
+                            th:alt="${item.productName}">
+                    <div class="item-fallback" th:if="${item.imageUrl == null}">
+                        Нет изображения
+                    </div>
+                </div>
+
                 <div class="item-content">
                     <h2 class="item-title" th:text="${item.productName}">Название товара</h2>
                     <div class="item-meta">
