@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1778246717901-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_categories
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_id
+                  type: BIGINT
+            tableName: categories
+  - changeSet:
+      id: 1778246717901-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_products_categories
+                  name: category_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_products_categories
+                  name: product_id
+                  type: BIGINT
+            tableName: products_categories
+  - changeSet:
+      id: 1778246717901-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uc_categories_name
+            tableName: categories
+  - changeSet:
+      id: 1778246717901-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_id
+            baseTableName: categories
+            constraintName: FK_CATEGORIES_ON_PARENT
+            referencedColumnNames: id
+            referencedTableName: categories
+  - changeSet:
+      id: 1778246717901-5
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: products_categories
+            constraintName: fk_procat_on_category
+            referencedColumnNames: id
+            referencedTableName: categories
+  - changeSet:
+      id: 1778246717901-6
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: products_categories
+            constraintName: fk_procat_on_product
+            referencedColumnNames: id
+            referencedTableName: products
+

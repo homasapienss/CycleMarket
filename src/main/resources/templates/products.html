@@ -29,6 +29,31 @@
         <a class="hero-action" th:href="@{/products/new}">Добавить товар</a>
     </section>
 
+    <section class="catalog-filters" th:if="${categories != null and !#lists.isEmpty(categories)}">
+        <div class="filters-header">
+            <h2>Категории</h2>
+            <p>Выберите раздел каталога или вернитесь ко всем товарам.</p>
+        </div>
+
+        <div class="category-chips">
+            <a
+                    class="category-chip"
+                    th:classappend="${selectedCategoryId == null} ? ' category-chip-active'"
+                    th:href="@{/products}">
+                Все товары
+            </a>
+
+            <a
+                    class="category-chip"
+                    th:each="category : ${categories}"
+                    th:classappend="${selectedCategoryId != null and selectedCategoryId == category.id} ? ' category-chip-active'"
+                    th:href="@{/products(categoryId=${category.id})}"
+                    th:text="${category.name}">
+                Категория
+            </a>
+        </div>
+    </section>
+
     <section th:if="${products != null and !#lists.isEmpty(products)}" class="products-grid">
         <article class="product-card" th:each="product : ${products}">
             <div class="product-media">
@@ -48,6 +73,11 @@
             <p class="product-manufacturer" th:text="${product.manufacturer.manufacturerName}">
                 Производитель
             </p>
+            <div class="product-categories" th:if="${product.categories != null and !#sets.isEmpty(product.categories)}">
+                <span class="product-category-tag" th:each="category : ${product.categories}" th:text="${category.name}">
+                    Категория
+                </span>
+            </div>
             <p class="product-description" th:text="${product.productDescription}">
                 Описание товара
             </p>

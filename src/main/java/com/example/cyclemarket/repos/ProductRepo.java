@@ -14,4 +14,5 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Override
     List<Product> findAllById(Iterable<Long> longs);
+    List<Product> findAllByCategories_Id(Long categoryId);
 }
