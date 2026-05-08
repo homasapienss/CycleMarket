@@ -6,10 +6,7 @@ import com.example.cyclemarket.dto.cart.CartSnapshotItem;
 import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.dto.order.OrderItemView;
 import com.example.cyclemarket.dto.order.OrderView;
-import com.example.cyclemarket.entities.Order;
-import com.example.cyclemarket.entities.OrderItem;
-import com.example.cyclemarket.entities.Product;
-import com.example.cyclemarket.entities.ProductImage;
+import com.example.cyclemarket.entities.*;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.exception.notfound.UserNotFoundException;
@@ -53,7 +50,7 @@ public class OrderService {
         order.setRecipientFullName(checkoutRequest.getRecipientFullName());
         order.setRecipientPhone(checkoutRequest.getRecipientPhone());
         order.setComment(checkoutRequest.getComment());
-        order.setStatus("NEW");
+        order.setStatus(OrderStatus.NEW);
         order.setUser(userRepo.findByEmail(email).orElseThrow(UserNotFoundException::new));
         order.setTotalPrice(cartSnapshot.getTotalPrice());
         List<OrderItem> orderItems = cartSnapshot.getItems()

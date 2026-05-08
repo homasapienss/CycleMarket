@@ -36,7 +36,8 @@ public class Order {
     @Column(nullable = false)
     private String deliveryAddress;
     private String comment;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
 }
