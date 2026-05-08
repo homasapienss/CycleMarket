@@ -250,6 +250,41 @@ body {
     line-height: 1.55;
 }
 
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.status-new {
+    background: rgba(184, 101, 42, 0.12);
+    color: #8f4e22;
+}
+
+.status-processing {
+    background: rgba(204, 153, 0, 0.14);
+    color: #8a6500;
+}
+
+.status-shipped {
+    background: rgba(34, 116, 165, 0.14);
+    color: #1e5f86;
+}
+
+.status-completed {
+    background: rgba(46, 139, 87, 0.14);
+    color: #256f45;
+}
+
+.status-cancelled {
+    background: rgba(177, 61, 45, 0.14);
+    color: #8f3124;
+}
+
 .summary-row-total {
     margin-top: 20px;
     padding-top: 20px;

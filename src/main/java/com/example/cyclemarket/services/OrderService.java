@@ -102,7 +102,9 @@ public class OrderService {
                 order.getRecipientFullName(),
                 order.getRecipientPhone(),
                 order.getDeliveryAddress(),
-                order.getComment()
+                order.getComment(),
+                order.getStatus().getDisplayName(),
+                order.getStatus().getCssClass()
         );
     }
 

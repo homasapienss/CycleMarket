@@ -72,6 +72,16 @@
             </div>
 
             <div class="details-block">
+                <span class="details-label">Статус заказа</span>
+                <span
+                        class="status-badge"
+                        th:classappend="${' ' + orderView.statusCssClass}"
+                        th:text="${orderView.statusDisplayName}">
+                    Заказ создан, ожидает обработки
+                </span>
+            </div>
+
+            <div class="details-block">
                 <span class="details-label">Получатель</span>
                 <span class="details-value" th:text="${orderView.recipientFullName}">Иванов Иван Иванович</span>
             </div>

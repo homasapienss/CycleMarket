@@ -21,4 +21,6 @@ public class OrderDetailsView {
     private String recipientPhone;
     private String deliveryAddress;
     private String comment;
+    private String statusDisplayName;
+    private String statusCssClass;
 }
