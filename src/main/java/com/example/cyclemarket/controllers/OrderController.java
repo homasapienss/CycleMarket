@@ -2,11 +2,14 @@ package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.CheckoutRequest;
 import com.example.cyclemarket.services.OrderService;
+import com.example.cyclemarket.services.SessionCartService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final SessionCartService sessionCartService;
 
     @GetMapping
     public String order(Model model,
@@ -32,7 +36,13 @@ public class OrderController {
     @PostMapping
     public String createOrder(HttpSession session,
                               Authentication authentication,
-                              @ModelAttribute("checkoutForm") CheckoutRequest checkoutRequest) {
+                              @Valid @ModelAttribute("checkoutForm") CheckoutRequest checkoutRequest,
+                              BindingResult bindingResult,
+                              Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("cartInfo", sessionCartService.getCartView(session));
+            return "checkout";
+        }
         orderService.createOrder(authentication.getName(), session, checkoutRequest);
         return "redirect:/orders";
     }

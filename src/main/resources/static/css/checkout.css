@@ -152,6 +152,16 @@ body {
     margin-top: 24px;
 }
 
+.form-error-banner {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border: 1px solid rgba(177, 61, 45, 0.24);
+    border-radius: 16px;
+    background: rgba(177, 61, 45, 0.08);
+    color: #8f3124;
+    font-weight: 700;
+}
+
 .field {
     display: block;
     margin-top: 18px;
@@ -191,6 +201,19 @@ body {
     outline: none;
     border-color: rgba(184, 101, 42, 0.6);
     box-shadow: 0 0 0 4px rgba(184, 101, 42, 0.10);
+}
+
+.field-input-error {
+    border-color: rgba(177, 61, 45, 0.55);
+    background: rgba(177, 61, 45, 0.04);
+}
+
+.field-error {
+    display: block;
+    margin-top: 8px;
+    color: #8f3124;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 .form-actions {
