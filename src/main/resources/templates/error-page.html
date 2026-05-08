@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/error-page.css}">
+</head>
+<body>
+<main class="page">
+    <section class="error-card">
+        <span class="error-chip">CycleMarket</span>
+        <h1>Что-то пошло не так</h1>
+        <p class="error-message" th:text="${error_message != null and !#strings.isEmpty(error_message) ? error_message : 'Не удалось выполнить запрос.'}">
+            Не удалось выполнить запрос.
+        </p>
+
+        <div class="actions">
+            <a class="primary-action" th:href="@{/products}">Перейти в каталог</a>
+            <a class="secondary-action" th:href="@{/orders}">Мои заказы</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

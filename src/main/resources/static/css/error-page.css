@@ -1,0 +1,130 @@
+:root {
+    --bg: #f3efe7;
+    --surface: rgba(255, 253, 250, 0.94);
+    --text: #1f2933;
+    --muted: #61707a;
+    --line: #ddd1bf;
+    --accent: #b8652a;
+    --accent-dark: #8f4e22;
+    --accent-soft: rgba(184, 101, 42, 0.12);
+    --shadow: 0 22px 52px rgba(67, 42, 24, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top left, rgba(184, 101, 42, 0.10), transparent 28%),
+        linear-gradient(180deg, #fbf8f2 0%, var(--bg) 100%);
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.error-card {
+    width: min(680px, 100%);
+    padding: 36px;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.error-chip {
+    display: inline-flex;
+    margin-bottom: 16px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.error-card h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+}
+
+.error-message {
+    max-width: 520px;
+    margin: 16px auto 0;
+    color: var(--muted);
+    font-size: 1.02rem;
+    line-height: 1.65;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.primary-action,
+.secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 18px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.primary-action {
+    background: var(--accent);
+    color: #fff;
+}
+
+.primary-action:hover {
+    background: var(--accent-dark);
+}
+
+.secondary-action {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text);
+}
+
+.secondary-action:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 16px;
+    }
+
+    .error-card {
+        padding: 24px 20px;
+        border-radius: 22px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .primary-action,
+    .secondary-action {
+        width: 100%;
+    }
+}
