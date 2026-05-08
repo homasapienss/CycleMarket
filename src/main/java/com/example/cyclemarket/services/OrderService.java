@@ -60,13 +60,12 @@ public class OrderService {
                     if (product == null) {
                         throw new ProductNotFoundException();
                     }
-
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(order);
-                    orderItem.setProduct(product);
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPriceSnapshot(cartItem.getUnitPrice());
-                    return orderItem;
+                    return OrderItem.builder()
+                            .order(order)
+                            .product(product)
+                            .quantity(cartItem.getQuantity())
+                            .priceSnapshot(cartItem.getUnitPrice())
+                            .build();
                 })
                 .toList();
         order.setItems(orderItems);
@@ -90,14 +89,14 @@ public class OrderService {
                             String imageUrl = productImages != null && !productImages.isEmpty()
                                     ? productImages.get(0).getImageUrl()
                                     : null;
-                            return new OrderItemView(
-                                    orderItem.getProduct().getId(),
-                                    orderItem.getProduct().getProductName(),
-                                    orderItem.getQuantity(),
-                                    orderItem.getPriceSnapshot(),
-                                    orderItem.getQuantity() * orderItem.getPriceSnapshot(),
-                                    imageUrl
-                            );
+                            return OrderItemView.builder()
+                                    .productId(orderItem.getProduct().getId())
+                                    .productName(orderItem.getProduct().getProductName())
+                                    .quantity(orderItem.getQuantity())
+                                    .priceSnapshot(orderItem.getPriceSnapshot())
+                                    .lineTotal(orderItem.getQuantity() * orderItem.getPriceSnapshot())
+                                    .imageUrl(imageUrl)
+                                    .build();
                         }).toList(),
                 order.getRecipientFullName(),
                 order.getRecipientPhone(),
