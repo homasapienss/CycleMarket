@@ -29,28 +29,45 @@
         <a class="hero-action" th:href="@{/products/new}">Добавить товар</a>
     </section>
 
-    <section class="catalog-filters" th:if="${categories != null and !#lists.isEmpty(categories)}">
+    <section class="catalog-filters" th:if="${rootCategories != null and !#lists.isEmpty(rootCategories)}">
         <div class="filters-header">
             <h2>Категории</h2>
-            <p>Выберите раздел каталога или вернитесь ко всем товарам.</p>
+            <p>Выберите крупный раздел каталога или уточните подбор через подкатегории.</p>
         </div>
 
-        <div class="category-chips">
+        <div class="category-tree">
             <a
-                    class="category-chip"
-                    th:classappend="${selectedCategoryId == null} ? ' category-chip-active'"
+                    class="root-category-link"
+                    th:classappend="${selectedCategoryId == null} ? ' root-category-link-active'"
                     th:href="@{/products}">
                 Все товары
             </a>
 
-            <a
-                    class="category-chip"
-                    th:each="category : ${categories}"
-                    th:classappend="${selectedCategoryId != null and selectedCategoryId == category.id} ? ' category-chip-active'"
-                    th:href="@{/products(categoryId=${category.id})}"
-                    th:text="${category.name}">
-                Категория
-            </a>
+            <details class="category-group" th:each="rootCategory : ${rootCategories}">
+                <summary class="category-summary">
+                    <a
+                            class="root-category-link"
+                            th:classappend="${selectedCategoryId != null and selectedCategoryId == rootCategory.id} ? ' root-category-link-active'"
+                            th:href="@{/products(categoryId=${rootCategory.id})}"
+                            th:text="${rootCategory.name}">
+                        Корневая категория
+                    </a>
+                    <span class="category-toggle" th:if="${rootCategory.children != null and !#lists.isEmpty(rootCategory.children)}">
+                        Подкатегории
+                    </span>
+                </summary>
+
+                <div class="subcategory-list" th:if="${rootCategory.children != null and !#lists.isEmpty(rootCategory.children)}">
+                    <a
+                            class="subcategory-link"
+                            th:each="childCategory : ${rootCategory.children}"
+                            th:classappend="${selectedCategoryId != null and selectedCategoryId == childCategory.id} ? ' subcategory-link-active'"
+                            th:href="@{/products(categoryId=${childCategory.id})}"
+                            th:text="${childCategory.name}">
+                        Подкатегория
+                    </a>
+                </div>
+            </details>
         </div>
     </section>
 

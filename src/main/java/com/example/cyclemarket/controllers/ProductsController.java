@@ -1,5 +1,6 @@
 package com.example.cyclemarket.controllers;
 
+import com.example.cyclemarket.services.CategoryService;
 import com.example.cyclemarket.services.ProductsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 public class ProductsController {
     private final ProductsService productsService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String products(@RequestParam(required = false) Long categoryId,
@@ -23,7 +25,7 @@ public class ProductsController {
             model.addAttribute("products", productsService.getProductsByCategory(categoryId));
         }
 
-        model.addAttribute("categories", productsService.getAllCategories());
+        model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         return "products";
     }

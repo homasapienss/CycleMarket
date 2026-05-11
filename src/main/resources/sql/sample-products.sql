@@ -8,55 +8,102 @@ INSERT INTO manufacturers (manufacturer_name) VALUES
                                                   ('Continental'),
                                                   ('Topeak'),
                                                   ('Abus'),
-                                                  ('Lezyne');
+                                                  ('Lezyne'),
+                                                  ('Fox Racing'),
+                                                  ('BBB Cycling'),
+                                                  ('Crankbrothers'),
+                                                  ('RockShox'),
+                                                  ('SRAM');
 
 INSERT INTO categories (name, parent_id) VALUES
                                              ('Велосипеды', NULL),
+                                             ('Аксессуары', NULL),
+                                             ('Инструменты', NULL),
+                                             ('Запчасти', NULL),
+                                             ('Велоодежда', NULL);
+
+INSERT INTO categories (name, parent_id) VALUES
                                              ('Горные велосипеды', (SELECT id FROM categories WHERE name = 'Велосипеды')),
                                              ('Шоссейные велосипеды', (SELECT id FROM categories WHERE name = 'Велосипеды')),
                                              ('Городские велосипеды', (SELECT id FROM categories WHERE name = 'Велосипеды')),
                                              ('Детские велосипеды', (SELECT id FROM categories WHERE name = 'Велосипеды')),
-                                             ('Шлемы', NULL),
-                                             ('Освещение', NULL),
-                                             ('Насосы', NULL),
-                                             ('Инструменты', NULL),
-                                             ('Камеры', NULL),
-                                             ('Покрышки', NULL),
-                                             ('Трансмиссия', NULL),
-                                             ('Седла', NULL),
-                                             ('Флягодержатели', NULL),
-                                             ('Сумки', NULL),
-                                             ('Аксессуары', NULL);
+                                             ('Гревел велосипеды', (SELECT id FROM categories WHERE name = 'Велосипеды'));
+
+INSERT INTO categories (name, parent_id) VALUES
+                                             ('Шлемы', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Освещение', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Насосы', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Флягодержатели', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Сумки', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Велоочки', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Сигналы', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Фляги', (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                             ('Замки', (SELECT id FROM categories WHERE name = 'Аксессуары'));
+
+INSERT INTO categories (name, parent_id) VALUES
+                                             ('Мультитулы', (SELECT id FROM categories WHERE name = 'Инструменты')),
+                                             ('Отвертки и ключи', (SELECT id FROM categories WHERE name = 'Инструменты')),
+                                             ('Ремкомплекты и латки', (SELECT id FROM categories WHERE name = 'Инструменты')),
+                                             ('Монтажки', (SELECT id FROM categories WHERE name = 'Инструменты')),
+                                             ('Смазки и химия', (SELECT id FROM categories WHERE name = 'Инструменты'));
+
+INSERT INTO categories (name, parent_id) VALUES
+                                             ('Камеры', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Покрышки', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Трансмиссия', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Тормоза', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Вилки', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Седла', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Колеса', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Педали', (SELECT id FROM categories WHERE name = 'Запчасти')),
+                                             ('Рули и выносы', (SELECT id FROM categories WHERE name = 'Запчасти'));
+
+INSERT INTO categories (name, parent_id) VALUES
+                                             ('Джерси', (SELECT id FROM categories WHERE name = 'Велоодежда')),
+                                             ('Куртки', (SELECT id FROM categories WHERE name = 'Велоодежда')),
+                                             ('Шорты и велотрусы', (SELECT id FROM categories WHERE name = 'Велоодежда')),
+                                             ('Перчатки', (SELECT id FROM categories WHERE name = 'Велоодежда'));
 
 INSERT INTO products (product_name, product_description, product_price, manufacturer_id) VALUES
-                                                                                             ('Горный велосипед Trek Marlin 7', 'Универсальный MTB для города, парков и легких трейлов. Алюминиевая рама и надежная трансмиссия.', 68990, (SELECT id FROM manufacturers WHERE
-                                                                                                 manufacturer_name = 'Trek')),
-                                                                                             ('Горный велосипед Specialized Rockhopper', 'Хардтейл начального среднего класса для уверенного старта в кросс-кантри и активных поездках.', 73490, (SELECT id FROM manufacturers WHERE
-                                                                                                 manufacturer_name = 'Specialized')),
-                                                                                             ('Шоссейный велосипед Giant Contend AR 2', 'Комфортная шоссейная модель для тренировок, фитнеса и длительных асфальтовых маршрутов.', 89990, (SELECT id FROM manufacturers WHERE
-                                                                                                 manufacturer_name = 'Giant')),
-                                                                                             ('Городской велосипед Merida Crossway 100', 'Практичный гибрид для города и парковых дорожек с удобной посадкой.', 52990, (SELECT id FROM manufacturers WHERE manufacturer_name =
-                                                                                                                                                                                                                                                           'Merida')),
-                                                                                             ('Детский велосипед Scott Roxter 20', 'Яркая и надежная модель для детей с безопасной геометрией и хорошим накатом.', 28990, (SELECT id FROM manufacturers WHERE manufacturer_name =
-                                                                                                                                                                                                                                                              'Scott')),
+                                                                                             ('Горный велосипед Trek Marlin 7', 'Универсальный MTB для города, парков и легких трейлов. Алюминиевая рама и надежная трансмиссия.', 68990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Trek')),
+                                                                                             ('Горный велосипед Specialized Rockhopper', 'Хардтейл начального среднего класса для уверенного старта в кросс-кантри и активных поездках.', 73490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
+                                                                                             ('Шоссейный велосипед Giant Contend AR 2', 'Комфортная шоссейная модель для тренировок, фитнеса и длительных асфальтовых маршрутов.', 89990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Giant')),
+                                                                                             ('Городской велосипед Merida Crossway 100', 'Практичный гибрид для города и парковых дорожек с удобной посадкой.', 52990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Merida')),
+
+                                                                                             ('Детский велосипед Scott Roxter 20', 'Яркая и надежная модель для детей с безопасной геометрией и хорошим накатом.', 28990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Scott')),
+                                                                                             ('Гревел велосипед Specialized Diverge E5', 'Универсальный гравийный велосипед для смешанных покрытий, дальних выездов и быстрых тренировок.', 124990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
                                                                                              ('Велошлем Abus Urban-I 3.0', 'Городской шлем с хорошей вентиляцией, регулировкой посадки и высокой заметностью.', 6490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Abus')),
                                                                                              ('Велошлем Abus MoDrop', 'Шлем для трейлового катания с увеличенной защитой затылочной зоны.', 7990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Abus')),
                                                                                              ('Передний фонарь Lezyne Hecto Drive 500XL', 'Компактный фонарь с USB-зарядкой и несколькими режимами свечения.', 4290, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Lezyne')),
                                                                                              ('Задний фонарь Lezyne Strip Drive', 'Яркий задний фонарь для повышения заметности на дороге в темное время.', 2390, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Lezyne')),
                                                                                              ('Напольный насос Topeak JoeBlow Sport', 'Удобный насос с манометром для точной накачки велосипедных колес.', 3590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+                                                                                             ('Флягодержатель Specialized Zee Cage II', 'Легкий и прочный флягодержатель с надежной фиксацией бутылки.', 1590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
+                                                                                             ('Велосумка Topeak Aero Wedge Pack', 'Подседельная сумка для камеры, мультитула и мелких аксессуаров.', 2790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+                                                                                             ('Велоочки BBB Chester', 'Легкие велоочки с сменными линзами для поездок в переменную погоду и защиты от ветра.', 4990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'BBB Cycling')),
+                                                                                             ('Электронный сигнал Lezyne Ebike Alert', 'Компактный звуковой сигнал для городской езды и безопасного движения в потоке.', 2190, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Lezyne')),
+                                                                                             ('Фляга Giant DoubleSpring 750 мл', 'Удобная спортивная фляга большого объема для длительных тренировок и прогулок.', 890, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Giant')),
+                                                                                             ('Замок Abus Steel-O-Chain 8807K', 'Цепной замок для повседневной парковки велосипеда в городе и у офиса.', 5590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Abus')),
                                                                                              ('Мультитул Topeak Mini 9', 'Компактный набор инструментов для настройки велосипеда в дороге.', 1890, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+                                                                                             ('Набор шестигранников Topeak DuoHex Tool', 'Складной набор ключей для базового обслуживания и настройки навесного оборудования.', 1490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+                                                                                             ('Ремкомплект Topeak FlyPaper Glueless', 'Комплект самоклеящихся латок для быстрой починки камеры без клея.', 590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak')),
+                                                                                             ('Монтажки Crankbrothers Speedier Lever', 'Прочные монтажки для удобного снятия и установки покрышек без лишних усилий.', 790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Crankbrothers')),
+                                                                                             ('Смазка цепи Shimano Wet Lube', 'Всепогодная смазка для цепи, рассчитанная на мокрые и грязные условия катания.', 990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
                                                                                              ('Камера 29 x 2.10', 'Камера для горных велосипедов с автониппелем и повышенной износостойкостью.', 690, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
-                                                                                             ('Покрышка Continental Race King 29 x 2.20', 'Быстрая покрышка для сухих трасс и универсального кросс-кантри.', 3290, (SELECT id FROM manufacturers WHERE manufacturer_name =
-                                                                                                                                                                                                                                                       'Continental')),
-                                                                                             ('Покрышка Continental Contact Urban 700x42', 'Городская покрышка с хорошим сцеплением и защитой от проколов.', 2890, (SELECT id FROM manufacturers WHERE manufacturer_name =
-                                                                                                                                                                                                                                                       'Continental')),
+                                                                                             ('Покрышка Continental Race King 29 x 2.20', 'Быстрая покрышка для сухих трасс и универсального кросс-кантри.', 3290, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
+                                                                                             ('Покрышка Continental Contact Urban 700x42', 'Городская покрышка с хорошим сцеплением и защитой от проколов.', 2890, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Continental')),
                                                                                              ('Цепь Shimano CN-HG53 9-speed', 'Надежная цепь для 9-скоростной трансмиссии с плавным переключением.', 1990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
                                                                                              ('Кассета Shimano CS-HG400 11-32', 'Кассета для 9-скоростных систем с универсальным диапазоном передач.', 3790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
-                                                                                             ('Задний переключатель Shimano Alivio RD-M3100', 'Переключатель для MTB-трансмиссий с точной работой и хорошим ресурсом.', 4590, (SELECT id FROM manufacturers WHERE manufacturer_name =
-                                                                                                                                                                                                                                                                  'Shimano')),
+                                                                                             ('Задний переключатель Shimano Alivio RD-M3100', 'Переключатель для MTB-трансмиссий с точной работой и хорошим ресурсом.', 4590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
+                                                                                             ('Тормоз Shimano BR-MT200', 'Гидравлический дисковый тормоз для MTB и городских велосипедов с стабильной модуляцией.', 3490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Shimano')),
+                                                                                             ('Амортизационная вилка RockShox Judy Silver TK', 'Воздушная вилка для кросс-кантри и трейлов с блокировкой и хорошей чувствительностью.', 22990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'RockShox')),
                                                                                              ('Седло Giant Connect Comfort', 'Комфортное седло для прогулочных и городских велосипедов.', 2490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Giant')),
-                                                                                             ('Флягодержатель Specialized Zee Cage II', 'Легкий и прочный флягодержатель с надежной фиксацией бутылки.', 1590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
-                                                                                             ('Велосумка Topeak Aero Wedge Pack', 'Подседельная сумка для камеры, мультитула и мелких аксессуаров.', 2790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Topeak'));
+                                                                                             ('Колесо DT Swiss X 1900 29 заднее', 'Готовое заднее колесо для MTB с надежной втулкой и хорошим запасом прочности.', 17990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'SRAM')),
+                                                                                             ('Педали Crankbrothers Stamp 1', 'Плоские педали с широкой платформой и цепким пином для контроля на трейле и в городе.', 5690, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Crankbrothers')),
+                                                                                             ('Руль и вынос BBB Skyline Cockpit Set', 'Комплект для обновления посадки и управления велосипедом с универсальной геометрией.', 6990, (SELECT id FROM manufacturers WHERE manufacturer_name = 'BBB Cycling')),
+                                                                                             ('Джерси Fox Ranger Short Sleeve', 'Легкое велоджерси для кросс-кантри и трейловых поездок в теплую погоду.', 4590, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Fox Racing')),
+                                                                                             ('Ветровка Specialized Trail Wind Jacket', 'Компактная велокуртка для защиты от ветра и прохлады в межсезонье.', 8790, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Specialized')),
+                                                                                             ('Шорты Fox Ranger Lite', 'Удобные велошорты для активного катания с легкой дышащей тканью.', 6290, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Fox Racing')),
+                                                                                             ('Перчатки Giro Bravo Gel', 'Легкие короткопалые перчатки с амортизирующими вставками для комфортных поездок.', 2490, (SELECT id FROM manufacturers WHERE manufacturer_name = 'Scott'));
 
 INSERT INTO products_categories (product_id, category_id) VALUES
                                                               ((SELECT id FROM products WHERE product_name = 'Горный велосипед Trek Marlin 7'), (SELECT id FROM categories WHERE name = 'Горные велосипеды')),
@@ -64,29 +111,39 @@ INSERT INTO products_categories (product_id, category_id) VALUES
                                                               ((SELECT id FROM products WHERE product_name = 'Шоссейный велосипед Giant Contend AR 2'), (SELECT id FROM categories WHERE name = 'Шоссейные велосипеды')),
                                                               ((SELECT id FROM products WHERE product_name = 'Городской велосипед Merida Crossway 100'), (SELECT id FROM categories WHERE name = 'Городские велосипеды')),
                                                               ((SELECT id FROM products WHERE product_name = 'Детский велосипед Scott Roxter 20'), (SELECT id FROM categories WHERE name = 'Детские велосипеды')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Гревел велосипед Specialized Diverge E5'), (SELECT id FROM categories WHERE name = 'Гревел велосипеды')),
                                                               ((SELECT id FROM products WHERE product_name = 'Велошлем Abus Urban-I 3.0'), (SELECT id FROM categories WHERE name = 'Шлемы')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Велошлем Abus Urban-I 3.0'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
                                                               ((SELECT id FROM products WHERE product_name = 'Велошлем Abus MoDrop'), (SELECT id FROM categories WHERE name = 'Шлемы')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Велошлем Abus MoDrop'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
                                                               ((SELECT id FROM products WHERE product_name = 'Передний фонарь Lezyne Hecto Drive 500XL'), (SELECT id FROM categories WHERE name = 'Освещение')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Передний фонарь Lezyne Hecto Drive 500XL'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
                                                               ((SELECT id FROM products WHERE product_name = 'Задний фонарь Lezyne Strip Drive'), (SELECT id FROM categories WHERE name = 'Освещение')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Задний фонарь Lezyne Strip Drive'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
                                                               ((SELECT id FROM products WHERE product_name = 'Напольный насос Topeak JoeBlow Sport'), (SELECT id FROM categories WHERE name = 'Насосы')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Напольный насос Topeak JoeBlow Sport'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Мультитул Topeak Mini 9'), (SELECT id FROM categories WHERE name = 'Инструменты')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Мультитул Topeak Mini 9'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Флягодержатель Specialized Zee Cage II'), (SELECT id FROM categories WHERE name = 'Флягодержатели')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Велосумка Topeak Aero Wedge Pack'), (SELECT id FROM categories WHERE name = 'Сумки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Велоочки BBB Chester'), (SELECT id FROM categories WHERE name = 'Велоочки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Электронный сигнал Lezyne Ebike Alert'), (SELECT id FROM categories WHERE name = 'Сигналы')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Фляга Giant DoubleSpring 750 мл'), (SELECT id FROM categories WHERE name = 'Фляги')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Замок Abus Steel-O-Chain 8807K'), (SELECT id FROM categories WHERE name = 'Замки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Мультитул Topeak Mini 9'), (SELECT id FROM categories WHERE name = 'Мультитулы')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Набор шестигранников Topeak DuoHex Tool'), (SELECT id FROM categories WHERE name = 'Отвертки и ключи')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Ремкомплект Topeak FlyPaper Glueless'), (SELECT id FROM categories WHERE name = 'Ремкомплекты и латки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Монтажки Crankbrothers Speedier Lever'), (SELECT id FROM categories WHERE name = 'Монтажки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Смазка цепи Shimano Wet Lube'), (SELECT id FROM categories WHERE name = 'Смазки и химия')),
                                                               ((SELECT id FROM products WHERE product_name = 'Камера 29 x 2.10'), (SELECT id FROM categories WHERE name = 'Камеры')),
                                                               ((SELECT id FROM products WHERE product_name = 'Покрышка Continental Race King 29 x 2.20'), (SELECT id FROM categories WHERE name = 'Покрышки')),
                                                               ((SELECT id FROM products WHERE product_name = 'Покрышка Continental Contact Urban 700x42'), (SELECT id FROM categories WHERE name = 'Покрышки')),
                                                               ((SELECT id FROM products WHERE product_name = 'Цепь Shimano CN-HG53 9-speed'), (SELECT id FROM categories WHERE name = 'Трансмиссия')),
                                                               ((SELECT id FROM products WHERE product_name = 'Кассета Shimano CS-HG400 11-32'), (SELECT id FROM categories WHERE name = 'Трансмиссия')),
                                                               ((SELECT id FROM products WHERE product_name = 'Задний переключатель Shimano Alivio RD-M3100'), (SELECT id FROM categories WHERE name = 'Трансмиссия')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Тормоз Shimano BR-MT200'), (SELECT id FROM categories WHERE name = 'Тормоза')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Амортизационная вилка RockShox Judy Silver TK'), (SELECT id FROM categories WHERE name = 'Вилки')),
                                                               ((SELECT id FROM products WHERE product_name = 'Седло Giant Connect Comfort'), (SELECT id FROM categories WHERE name = 'Седла')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Флягодержатель Specialized Zee Cage II'), (SELECT id FROM categories WHERE name = 'Флягодержатели')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Флягодержатель Specialized Zee Cage II'), (SELECT id FROM categories WHERE name = 'Аксессуары')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Велосумка Topeak Aero Wedge Pack'), (SELECT id FROM categories WHERE name = 'Сумки')),
-                                                              ((SELECT id FROM products WHERE product_name = 'Велосумка Topeak Aero Wedge Pack'), (SELECT id FROM categories WHERE name = 'Аксессуары'));
+                                                              ((SELECT id FROM products WHERE product_name = 'Колесо DT Swiss X 1900 29 заднее'), (SELECT id FROM categories WHERE name = 'Колеса')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Педали Crankbrothers Stamp 1'), (SELECT id FROM categories WHERE name = 'Педали')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Руль и вынос BBB Skyline Cockpit Set'), (SELECT id FROM categories WHERE name = 'Рули и выносы')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Джерси Fox Ranger Short Sleeve'), (SELECT id FROM categories WHERE name = 'Джерси')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Ветровка Specialized Trail Wind Jacket'), (SELECT id FROM categories WHERE name = 'Куртки')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Шорты Fox Ranger Lite'), (SELECT id FROM categories WHERE name = 'Шорты и велотрусы')),
+                                                              ((SELECT id FROM products WHERE product_name = 'Перчатки Giro Bravo Gel'), (SELECT id FROM categories WHERE name = 'Перчатки'));
 
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
                                                                 ((SELECT id FROM products WHERE product_name = 'Горный велосипед Trek Marlin 7'), '/products/trek-marlin-7-main.jpg', true),
