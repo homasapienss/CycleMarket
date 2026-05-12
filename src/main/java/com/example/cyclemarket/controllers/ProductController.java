@@ -6,6 +6,7 @@ import com.example.cyclemarket.services.CategoryService;
 import com.example.cyclemarket.services.ManufacturerService;
 import com.example.cyclemarket.services.ProductManagementService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class ProductController {
         return "product";
     }
     @GetMapping("/new")
+    @PreAuthorize("hasRole('MANAGER')")
     public String createForm(Model model) {
         model.addAttribute("productForm", new ProductCreateRequest());
         model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
@@ -32,6 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/new")
+    @PreAuthorize("hasRole('MANAGER')")
     public String createProduct(@ModelAttribute("productForm") ProductCreateRequest productForm) throws Exception {
         productManagementService.createProduct(productForm);
         return "redirect:/products";
