@@ -1,7 +1,6 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
-import com.example.cyclemarket.repos.ManufacturerRepo;
 import com.example.cyclemarket.services.CategoryService;
 import com.example.cyclemarket.services.ManufacturerService;
 import com.example.cyclemarket.services.ProductManagementService;
