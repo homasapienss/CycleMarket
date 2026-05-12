@@ -1,5 +1,6 @@
 package com.example.cyclemarket.dto;
 
+import com.example.cyclemarket.entities.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class ProductCreateRequest {
     private Integer productPrice;
     private Long manufacturerId;
     private MultipartFile image;
+    private Long categoryId;
 }

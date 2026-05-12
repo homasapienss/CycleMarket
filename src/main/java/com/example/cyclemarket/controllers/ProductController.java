@@ -2,6 +2,8 @@ package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
 import com.example.cyclemarket.repos.ManufacturerRepo;
+import com.example.cyclemarket.services.CategoryService;
+import com.example.cyclemarket.services.ManufacturerService;
 import com.example.cyclemarket.services.ProductManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/products")
 @AllArgsConstructor
 public class ProductController {
-    private final ManufacturerRepo manufacturerRepo;
+    private final ManufacturerService manufacturerService;
+    private final CategoryService categoryService;
     private final ProductManagementService productManagementService;
 
     @GetMapping("/{id}")
@@ -23,7 +26,8 @@ public class ProductController {
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("productForm", new ProductCreateRequest());
-        model.addAttribute("manufacturers", manufacturerRepo.findAll());
+        model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
+        model.addAttribute("categories", categoryService.getWeakCategories());
         return "product-create";
     }
 

@@ -26,4 +26,9 @@ public class CategoryService {
     public List<Category> getAllParentCategories() {
         return categoryRepo.findAllByParentIsNull();
     }
+
+    @Transactional
+    public List<Category> getWeakCategories() {
+        return categoryRepo.findAllByParentIsNotNull();
+    }
 }

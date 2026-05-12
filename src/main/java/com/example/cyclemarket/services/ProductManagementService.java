@@ -1,12 +1,13 @@
 package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
+import com.example.cyclemarket.entities.Category;
 import com.example.cyclemarket.entities.Manufacturer;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.ProductImage;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
-import com.example.cyclemarket.repos.ManufacturerRepo;
 import com.example.cyclemarket.repos.ProductRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,29 +20,26 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ProductManagementService {
     private final ProductRepo productRepo;
-    private final ManufacturerRepo manufacturerRepo;
+    private final ManufacturerService manufacturerService;
+    private final CategoryService categoryService;
 
     @Value("${spring.images.dir}")
     private String imageDir;
 
-
-    public ProductManagementService(ProductRepo productRepo, ManufacturerRepo manufacturerRepo) {
-        this.productRepo = productRepo;
-        this.manufacturerRepo = manufacturerRepo;
-    }
-
     @Transactional
     public Product createProduct(ProductCreateRequest request) throws IOException {
-        Manufacturer manufacturer = manufacturerRepo.findById(request.getManufacturerId())
-                .orElseThrow(() -> new IllegalArgumentException("Manufacturer not found: " + request.getManufacturerId()));
+        Manufacturer manufacturer = manufacturerService.getById(request.getManufacturerId());
+        Category category = categoryService.getCategoryById(request.getCategoryId());
 
         Product product = new Product();
         product.setProductName(request.getProductName());
         product.setProductDescription(request.getProductDescription());
         product.setProductPrice(request.getProductPrice());
         product.setManufacturer(manufacturer);
+        product.getCategories().add(category);
 
         Product savedProduct = productRepo.save(product);
 
