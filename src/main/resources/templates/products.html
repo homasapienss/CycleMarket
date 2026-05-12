@@ -71,8 +71,33 @@
         </div>
     </section>
 
+    <section class="catalog-toolbar">
+        <div class="catalog-toolbar-copy">
+            <h2>Сортировка каталога</h2>
+            <p>Можно комбинировать выбранную категорию и порядок вывода товаров по цене.</p>
+        </div>
+
+        <form class="sort-form" th:action="@{/products}" method="get">
+            <input th:if="${selectedCategoryId != null}" type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+
+            <label class="sort-label" for="sort-select">Сортировать по</label>
+            <select class="sort-select" id="sort-select" name="sort" onchange="this.form.submit()">
+                <option value="" th:selected="${param.sort == null or #lists.isEmpty(param.sort)}">Без сортировки</option>
+                <option value="priceAsc" th:selected="${param.sort != null and !#lists.isEmpty(param.sort) and param.sort[0] == 'priceAsc'}">
+                    Сначала дешевле
+                </option>
+                <option value="priceDesc" th:selected="${param.sort != null and !#lists.isEmpty(param.sort) and param.sort[0] == 'priceDesc'}">
+                    Сначала дороже
+                </option>
+            </select>
+        </form>
+    </section>
+
     <section th:if="${products != null and !#lists.isEmpty(products)}" class="products-grid">
         <article class="product-card" th:each="product : ${products}">
+            <a class="product-card-link" th:href="@{/products/{id}(id=${product.id})}" th:aria-label="${'Открыть товар ' + product.productName}">
+                Открыть товар
+            </a>
             <div class="product-media">
                 <img
                         class="product-image"
@@ -85,24 +110,18 @@
                     Изображение товара пока не добавлено
                 </div>
             </div>
-            <span class="product-badge">CycleMarket</span>
             <h2 class="product-title" th:text="${product.productName}">Название товара</h2>
             <p class="product-manufacturer" th:text="${product.manufacturer.manufacturerName}">
                 Производитель
             </p>
-            <div class="product-categories" th:if="${product.categories != null and !#sets.isEmpty(product.categories)}">
-                <span class="product-category-tag" th:each="category : ${product.categories}" th:text="${category.name}">
-                    Категория
-                </span>
-            </div>
-            <p class="product-description" th:text="${product.productDescription}">
-                Описание товара
-            </p>
             <div class="product-footer">
                 <span class="product-price" th:text="${product.productPrice + ' ₽'}">0 ₽</span>
-                <a class="product-link" th:href="@{/products/{id}(id=${product.id})}">
-                    Открыть карточку
-                </a>
+                <form class="product-cart-form" th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
+                    <input type="hidden" name="quantity" value="1">
+                    <button class="product-cart-button" type="submit" aria-label="Добавить в корзину">
+                        В корзину
+                    </button>
+                </form>
             </div>
         </article>
     </section>

@@ -4,6 +4,7 @@ import com.example.cyclemarket.entities.Category;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.repos.ProductRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,18 +15,28 @@ public class ProductsService {
     private final ProductRepo productRepo;
     private final CategoryService categoryService;
 
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
-    }
-
-    public List<Product> getProductsByCategory(Long categoryId) {
+    public List<Product> getProducts(Long categoryId, String sort) {
+        Sort sortType = resolveSort(sort);
+        if (categoryId == null) {
+            return productRepo.findAll(sortType);
+        }
         Category categoryById = categoryService.getCategoryById(categoryId);
         if (categoryById.getChildren() == null || categoryById.getChildren().isEmpty()) {
-            return productRepo.findAllByCategories_Id(categoryId);
+            return productRepo.findAllByCategories_Id(categoryId, sortType);
         }
         List<Long> childIds = categoryById.getChildren().stream()
                 .map(Category::getId)
                 .toList();
-        return productRepo.findAllByCategories_IdIn(childIds);
+        return productRepo.findAllByCategories_IdIn(childIds, sortType);
+    }
+
+    private Sort resolveSort(String sort) {
+        if ("priceAsc".equals(sort)) {
+            return Sort.by("productPrice").ascending();
+        }
+        if ("priceDesc".equals(sort)) {
+            return Sort.by("productPrice").descending();
+        }
+        return Sort.unsorted();
     }
 }

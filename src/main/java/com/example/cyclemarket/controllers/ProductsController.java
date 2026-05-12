@@ -18,13 +18,9 @@ public class ProductsController {
 
     @GetMapping
     public String products(@RequestParam(required = false) Long categoryId,
+                           @RequestParam(required = false) String sort,
                            Model model) {
-        if (categoryId == null) {
-            model.addAttribute("products", productsService.getAllProducts());
-        } else {
-            model.addAttribute("products", productsService.getProductsByCategory(categoryId));
-        }
-
+        model.addAttribute("products", productsService.getProducts(categoryId, sort));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         return "products";

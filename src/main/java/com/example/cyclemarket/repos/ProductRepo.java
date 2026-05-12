@@ -1,6 +1,7 @@
 package com.example.cyclemarket.repos;
 
 import com.example.cyclemarket.entities.Product;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     List<Product> findAllById(Iterable<Long> longs);
     List<Product> findAllByCategories_Id(Long categoryId);
     List<Product> findAllByCategories_IdIn(List<Long> childIds);
+
+    List<Product> findAllByCategories_IdIn(List<Long> childIds, Sort sortType);
+
+    List<Product> findAllByCategories_Id(Long categoryId, Sort sortType);
 }
