@@ -29,4 +29,8 @@ public class EmployeeService {
 
         employeeRepo.save(employee);
     }
+
+    public Long getShopIdByEmployeeName(String name) {
+        return employeeRepo.findByUserEmail(name).getShop().getId();
+    }
 }
