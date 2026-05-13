@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Панель администратора</h1>
+            <p>
+                Отсюда можно добавлять новые магазины, сотрудников и новые товары в общий каталог.
+                Это стартовая точка для основных служебных операций администратора.
+            </p>
+
+            <div class="hero-meta" th:if="${adminUsername != null}">
+                <div class="meta-chip">
+                    <span class="meta-label">Администратор</span>
+                    <span class="meta-value" th:text="${adminUsername}">admin@example.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-panel">
+            <span class="panel-title">Зона ответственности</span>
+            <p>
+                Администратор управляет служебными учетными записями, точками хранения и общей
+                структурой каталога. Менеджерские действия с остатками остаются отдельной зоной.
+            </p>
+            <a class="hero-link" th:href="@{/products}">Открыть каталог</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Основные действия</h2>
+            <p>Навигация по первым экранам админки, которые уже можно привязывать к backend.</p>
+        </div>
+
+        <div class="action-grid">
+            <article class="action-card action-card-primary">
+                <span class="action-badge">Employees</span>
+                <h3>Добавить сотрудника</h3>
+                <p>Создание служебной учетной записи и привязка сотрудника к конкретному магазину.</p>
+                <a class="action-link" th:href="@{/admin/employees/new}">Создать сотрудника</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Shops</span>
+                <h3>Добавить магазин</h3>
+                <p>Регистрация новой точки в системе, которая потом будет использоваться в остатках и назначениях.</p>
+                <a class="action-link" th:href="@{/admin/shops/new}">Создать точку</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Shops</span>
+                <h3>Список магазинов</h3>
+                <p>Просмотр уже добавленных точек, чтобы проверять структуру магазинов и складов.</p>
+                <a class="action-link" th:href="@{/admin/shops}">Открыть список</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Catalog</span>
+                <h3>Добавить товар</h3>
+                <p>Создание новой карточки товара с категорией, производителем и главным изображением.</p>
+                <a class="action-link" th:href="@{/products/new}">Создать товар</a>
+            </article>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый сотрудник | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin-form.css}">
+</head>
+<body>
+<main class="admin-form-page">
+    <section class="form-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Создание сотрудника</h1>
+            <p>
+                Администратор создает служебную учетную запись и привязывает сотрудника к одному
+                из существующих магазинов системы.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/admin}">Вернуться в админ-панель</a>
+    </section>
+
+    <section class="form-layout">
+        <form class="admin-form-card" th:action="@{/admin/employees/new}" method="post">
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="firstName">Имя</label>
+                    <input
+                            class="field-input"
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Иван"
+                            th:value="${employeeForm != null ? employeeForm.firstName : ''}"
+                            required>
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="lastName">Фамилия</label>
+                    <input
+                            class="field-input"
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Петров"
+                            th:value="${employeeForm != null ? employeeForm.lastName : ''}"
+                            required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="username">Логин</label>
+                    <input
+                            class="field-input"
+                            id="username"
+                            name="username"
+                            type="text"
+                            maxlength="120"
+                            placeholder="manager_south_01"
+                            th:value="${registerForm != null ? registerForm.username : ''}"
+                            required>
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="password">Пароль</label>
+                    <input
+                            class="field-input"
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Временный пароль"
+                            th:value="${registerForm != null ? registerForm.password : ''}"
+                            required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="phoneNumber">Телефон</label>
+                    <input
+                            class="field-input"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            type="text"
+                            maxlength="50"
+                            placeholder="+7 (900) 000-00-00"
+                            th:value="${employeeForm != null ? employeeForm.phoneNumber : ''}">
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="shopId">Магазин</label>
+                    <select class="field-input field-select" id="shopId" name="shopId" required>
+                        <option value="">Выбери магазин</option>
+                        <option
+                                th:each="shop : ${shops}"
+                                th:value="${shop.id}"
+                                th:text="${shop.shopName}"
+                                th:selected="${employeeForm != null and employeeForm.shopId == shop.id}">
+                            Магазин
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="message message-error" th:if="${error != null}" th:text="${error}">
+                Ошибка создания сотрудника
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Создать сотрудника</button>
+                <span class="form-note">Логин и пароль отправляются отдельным form-object `registerForm`, служебные данные сотрудника идут в `employeeForm`.</span>
+            </div>
+        </form>
+
+        <aside class="info-panel">
+            <div class="panel-card">
+                <h2>Что ожидает backend</h2>
+                <ul class="tips-list">
+                    <li><code>GET /admin/employees/new</code> должен положить в модель <code>employeeForm</code>, <code>registerForm</code> и <code>shops</code>.</li>
+                    <li><code>POST /admin/employees/new</code> принимает поля сотрудника и данные учетной записи в одной HTML-форме.</li>
+                    <li>Для корректной привязки сотрудника селект должен получить реальные магазины из сервиса.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Ограничение</h2>
+                <p>Если список <code>shops</code> не передан в модель, сотрудника нельзя будет корректно привязать к магазину.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

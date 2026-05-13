@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазины | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Список магазинов</h1>
+            <p>
+                Страница показывает все добавленные магазины и склады, которые сервис положил
+                в модель под атрибутом <code>shops</code>.
+            </p>
+        </div>
+
+        <div class="hero-panel">
+            <span class="panel-title">Навигация</span>
+            <p>Отсюда можно быстро вернуться в панель администратора или открыть форму добавления новой точки.</p>
+            <a class="hero-link" th:href="@{/admin/shops/new}">Добавить магазин</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Все точки</h2>
+            <p>Если список пуст, значит в базе еще нет магазинов или сервис пока ничего не вернул.</p>
+        </div>
+
+        <div class="action-grid" th:if="${shops != null and !#lists.isEmpty(shops)}">
+            <article class="action-card" th:each="shop : ${shops}">
+                <span class="action-badge">Shop</span>
+                <h3 th:text="${shop.shopName}">Название магазина</h3>
+                <p th:text="${shop.address}">Адрес магазина</p>
+            </article>
+        </div>
+
+        <section class="dashboard-section-soft" th:if="${shops == null or #lists.isEmpty(shops)}">
+            Магазины пока не добавлены.
+        </section>
+    </section>
+</main>
+</body>
+</html>

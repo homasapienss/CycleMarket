@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новый магазин | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin-form.css}">
+</head>
+<body>
+<main class="admin-form-page">
+    <section class="form-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Добавление нового магазина</h1>
+            <p>
+                Эта форма соответствует текущему DTO магазина и пока принимает только название и адрес.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/admin}">Вернуться в админ-панель</a>
+    </section>
+
+    <section class="form-layout">
+        <form class="admin-form-card" th:action="@{/admin/shops/new}" method="post">
+            <div class="form-block">
+                <label class="field-label" for="name">Название магазина</label>
+                <input
+                        class="field-input"
+                        id="name"
+                        name="name"
+                        type="text"
+                        maxlength="255"
+                        placeholder="Например, CycleMarket Склад Юг"
+                        th:value="${shopForm != null ? shopForm.name : ''}"
+                        required>
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="address">Адрес</label>
+                <input
+                        class="field-input"
+                        id="address"
+                        name="address"
+                        type="text"
+                        maxlength="255"
+                        placeholder="Город, улица, дом"
+                        th:value="${shopForm != null ? shopForm.address : ''}"
+                        required>
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Сохранить магазин</button>
+                <span class="form-note">Текущая backend-модель магазина еще не принимает тип точки или описание.</span>
+            </div>
+        </form>
+
+        <aside class="info-panel">
+            <div class="panel-card">
+                <h2>Что ожидает backend</h2>
+                <ul class="tips-list">
+                    <li><code>GET /admin/shops/new</code> должен положить в модель <code>shopForm</code>.</li>
+                    <li><code>POST /admin/shops/new</code> принимает поля <code>name</code> и <code>address</code>.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Текущий scope</h2>
+                <p>Когда DTO магазина расширится, сюда можно будет вернуть тип точки, описание и другие служебные поля.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>
