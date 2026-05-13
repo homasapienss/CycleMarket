@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Остатки точки | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/manager-stock.css}">
+</head>
+<body>
+<main class="stock-page">
+    <section class="stock-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Manager</span>
+            <h1>Товары моего магазина</h1>
+            <p>
+                Здесь отображаются товары, которые уже привязаны к текущей точке через таблицу
+                <code>stock</code>. Страница ожидает список <code>shopStock</code> в модели.
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            <a class="ghost-link" th:href="@{/manager}">Назад в панель</a>
+            <a class="primary-link" th:href="@{/manager/stock/new}">Добавить новый товар</a>
+        </div>
+    </section>
+
+    <section class="stock-section" th:if="${shopStock != null and !#lists.isEmpty(shopStock)}">
+        <div class="section-head">
+            <h2>Текущие остатки</h2>
+            <p>Каждая строка показывает товар и количество, которое числится за магазином менеджера.</p>
+        </div>
+
+        <div class="stock-table-shell">
+            <table class="stock-table">
+                <thead>
+                <tr>
+                    <th>ID товара</th>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Карточка</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${shopStock}">
+                    <td th:text="${item.id != null ? item.id : '-'}">1</td>
+                    <td th:text="${item.productName != null ? item.productName : 'Товар не найден'}">Товар</td>
+                    <td th:text="${item.productPrice != null ? item.productPrice + ' ₽' : '-'}">0 ₽</td>
+                    <td>
+                        <span class="quantity-badge" th:text="${item.quantity}">0</span>
+                    </td>
+                    <td>
+                        <a class="table-link"
+                           th:if="${item.id != null}"
+                           th:href="@{/products/{id}(id=${item.id})}">
+                            Открыть товар
+                        </a>
+                        <span th:if="${item.id == null}">-</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="empty-state" th:if="${shopStock == null or #lists.isEmpty(shopStock)}">
+        <h2>В этой точке пока нет привязанных товаров</h2>
+        <p>Сначала добавь товары из общего каталога в наличие магазина, а потом они появятся в списке остатков.</p>
+        <a class="primary-link" th:href="@{/manager/stock/new}">Перейти к добавлению товаров</a>
+    </section>
+</main>
+</body>
+</html>

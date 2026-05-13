@@ -3,7 +3,9 @@ package com.example.cyclemarket.services.entity;
 import com.example.cyclemarket.dto.CreateEmployeeReq;
 import com.example.cyclemarket.dto.auth.AuthReq;
 import com.example.cyclemarket.entities.Employee;
+import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.entities.User;
+import com.example.cyclemarket.exception.notfound.EmployeeNotFoundException;
 import com.example.cyclemarket.repos.EmployeeRepo;
 import com.example.cyclemarket.services.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,14 @@ public class EmployeeService {
     }
 
     public Long getShopIdByEmployeeName(String name) {
-        return employeeRepo.findByUserEmail(name).getShop().getId();
+        return employeeRepo.findByUserEmail(name)
+                .orElseThrow(EmployeeNotFoundException::new)
+                .getShop()
+                .getId();
+    }
+    public Shop getCurrentManagerShop(String name) {
+        return employeeRepo.findByUserEmail(name)
+                .orElseThrow(EmployeeNotFoundException::new)
+                .getShop();
     }
 }

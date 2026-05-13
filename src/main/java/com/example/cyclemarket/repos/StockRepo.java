@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface StockRepo extends JpaRepository<Stock, Long> {
     List<Stock> findByShopId(Long shopId);
+
+    boolean existsByShopIdAndProductId(Long id, Long productId);
+
 }

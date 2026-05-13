@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить товар в магазин | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/manager-stock.css}">
+</head>
+<body>
+<main class="stock-page">
+    <section class="stock-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Manager</span>
+            <h1>Товары, которых еще нет в магазине</h1>
+            <p>
+                Здесь должны отображаться товары из общего каталога, которых еще нет в
+                <code>stock</code> текущей точки. Страница ожидает список <code>notShopStock</code>.
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            <a class="ghost-link" th:href="@{/manager}">Назад в панель</a>
+            <a class="ghost-link" th:href="@{/manager/stock}">Мои остатки</a>
+        </div>
+    </section>
+
+    <section class="stock-section" th:if="${notShopStock != null and !#lists.isEmpty(notShopStock)}">
+        <div class="section-head">
+            <h2>Доступные для привязки товары</h2>
+            <p>Список удобно использовать как старт для следующего шага: формы ввода количества и создания записи в stock.</p>
+        </div>
+
+        <div class="card-grid">
+            <article class="product-card" th:each="product : ${notShopStock}">
+                <div class="product-card-head">
+                    <span class="card-badge">Catalog Product</span>
+                    <span class="card-id" th:text="${'ID ' + product.id}">ID 1</span>
+                </div>
+
+                <h3 th:text="${product.productName}">Название товара</h3>
+                <p class="product-meta"
+                   th:text="${product.manufacturer != null ? product.manufacturer.manufacturerName : 'Производитель не указан'}">
+                    Производитель
+                </p>
+                <p class="product-price" th:text="${product.productPrice != null ? product.productPrice + ' ₽' : 'Цена не указана'}">
+                    0 ₽
+                </p>
+
+                <div class="product-actions">
+                    <a class="table-link" th:href="@{/products/{id}(id=${product.id})}">Открыть карточку</a>
+                    <form class="stock-add-form" th:action="@{/manager/stock/new}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+
+                        <label class="quantity-label" th:for="${'quantity-' + product.id}">Количество для добавления</label>
+                        <div class="quantity-row">
+                            <input
+                                    class="quantity-input"
+                                    th:id="${'quantity-' + product.id}"
+                                    name="quantity"
+                                    type="number"
+                                    min="1"
+                                    step="1"
+                                    value="1"
+                                    required>
+                            <button class="submit-button" type="submit">Добавить на склад</button>
+                        </div>
+                    </form>
+                    <span class="helper-note">Для менеджера магазин определяется на backend по текущему пользователю.</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="empty-state" th:if="${notShopStock == null or #lists.isEmpty(notShopStock)}">
+        <h2>Все товары каталога уже добавлены в магазин</h2>
+        <p>Для текущей точки не осталось новых товаров, которые можно привязать через stock.</p>
+        <a class="primary-link" th:href="@{/manager/stock}">Посмотреть текущие остатки</a>
+    </section>
+</main>
+</body>
+</html>
