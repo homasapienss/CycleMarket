@@ -53,15 +53,17 @@ public class AdminController {
         return "admin/shop-new";
     }
 
+    @PostMapping("/shops/new")
+    public String createShop(@ModelAttribute("shopForm") CreateShopReq createShopReq) {
+        shopService.createShop(createShopReq);
+        return "redirect:/admin";
+    }
+
     @GetMapping("/shops")
     public String getAllShopsPage(Model model) {
         model.addAttribute("shops", shopService.getAllShops());
         return "admin/shops";
     }
 
-    @PostMapping("/shops/new")
-    public String createShop(@ModelAttribute("shopForm") CreateShopReq createShopReq) {
-        shopService.createShop(createShopReq);
-        return "redirect:/admin";
-    }
+
 }
