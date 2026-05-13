@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель менеджера | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/manager.css}">
+</head>
+<body>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Manager</span>
+            <h1>Панель менеджера точки</h1>
+            <p>
+                Здесь можно управлять остатками только того магазина или склада, к которому
+                привязан текущий менеджер.
+            </p>
+
+            <div class="hero-meta">
+                <div class="meta-chip" th:if="${managerShopName != null}">
+                    <span class="meta-label">Точка</span>
+                    <span class="meta-value" th:text="${managerShopName}">Название магазина</span>
+                </div>
+                <div class="meta-chip" th:if="${managerUsername != null}">
+                    <span class="meta-label">Пользователь</span>
+                    <span class="meta-value" th:text="${managerUsername}">manager@example.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-panel">
+            <span class="panel-title">Основной сценарий</span>
+            <p>
+                Менеджер не выбирает чужой магазин вручную. Все действия с остатками должны
+                опираться на магазин, полученный на backend через текущего пользователя.
+            </p>
+            <a class="hero-link" th:href="@{/products}">Перейти в каталог</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Управление остатками</h2>
+            <p>Блоки ниже можно поэтапно привязывать к реальным страницам и обработчикам.</p>
+        </div>
+
+        <div class="action-grid">
+            <article class="action-card action-card-primary">
+                <span class="action-badge">Stock</span>
+                <h3>Остатки моей точки</h3>
+                <p>Список всех товаров, которые уже привязаны к текущему магазину или складу.</p>
+                <a class="action-link" th:href="@{/manager/stock}">Открыть остатки</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Stock</span>
+                <h3>Добавить товар в наличие</h3>
+                <p>Привязка существующего товара каталога к текущей точке и ввод начального количества.</p>
+                <a class="action-link" th:href="@{/manager/stock/new}">Добавить наличие</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Stock</span>
+                <h3>Изменить количество</h3>
+                <p>Корректировка остатков по уже существующим позициям без доступа к чужим точкам.</p>
+                <a class="action-link" th:href="@{/manager/stock/edit}">Изменить остатки</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section dashboard-section-soft">
+        <div class="section-heading">
+            <h2>Ограничения роли</h2>
+            <p>Эти правила можно использовать как ориентир для backend-проверок и навигации.</p>
+        </div>
+
+        <div class="rule-list">
+            <div class="rule-item">Менеджер работает только с остатками своей точки.</div>
+            <div class="rule-item">Менеджер не должен менять свои учетные данные и привязку к магазину.</div>
+            <div class="rule-item">Создание и управление сотрудниками остается в зоне ответственности администратора.</div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

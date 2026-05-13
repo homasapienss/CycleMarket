@@ -24,7 +24,7 @@ public class ProductController {
         return "product";
     }
     @GetMapping("/new")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String createForm(Model model) {
         model.addAttribute("productForm", new ProductCreateRequest());
         model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
@@ -33,7 +33,7 @@ public class ProductController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String createProduct(@ModelAttribute("productForm") ProductCreateRequest productForm) throws Exception {
         productManagementService.createProduct(productForm);
         return "redirect:/products";

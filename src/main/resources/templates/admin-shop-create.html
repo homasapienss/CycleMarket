@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новая точка | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin-form.css}">
+</head>
+<body>
+<main class="admin-form-page">
+    <section class="form-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Добавление магазина или склада</h1>
+            <p>
+                Используй эту форму, чтобы зарегистрировать новую точку хранения или продажи,
+                к которой потом можно будет привязывать сотрудников и остатки.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/admin}">Вернуться в админ-панель</a>
+    </section>
+
+    <section class="form-layout">
+        <form class="admin-form-card" th:action="@{/admin/shops/new}" method="post">
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="shopName">Название точки</label>
+                    <input
+                            class="field-input"
+                            id="shopName"
+                            name="shopName"
+                            type="text"
+                            maxlength="255"
+                            placeholder="Например, CycleMarket Склад Юг"
+                            th:value="${shopForm != null ? shopForm.shopName : ''}"
+                            required>
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="shopType">Тип точки</label>
+                    <select class="field-input field-select" id="shopType" name="shopType" required>
+                        <option value="">Выбери тип</option>
+                        <option value="STORE" th:selected="${shopForm != null and shopForm.shopType == 'STORE'}">Магазин</option>
+                        <option value="WAREHOUSE" th:selected="${shopForm != null and shopForm.shopType == 'WAREHOUSE'}">Склад</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="address">Адрес</label>
+                <input
+                        class="field-input"
+                        id="address"
+                        name="address"
+                        type="text"
+                        maxlength="255"
+                        placeholder="Город, улица, дом"
+                        th:value="${shopForm != null ? shopForm.address : ''}"
+                        required>
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="description">Описание точки</label>
+                <textarea
+                        class="field-input field-textarea"
+                        id="description"
+                        name="description"
+                        rows="6"
+                        placeholder="Например, пункт выдачи с локальным складом или центральный склад."
+                        th:text="${shopForm != null ? shopForm.description : ''}"></textarea>
+            </div>
+
+            <div class="message message-error" th:if="${errorMessage != null}" th:text="${errorMessage}">
+                Ошибка создания точки
+            </div>
+
+            <div class="message message-success" th:if="${successMessage != null}" th:text="${successMessage}">
+                Точка успешно создана
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Сохранить точку</button>
+                <span class="form-note">После создания магазина или склада его можно будет использовать при назначении менеджеров.</span>
+            </div>
+        </form>
+
+        <aside class="info-panel">
+            <div class="panel-card">
+                <h2>Что ожидает backend</h2>
+                <ul class="tips-list">
+                    <li><code>GET /admin/shops/new</code> должен положить в модель пустой <code>shopForm</code> при необходимости.</li>
+                    <li><code>POST /admin/shops/new</code> должен принять как минимум <code>shopName</code>, <code>shopType</code> и <code>address</code>.</li>
+                    <li>Опционально можно сохранить <code>description</code>, если оно есть в будущей модели точки.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Назначение формы</h2>
+                <p>Эта страница нужна только администратору. Менеджер не должен создавать или редактировать точки.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

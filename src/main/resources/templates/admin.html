@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Панель администратора</h1>
+            <p>
+                Центр управления сотрудниками, магазинами и служебными операциями. Отсюда можно
+                развести отдельные экраны для создания менеджеров, привязки к точкам и контроля каталога.
+            </p>
+
+            <div class="hero-meta" th:if="${adminUsername != null}">
+                <div class="meta-chip">
+                    <span class="meta-label">Администратор</span>
+                    <span class="meta-value" th:text="${adminUsername}">admin@example.com</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-panel">
+            <span class="panel-title">Зона ответственности</span>
+            <p>
+                Именно администратор управляет учетными записями сотрудников, назначает роли и
+                определяет, к какому магазину привязан каждый менеджер.
+            </p>
+            <a class="hero-link" th:href="@{/products}">Открыть каталог</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Управление системой</h2>
+            <p>Карточки можно использовать как стартовую навигацию для будущих страниц админки.</p>
+        </div>
+
+        <div class="action-grid">
+            <article class="action-card action-card-primary">
+                <span class="action-badge">Employees</span>
+                <h3>Добавить сотрудника</h3>
+                <p>Создание учетной записи менеджера или другого работника с ролью и привязкой к точке.</p>
+                <a class="action-link" th:href="@{/admin/employees/new}">Создать сотрудника</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Shops</span>
+                <h3>Добавить магазин или склад</h3>
+                <p>Регистрация новой точки в системе с названием, адресом и базовым описанием.</p>
+                <a class="action-link" th:href="@{/admin/shops/new}">Создать точку</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Catalog</span>
+                <h3>Добавить товар</h3>
+                <p>Создание новой карточки товара в общем каталоге с категорией, производителем и изображением.</p>
+                <a class="action-link" th:href="@{/products/new}">Создать товар</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Admin</span>
+                <h3>Следующие функции</h3>
+                <p>Позже сюда можно вынести список сотрудников, список магазинов, редактирование ролей и аудит операций.</p>
+                <a class="action-link" th:href="@{/admin}">Остаться в панели</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section dashboard-section-soft">
+        <div class="section-heading">
+            <h2>Правила доступа</h2>
+            <p>Эта часть страницы напоминает о границе между ролями и их полномочиями.</p>
+        </div>
+
+        <div class="rule-list">
+            <div class="rule-item">Администратор создает пользователей и задает им роли.</div>
+            <div class="rule-item">Администратор привязывает менеджера к конкретной точке.</div>
+            <div class="rule-item">Менеджер не управляет чужими остатками и не меняет свою служебную привязку.</div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
