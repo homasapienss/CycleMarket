@@ -20,14 +20,25 @@ public class AuthService {
 
     @Transactional
     public void register(String username, String password) {
-        if (userRepo.existsByEmail(username)) {
+        createUserWithRole(username, password, "ROLE_CUSTOMER");
+    }
+    @Transactional
+    public User registerEmployee(String username, String password) {
+        return createUserWithRole(username, password, "ROLE_MANAGER");
+    }
+    private User createUserWithRole(String email, String password, String roleName) {
+        if (userRepo.existsByEmail(email)) {
             throw new UserAlreadyExists();
         }
+
+        Role role = roleRepo.findByName(roleName)
+                .orElseThrow(RoleNotFoundException::new);
+
         User user = new User();
-        user.setEmail(username);
+        user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(password));
-        Role role = roleRepo.findByName("ROLE_CUSTOMER").orElseThrow(RoleNotFoundException::new);
         user.getRoles().add(role);
-        userRepo.save(user);
+
+        return userRepo.save(user);
     }
 }
