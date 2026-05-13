@@ -22,7 +22,7 @@ public class AdminController {
 
     @GetMapping
     public String getAdminPage() {
-        return "admin";
+        return "admin/admin";
     }
 
     @GetMapping("/employees/new")
@@ -30,7 +30,7 @@ public class AdminController {
         model.addAttribute("employeeForm", new CreateEmployeeReq());
         model.addAttribute("registerForm", new AuthReq());
         model.addAttribute("shops", shopService.getAllShops());
-        return "employee-new";
+        return "admin/employee-new";
     }
 
     @PostMapping("/employees/new")
@@ -42,7 +42,7 @@ public class AdminController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("employeeForm", createEmployeeReq);
             model.addAttribute("registerForm", authReq);
-            return "employee-new";
+            return "admin/employee-new";
         }
         return "redirect:/admin";
     }
@@ -50,13 +50,13 @@ public class AdminController {
     @GetMapping("/shops/new")
     public String getNewShopPage(Model model) {
         model.addAttribute("shopForm", new CreateShopReq());
-        return "shop-new";
+        return "admin/shop-new";
     }
 
     @GetMapping("/shops")
     public String getAllShopsPage(Model model) {
         model.addAttribute("shops", shopService.getAllShops());
-        return "shops";
+        return "admin/shops";
     }
 
     @PostMapping("/shops/new")
