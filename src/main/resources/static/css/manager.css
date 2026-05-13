@@ -157,6 +157,37 @@ body {
     font-size: 1.7rem;
 }
 
+.role-block + .role-block {
+    margin-top: 22px;
+}
+
+.role-block-head {
+    margin-bottom: 18px;
+}
+
+.role-block-head h3 {
+    margin: 8px 0 10px;
+    font-size: 1.35rem;
+}
+
+.role-block-head p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.role-badge {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 .action-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -174,6 +205,12 @@ body {
 .action-card-primary {
     background:
         linear-gradient(180deg, rgba(47, 125, 86, 0.11), rgba(255, 255, 255, 0.98)),
+        var(--surface-strong);
+}
+
+.action-card-admin {
+    background:
+        linear-gradient(180deg, rgba(27, 42, 34, 0.06), rgba(255, 255, 255, 0.98)),
         var(--surface-strong);
 }
 

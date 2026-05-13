@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,8 +13,9 @@
             <span class="hero-kicker">CycleMarket Manager</span>
             <h1>Панель менеджера точки</h1>
             <p>
-                Здесь можно управлять остатками только того магазина или склада, к которому
-                привязан текущий менеджер.
+                Эта панель используется для работы с остатками. Набор доступных действий зависит
+                от роли текущего пользователя: менеджер работает только со своей точкой, а администратор
+                может управлять остатками по всем магазинам и складам.
             </p>
 
             <div class="hero-meta">
@@ -32,8 +33,8 @@
         <div class="hero-panel">
             <span class="panel-title">Основной сценарий</span>
             <p>
-                Менеджер не выбирает чужой магазин вручную. Все действия с остатками должны
-                опираться на магазин, полученный на backend через текущего пользователя.
+                Для менеджера backend должен брать магазин из текущего сотрудника. Для администратора
+                здесь можно открывать более общий сценарий без жесткой привязки к одной точке.
             </p>
             <a class="hero-link" th:href="@{/products}">Перейти в каталог</a>
         </div>
@@ -42,30 +43,69 @@
     <section class="dashboard-section">
         <div class="section-heading">
             <h2>Управление остатками</h2>
-            <p>Блоки ниже можно поэтапно привязывать к реальным страницам и обработчикам.</p>
+            <p>Ниже разделены действия для менеджера своей точки и расширенные действия администратора.</p>
         </div>
 
-        <div class="action-grid">
-            <article class="action-card action-card-primary">
-                <span class="action-badge">Stock</span>
-                <h3>Остатки моей точки</h3>
-                <p>Список всех товаров, которые уже привязаны к текущему магазину или складу.</p>
-                <a class="action-link" th:href="@{/manager/stock}">Открыть остатки</a>
-            </article>
+        <div class="role-block" sec:authorize="hasRole('MANAGER')">
+            <div class="role-block-head">
+                <span class="role-badge">Manager</span>
+                <h3>Сценарий менеджера своей точки</h3>
+                <p>Эти действия должны работать только в рамках магазина, к которому привязан текущий сотрудник.</p>
+            </div>
 
-            <article class="action-card">
-                <span class="action-badge">Stock</span>
-                <h3>Добавить товар в наличие</h3>
-                <p>Привязка существующего товара каталога к текущей точке и ввод начального количества.</p>
-                <a class="action-link" th:href="@{/manager/stock/new}">Добавить наличие</a>
-            </article>
+            <div class="action-grid">
+                <article class="action-card action-card-primary">
+                    <span class="action-badge">Stock</span>
+                    <h3>Остатки моей точки</h3>
+                    <p>Список всех товаров, которые уже привязаны к текущему магазину или складу.</p>
+                    <a class="action-link" th:href="@{/manager/stock}">Открыть остатки</a>
+                </article>
 
-            <article class="action-card">
-                <span class="action-badge">Stock</span>
-                <h3>Изменить количество</h3>
-                <p>Корректировка остатков по уже существующим позициям без доступа к чужим точкам.</p>
-                <a class="action-link" th:href="@{/manager/stock/edit}">Изменить остатки</a>
-            </article>
+                <article class="action-card">
+                    <span class="action-badge">Stock</span>
+                    <h3>Добавить товар в наличие</h3>
+                    <p>Привязка существующего товара каталога к текущей точке и ввод начального количества.</p>
+                    <a class="action-link" th:href="@{/manager/stock/new}">Добавить наличие</a>
+                </article>
+
+                <article class="action-card">
+                    <span class="action-badge">Stock</span>
+                    <h3>Изменить количество</h3>
+                    <p>Корректировка остатков по уже существующим позициям без доступа к чужим точкам.</p>
+                    <a class="action-link" th:href="@{/manager/stock/edit}">Изменить остатки</a>
+                </article>
+            </div>
+        </div>
+
+        <div class="role-block role-block-admin" sec:authorize="hasRole('ADMIN')">
+            <div class="role-block-head">
+                <span class="role-badge">Admin</span>
+                <h3>Расширенное управление остатками</h3>
+                <p>Администратор не ограничен одной точкой и должен иметь доступ к управлению остатками по всем магазинам и складам.</p>
+            </div>
+
+            <div class="action-grid action-grid-admin">
+                <article class="action-card action-card-admin">
+                    <span class="action-badge">Stock</span>
+                    <h3>Все остатки по точкам</h3>
+                    <p>Общий список наличия с возможностью выбирать конкретный магазин или склад для дальнейших действий.</p>
+                    <a class="action-link" th:href="@{/admin/stock}">Открыть все остатки</a>
+                </article>
+
+                <article class="action-card action-card-admin">
+                    <span class="action-badge">Stock</span>
+                    <h3>Добавить наличие в любую точку</h3>
+                    <p>Администратор сам выбирает магазин и товар, после чего задает начальное количество.</p>
+                    <a class="action-link" th:href="@{/admin/stock/new}">Добавить наличие</a>
+                </article>
+
+                <article class="action-card action-card-admin">
+                    <span class="action-badge">Stock</span>
+                    <h3>Изменить остатки точки</h3>
+                    <p>Корректировка наличия по любой точке без ограничений текущим магазином менеджера.</p>
+                    <a class="action-link" th:href="@{/admin/stock/edit}">Управлять остатками</a>
+                </article>
+            </div>
         </div>
     </section>
 
@@ -77,6 +117,7 @@
 
         <div class="rule-list">
             <div class="rule-item">Менеджер работает только с остатками своей точки.</div>
+            <div class="rule-item">Администратор может управлять остатками любой точки без привязки к одному магазину.</div>
             <div class="rule-item">Менеджер не должен менять свои учетные данные и привязку к магазину.</div>
             <div class="rule-item">Создание и управление сотрудниками остается в зоне ответственности администратора.</div>
         </div>
