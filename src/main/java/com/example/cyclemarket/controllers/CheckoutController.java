@@ -20,6 +20,6 @@ public class CheckoutController {
                               HttpSession session) {
         model.addAttribute("cartInfo", sessionCartService.getCartView(session));
         model.addAttribute("checkoutForm", new CheckoutRequest());
-        return "checkout";
+        return "order/checkout";
     }
 }

@@ -21,7 +21,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public String product(@PathVariable String id, Model model) {
         model.addAttribute("product", productManagementService.getProductById(Long.valueOf(id)));
-        return "product";
+        return "product/product";
     }
     @GetMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
@@ -29,7 +29,7 @@ public class ProductController {
         model.addAttribute("productForm", new ProductCreateRequest());
         model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
         model.addAttribute("categories", categoryService.getWeakCategories());
-        return "product-create";
+        return "product/product-create";
     }
 
     @PostMapping("/new")

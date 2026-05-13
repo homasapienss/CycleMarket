@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ManagerController {
     @GetMapping
     public String getManagerPage(){
-        return "manager";
+        return "manager/manager";
     }
 }

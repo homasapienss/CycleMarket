@@ -23,14 +23,14 @@ public class OrderController {
     public String order(Model model,
                         Authentication authentication) {
         model.addAttribute("ordersViews", orderService.getOrders(authentication.getName()));
-        return "orders";
+        return "order/orders";
     }
 
     @GetMapping("/{id}")
     public String order(@PathVariable Long id, Model model,
                         Authentication authentication) {
         model.addAttribute("orderView", orderService.getOrder(id, authentication.getName()));
-        return "order";
+        return "order/order";
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class OrderController {
                               Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("cartInfo", sessionCartService.getCartView(session));
-            return "checkout";
+            return "order/checkout";
         }
         orderService.createOrder(authentication.getName(), session, checkoutRequest);
         return "redirect:/orders";

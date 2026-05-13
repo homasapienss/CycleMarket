@@ -23,6 +23,6 @@ public class ProductsController {
         model.addAttribute("products", productsService.getProducts(categoryId, sort));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);
-        return "products";
+        return "product/products";
     }
 }

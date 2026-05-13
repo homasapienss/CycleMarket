@@ -18,12 +18,12 @@ public class AuthController {
 
     @GetMapping("/sign-in")
     public String showSignInPage(Authentication authentication) {
-        return isAuthenticated(authentication) ? "redirect:/products" : "sign-in";
+        return isAuthenticated(authentication) ? "redirect:/products" : "auth/sign-in";
     }
 
     @GetMapping("/sign-up")
     public String showSignUpPage(Authentication authentication) {
-        return isAuthenticated(authentication) ? "redirect:/products" : "sign-up";
+        return isAuthenticated(authentication) ? "redirect:/products" : "auth/sign-up";
     }
 
     @PostMapping("/sign-up")
@@ -32,7 +32,7 @@ public class AuthController {
             authService.register(authReq.getUsername(), authReq.getPassword());
         } catch (Exception e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "sign-up";
+            return "auth/sign-up";
         }
         return "redirect:/sign-in";
     }
