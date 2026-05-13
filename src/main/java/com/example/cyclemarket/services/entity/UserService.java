@@ -1,4 +1,4 @@
-package com.example.cyclemarket.services;
+package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.entities.User;
 import com.example.cyclemarket.exception.notfound.UserNotFoundException;

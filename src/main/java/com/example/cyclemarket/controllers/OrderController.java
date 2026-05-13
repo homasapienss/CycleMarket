@@ -1,7 +1,7 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.CheckoutRequest;
-import com.example.cyclemarket.services.OrderService;
+import com.example.cyclemarket.services.entity.OrderService;
 import com.example.cyclemarket.services.SessionCartService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

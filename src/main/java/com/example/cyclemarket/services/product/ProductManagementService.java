@@ -1,4 +1,4 @@
-package com.example.cyclemarket.services;
+package com.example.cyclemarket.services.product;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
 import com.example.cyclemarket.entities.Category;
@@ -7,6 +7,8 @@ import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.ProductImage;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ProductRepo;
+import com.example.cyclemarket.services.entity.CategoryService;
+import com.example.cyclemarket.services.entity.ManufacturerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

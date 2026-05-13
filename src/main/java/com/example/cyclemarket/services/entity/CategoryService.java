@@ -1,4 +1,4 @@
-package com.example.cyclemarket.services;
+package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.entities.Category;
 import com.example.cyclemarket.exception.notfound.CategoryNotFoundException;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

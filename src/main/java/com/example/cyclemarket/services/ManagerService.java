@@ -4,6 +4,7 @@ import com.example.cyclemarket.dto.ProductStock;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.Stock;
 import com.example.cyclemarket.repos.StockRepo;
+import com.example.cyclemarket.services.entity.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

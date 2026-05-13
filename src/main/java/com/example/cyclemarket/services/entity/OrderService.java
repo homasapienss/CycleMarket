@@ -1,4 +1,4 @@
-package com.example.cyclemarket.services;
+package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.dto.CheckoutRequest;
 import com.example.cyclemarket.dto.cart.CartSnapshot;
@@ -13,6 +13,7 @@ import com.example.cyclemarket.exception.notfound.UserNotFoundException;
 import com.example.cyclemarket.repos.OrderRepo;
 import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.repos.UserRepo;
+import com.example.cyclemarket.services.SessionCartService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,9 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
-import com.example.cyclemarket.services.CategoryService;
-import com.example.cyclemarket.services.ManufacturerService;
-import com.example.cyclemarket.services.ProductManagementService;
+import com.example.cyclemarket.services.entity.CategoryService;
+import com.example.cyclemarket.services.entity.ManufacturerService;
+import com.example.cyclemarket.services.product.ProductManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

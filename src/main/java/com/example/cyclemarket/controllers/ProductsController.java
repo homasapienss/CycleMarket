@@ -1,7 +1,7 @@
 package com.example.cyclemarket.controllers;
 
-import com.example.cyclemarket.services.CategoryService;
-import com.example.cyclemarket.services.ProductsService;
+import com.example.cyclemarket.services.entity.CategoryService;
+import com.example.cyclemarket.services.product.ProductsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

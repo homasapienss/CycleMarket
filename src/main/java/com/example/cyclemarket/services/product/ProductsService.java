@@ -1,8 +1,9 @@
-package com.example.cyclemarket.services;
+package com.example.cyclemarket.services.product;
 
 import com.example.cyclemarket.entities.Category;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.repos.ProductRepo;
+import com.example.cyclemarket.services.entity.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
