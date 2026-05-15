@@ -12,6 +12,12 @@ public class UserService {
     private final UserRepo userRepo;
 
     public User getUserById(Long userId) {
-        return userRepo.findById(userId).orElseThrow(UserNotFoundException::new);
+        return userRepo.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    public User getByEmail(String email) {
+        return userRepo.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
     }
 }

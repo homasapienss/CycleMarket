@@ -9,11 +9,10 @@ import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.*;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
-import com.example.cyclemarket.exception.notfound.UserNotFoundException;
 import com.example.cyclemarket.repos.OrderRepo;
 import com.example.cyclemarket.repos.ProductRepo;
-import com.example.cyclemarket.repos.UserRepo;
 import com.example.cyclemarket.services.SessionCartService;
+import com.example.cyclemarket.services.StockService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,9 +26,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderService {
     private final SessionCartService sessionCartService;
-    private final UserRepo userRepo;
+    private final UserService userService;
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
+    private final StockService stockService;
 
     @Transactional
     public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest) {
@@ -43,7 +43,8 @@ public class OrderService {
                 .map(CartSnapshotItem::getProductId)
                 .toList();
 
-        Map<Long, Product> productsById = productRepo.findAllById(productIds).stream()
+        Map<Long, Product> productsById = productRepo.findAllById(productIds)
+                .stream()
                 .collect(Collectors.toMap(Product::getId, product -> product));
 
         Order order = new Order();
@@ -52,7 +53,7 @@ public class OrderService {
         order.setRecipientPhone(checkoutRequest.getRecipientPhone());
         order.setComment(checkoutRequest.getComment());
         order.setStatus(OrderStatus.NEW);
-        order.setUser(userRepo.findByEmail(email).orElseThrow(UserNotFoundException::new));
+        order.setUser(userService.getByEmail(email));
         order.setTotalPrice(cartSnapshot.getTotalPrice());
         List<OrderItem> orderItems = cartSnapshot.getItems()
                 .stream()
@@ -110,7 +111,7 @@ public class OrderService {
 
     @Transactional
     public List<OrderView> getOrders(String email) {
-        List<Order> ordersByUser = orderRepo.findOrdersByUser(userRepo.findByEmail(email).orElseThrow(UserNotFoundException::new));
+        List<Order> ordersByUser = orderRepo.findOrdersByUser(userService.getByEmail(email));
 
         return ordersByUser.stream().map(
                 order -> new OrderView(
