@@ -27,7 +27,7 @@ public class EmployeeService {
         employee.setFirstName(employeeReq.getFirstName());
         employee.setLastName(employeeReq.getLastName());
         employee.setPhoneNumber(employeeReq.getPhoneNumber());
-        employee.setShop(shopService.getShopById(employeeReq.getShopId()));
+        employee.setShop(shopService.getById(employeeReq.getShopId()));
         employee.setUser(user);
 
         employeeRepo.save(employee);

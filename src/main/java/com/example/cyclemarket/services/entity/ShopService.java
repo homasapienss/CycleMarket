@@ -14,7 +14,7 @@ import java.util.List;
 public class ShopService {
     private final ShopRepo shopRepo;
 
-    public Shop getShopById(Long shopId) {
+    public Shop getById(Long shopId) {
         return shopRepo.findById(shopId).orElseThrow(ShopNotFoundException::new);
     }
 
@@ -27,5 +27,10 @@ public class ShopService {
 
     public List<Shop> getAllShops() {
         return shopRepo.findAll();
+    }
+
+    public Shop getByName(String selectedShopName) {
+        return shopRepo.findByShopName(selectedShopName)
+                .orElseThrow(ShopNotFoundException::new);
     }
 }

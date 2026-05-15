@@ -1,6 +1,7 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.CheckoutRequest;
+import com.example.cyclemarket.services.ShopContextService;
 import com.example.cyclemarket.services.entity.OrderService;
 import com.example.cyclemarket.services.SessionCartService;
 import jakarta.servlet.http.HttpSession;
@@ -18,18 +19,26 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
     private final SessionCartService sessionCartService;
+    private final ShopContextService shopContextService;
 
     @GetMapping
     public String order(Model model,
-                        Authentication authentication) {
+                        Authentication authentication,
+                        HttpSession session) {
         model.addAttribute("ordersViews", orderService.getOrders(authentication.getName()));
+        model.addAttribute("shops", shopContextService.getAllShops());
+        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/orders";
     }
 
     @GetMapping("/{id}")
-    public String order(@PathVariable Long id, Model model,
-                        Authentication authentication) {
+    public String order(@PathVariable Long id,
+                        Model model,
+                        Authentication authentication,
+                        HttpSession session) {
         model.addAttribute("orderView", orderService.getOrder(id, authentication.getName()));
+        model.addAttribute("shops", shopContextService.getAllShops());
+        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/order";
     }
 

@@ -1,6 +1,7 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.services.SessionCartService;
+import com.example.cyclemarket.services.ShopContextService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class CartController {
     private final SessionCartService sessionCartService;
+    private final ShopContextService shopContextService;
 
     @GetMapping
     public String getCartItems(HttpSession session, Model model) {
         model.addAttribute("cartInfo", sessionCartService.getCartView(session));
+        model.addAttribute("shops", shopContextService.getAllShops());
+        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "cart";
     }
 

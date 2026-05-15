@@ -29,7 +29,6 @@ public class OrderService {
     private final UserService userService;
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
-    private final StockService stockService;
 
     @Transactional
     public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest) {

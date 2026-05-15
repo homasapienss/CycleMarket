@@ -1,9 +1,11 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.dto.ProductCreateRequest;
+import com.example.cyclemarket.services.ShopContextService;
 import com.example.cyclemarket.services.entity.CategoryService;
 import com.example.cyclemarket.services.entity.ManufacturerService;
 import com.example.cyclemarket.services.product.ProductManagementService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,15 @@ public class ProductController {
     private final ManufacturerService manufacturerService;
     private final CategoryService categoryService;
     private final ProductManagementService productManagementService;
+    private final ShopContextService shopContextService;
 
     @GetMapping("/{id}")
-    public String product(@PathVariable String id, Model model) {
+    public String product(@PathVariable String id,
+                          Model model,
+                          HttpSession session) {
         model.addAttribute("product", productManagementService.getProductById(Long.valueOf(id)));
+        model.addAttribute("shops", shopContextService.getAllShops());
+        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "product/product";
     }
     @GetMapping("/new")

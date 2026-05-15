@@ -1,7 +1,9 @@
 package com.example.cyclemarket.controllers;
 
+import com.example.cyclemarket.services.ShopContextService;
 import com.example.cyclemarket.services.entity.CategoryService;
 import com.example.cyclemarket.services.product.ProductsService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,14 +17,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductsController {
     private final ProductsService productsService;
     private final CategoryService categoryService;
+    private final ShopContextService shopContextService;
 
     @GetMapping
     public String products(@RequestParam(required = false) Long categoryId,
                            @RequestParam(required = false) String sort,
-                           Model model) {
+                           Model model,
+                           HttpSession session) {
         model.addAttribute("products", productsService.getProducts(categoryId, sort));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("shops", shopContextService.getAllShops());
+        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "product/products";
     }
 }

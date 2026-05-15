@@ -10,6 +10,19 @@
 <main class="page">
     <div class="page-toolbar">
         <div class="toolbar-actions">
+            <form class="shop-select-form" th:action="@{/shops/select}" method="post" th:if="${shops != null and !#lists.isEmpty(shops)}">
+                <label class="shop-select-label" for="toolbar-shop-order">Магазин</label>
+                <select class="shop-select" id="toolbar-shop-order" name="shopId" onchange="this.form.submit()">
+                    <option value="" th:selected="${currentShop == null}">Все магазины</option>
+                    <option
+                            th:each="shop : ${shops}"
+                            th:value="${shop.id}"
+                            th:text="${shop.shopName}"
+                            th:selected="${currentShop != null and currentShop.id == shop.id}">
+                        Магазин
+                    </option>
+                </select>
+            </form>
             <a class="toolbar-link" th:href="@{/products}">Каталог</a>
             <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
             <a class="toolbar-link" th:href="@{/orders}">Заказы</a>
