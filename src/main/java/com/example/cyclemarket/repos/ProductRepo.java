@@ -33,4 +33,38 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
           )
       """)
     List<Product> findProductsNotInShopStock(@Param("shopId") Long shopId);
+    @Query("""
+          select distinct p
+          from Product p
+          join Stock s on s.product = p
+          where s.shop.id = :shopId
+            and s.quantity > 0
+      """)
+    List<Product> findAllByShopId(@Param("shopId") Long shopId, Sort sort);
+
+    @Query("""
+          select distinct p
+          from Product p
+          join p.categories c
+          join Stock s on s.product = p
+          where s.shop.id = :shopId
+            and s.quantity > 0
+            and c.id = :categoryId
+      """)
+    List<Product> findAllByShopIdAndCategoryId(@Param("shopId") Long shopId,
+                                               @Param("categoryId") Long categoryId,
+                                               Sort sort);
+
+    @Query("""
+          select distinct p
+          from Product p
+          join p.categories c
+          join Stock s on s.product = p
+          where s.shop.id = :shopId
+            and s.quantity > 0
+            and c.id in :categoryIds
+      """)
+    List<Product> findAllByShopIdAndCategoryIdIn(@Param("shopId") Long shopId,
+                                                 @Param("categoryIds") List<Long> categoryIds,
+                                                 Sort sort);
 }

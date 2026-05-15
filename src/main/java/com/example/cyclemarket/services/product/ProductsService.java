@@ -16,19 +16,36 @@ public class ProductsService {
     private final ProductRepo productRepo;
     private final CategoryService categoryService;
 
-    public List<Product> getProducts(Long categoryId, String sort) {
+    public List<Product> getProducts(Long categoryId, String sort, Long shopId) {
         Sort sortType = resolveSort(sort);
-        if (categoryId == null) {
-            return productRepo.findAll(sortType);
+
+
+        if (shopId == null) {
+            if (categoryId == null) {
+                return productRepo.findAll(sortType);
+            }
+            Category categoryById = categoryService.getCategoryById(categoryId);
+            if (categoryById.getChildren() == null || categoryById.getChildren().isEmpty()) {
+                return productRepo.findAllByCategories_Id(categoryId, sortType);
+            }
+            List<Long> childIds = categoryById.getChildren().stream()
+                    .map(Category::getId)
+                    .toList();
+            return productRepo.findAllByCategories_IdIn(childIds, sortType);
+
+        } else {
+            if (categoryId == null) {
+                return productRepo.findAllByShopId(shopId, sortType);
+            }
+            Category categoryById = categoryService.getCategoryById(categoryId);
+            if (categoryById.getChildren() == null || categoryById.getChildren().isEmpty()) {
+                return productRepo.findAllByShopIdAndCategoryId(shopId, categoryId, sortType);
+            }
+            List<Long> childIds = categoryById.getChildren().stream()
+                    .map(Category::getId)
+                    .toList();
+            return productRepo.findAllByShopIdAndCategoryIdIn(shopId, childIds, sortType);
         }
-        Category categoryById = categoryService.getCategoryById(categoryId);
-        if (categoryById.getChildren() == null || categoryById.getChildren().isEmpty()) {
-            return productRepo.findAllByCategories_Id(categoryId, sortType);
-        }
-        List<Long> childIds = categoryById.getChildren().stream()
-                .map(Category::getId)
-                .toList();
-        return productRepo.findAllByCategories_IdIn(childIds, sortType);
     }
 
     private Sort resolveSort(String sort) {

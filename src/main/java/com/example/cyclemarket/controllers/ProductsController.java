@@ -1,5 +1,6 @@
 package com.example.cyclemarket.controllers;
 
+import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.services.ShopContextService;
 import com.example.cyclemarket.services.entity.CategoryService;
 import com.example.cyclemarket.services.product.ProductsService;
@@ -24,11 +25,13 @@ public class ProductsController {
                            @RequestParam(required = false) String sort,
                            Model model,
                            HttpSession session) {
-        model.addAttribute("products", productsService.getProducts(categoryId, sort));
+        Shop currentShop = shopContextService.getSelectedShop(session);
+        Long shopId = currentShop != null ? currentShop.getId() : null;
+        model.addAttribute("products", productsService.getProducts(categoryId, sort, shopId));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("shops", shopContextService.getAllShops());
-        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
+        model.addAttribute("currentShop", currentShop);
         return "product/products";
     }
 }
