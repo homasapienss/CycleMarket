@@ -90,4 +90,16 @@ public class StockService {
                 .filter(stock -> stock.getQuantity() != null && stock.getQuantity() > 0)
                 .count();
     }
+
+    public Map<Long, Long> getProductSingleShopId() {
+        return stockRepo.findAll().stream()
+                .filter(stock -> stock.getQuantity() != null && stock.getQuantity() > 0)
+                .collect(Collectors.groupingBy(stock -> stock.getProduct().getId()))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue().size() == 1)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().get(0).getShop().getId()
+                ));
+    }
 }

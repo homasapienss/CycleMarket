@@ -139,15 +139,28 @@
                 <span class="availability-label">Наличие</span>
                 <span
                         class="availability-value"
-                        th:classappend="${productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 0} ? ' availability-value-link'"
-                        th:text="${productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 0 ? 'Доступно в ' + productShopCount[product.id] + ' магазинах' : 'Нет в наличии'}">
-                    Доступно в 0 магазинах
+                        th:text="${
+                            productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 0
+                                ? (productShopCount[product.id] == 1
+                                    ? 'Товар доступен в 1 магазине'
+                                    : 'Товар доступен в ' + productShopCount[product.id] + ' магазинах')
+                                : 'Нет в наличии'}">
+                    Товар доступен в 1 магазине
                 </span>
             </div>
             <div class="product-footer">
                 <span class="product-price" th:text="${product.productPrice + ' ₽'}">0 ₽</span>
-                <form class="product-cart-form" th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
+                <form
+                        class="product-cart-form"
+                        th:if="${currentShop != null or (productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] == 1)}"
+                        th:action="@{/cart/item/{id}(id=${product.id})}"
+                        method="post">
                     <input type="hidden" name="quantity" value="1">
+                    <input
+                            th:if="${currentShop == null}"
+                            type="hidden"
+                            name="shopId"
+                            th:value="${productSingleShopId != null ? productSingleShopId[product.id] : null}">
                     <button
                             class="product-cart-button"
                             type="submit"
@@ -156,6 +169,12 @@
                         В корзину
                     </button>
                 </form>
+                <a
+                        class="product-cart-button product-select-button"
+                        th:if="${currentShop == null and productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 1}"
+                        th:href="@{/products/{id}(id=${product.id})}">
+                    Выбрать магазин
+                </a>
             </div>
         </article>
     </section>

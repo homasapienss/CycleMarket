@@ -26,7 +26,11 @@ public class CartController {
     @PostMapping("/item/{id}")
     public String addItem(@PathVariable Long id,
                           @RequestParam(defaultValue = "1") Integer quantity,
+                          @RequestParam(required = false) Long shopId,
                           HttpSession session) {
+        if (shopContextService.getSelectedShop(session) == null && shopId != null) {
+            shopContextService.setSelectedShop(shopId, session);
+        }
         sessionCartService.addItem(id, quantity, session);
         return "redirect:/cart";
     }

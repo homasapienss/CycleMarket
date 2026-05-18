@@ -35,6 +35,7 @@ public class ProductsController {
         } else {
             model.addAttribute("productShopCount", stockService.getProductShopCount());
             model.addAttribute("productAvailabilityByShop", stockService.getProductAvailabilityByShop());
+            model.addAttribute("productSingleShopId", stockService.getProductSingleShopId());
         }
         model.addAttribute("products", productsService.getProducts(categoryId, sort, shopId));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
