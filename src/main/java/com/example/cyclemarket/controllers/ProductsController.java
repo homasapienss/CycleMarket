@@ -2,6 +2,7 @@ package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.services.ShopContextService;
+import com.example.cyclemarket.services.StockService;
 import com.example.cyclemarket.services.entity.CategoryService;
 import com.example.cyclemarket.services.product.ProductsService;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,7 @@ public class ProductsController {
     private final ProductsService productsService;
     private final CategoryService categoryService;
     private final ShopContextService shopContextService;
+    private final StockService stockService;
 
     @GetMapping
     public String products(@RequestParam(required = false) Long categoryId,
@@ -26,7 +28,14 @@ public class ProductsController {
                            Model model,
                            HttpSession session) {
         Shop currentShop = shopContextService.getSelectedShop(session);
-        Long shopId = currentShop != null ? currentShop.getId() : null;
+        Long shopId = null;
+        if (currentShop != null ){
+            shopId = currentShop.getId();
+            model.addAttribute("productStockByShop", stockService.getProductStockByShop(shopId));
+        } else {
+            model.addAttribute("productShopCount", stockService.getProductShopCount());
+            model.addAttribute("productAvailabilityByShop", stockService.getProductAvailabilityByShop());
+        }
         model.addAttribute("products", productsService.getProducts(categoryId, sort, shopId));
         model.addAttribute("rootCategories", categoryService.getAllParentCategories());
         model.addAttribute("selectedCategoryId", categoryId);

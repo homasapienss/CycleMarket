@@ -13,6 +13,7 @@
     <div class="page-toolbar">
         <div class="toolbar-actions">
             <form class="shop-select-form" th:action="@{/shops/select}" method="post" th:if="${shops != null and !#lists.isEmpty(shops)}">
+                <input type="hidden" name="redirectTo" th:value="@{/products/{id}(id=${product.id})}" th:if="${product != null}">
                 <label class="shop-select-label" for="toolbar-shop-product">Магазин</label>
                 <select class="shop-select" id="toolbar-shop-product" name="shopId" onchange="this.form.submit()">
                     <option value="" th:selected="${currentShop == null}">Все магазины</option>
@@ -87,13 +88,88 @@
             <div class="price-card">
                 <span class="price-label">Цена</span>
                 <span class="price-value" th:text="${product.productPrice + ' ₽'}">0 ₽</span>
-                <p class="price-note">Позже здесь можно будет показать наличие по складам и скидки.</p>
+                <div class="price-note availability-block" th:if="${currentShop != null}">
+                    <span class="availability-heading">Наличие в выбранном магазине</span>
+                    <div class="availability-main-row">
+                        <span
+                                class="availability-value"
+                                th:text="${currentProductStock != null ? currentProductStock + ' шт. в магазине ' + currentShop.shopName : 'Нет данных по остатку'}">
+                            0 шт. в магазине
+                        </span>
+                        <form class="availability-inline-form" th:action="@{/shops/select}" method="post">
+                            <input type="hidden" name="redirectTo" th:value="@{/products/{id}(id=${product.id})}">
+                            <input type="hidden" name="shopId" value="">
+                            <button class="availability-link-button" type="submit">Все магазины</button>
+                        </form>
+                    </div>
+                    <details class="availability-details product-availability-details">
+                        <summary class="availability-summary">
+                            Посмотреть другие магазины
+                        </summary>
+                        <div class="availability-panel">
+                            <div class="availability-empty"
+                                 th:if="${productAvailabilityByShop == null or #lists.isEmpty(productAvailabilityByShop)}">
+                                Нет данных по другим магазинам.
+                            </div>
+                            <div class="availability-shop-list"
+                                 th:if="${productAvailabilityByShop != null and !#lists.isEmpty(productAvailabilityByShop)}">
+                                <div class="availability-shop-row" th:each="item : ${productAvailabilityByShop}">
+                                    <div class="availability-shop-copy">
+                                        <span class="availability-shop-name" th:text="${item.shopName}">Магазин</span>
+                                        <span class="availability-shop-stock" th:text="${item.quantity + ' шт.'}">0 шт.</span>
+                                    </div>
+                                    <form th:action="@{/shops/select}" method="post">
+                                        <input type="hidden" name="redirectTo" th:value="@{/products/{id}(id=${product.id})}">
+                                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+                                        <button class="availability-select-button" type="submit">Выбрать</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="price-note availability-block" th:if="${currentShop == null}">
+                    <span class="availability-heading">Наличие по магазинам</span>
+                    <details class="availability-details product-availability-details">
+                        <summary class="availability-summary">
+                            <span
+                                    class="availability-value"
+                                    th:classappend="${productShopCount != null and productShopCount > 0} ? ' availability-value-link'"
+                                    th:text="${productShopCount != null and productShopCount > 0 ? 'Доступно в ' + productShopCount + ' магазинах' : 'Нет в наличии'}">
+                                Доступно в 0 магазинах
+                            </span>
+                        </summary>
+                        <div class="availability-panel">
+                            <div class="availability-empty"
+                                 th:if="${productAvailabilityByShop == null or #lists.isEmpty(productAvailabilityByShop)}">
+                                Нет данных по остаткам в магазинах.
+                            </div>
+                            <div class="availability-shop-list"
+                                 th:if="${productAvailabilityByShop != null and !#lists.isEmpty(productAvailabilityByShop)}">
+                                <div class="availability-shop-row" th:each="item : ${productAvailabilityByShop}">
+                                    <div class="availability-shop-copy">
+                                        <span class="availability-shop-name" th:text="${item.shopName}">Магазин</span>
+                                        <span class="availability-shop-stock" th:text="${item.quantity + ' шт.'}">0 шт.</span>
+                                    </div>
+                                    <form th:action="@{/shops/select}" method="post">
+                                        <input type="hidden" name="redirectTo" th:value="@{/products/{id}(id=${product.id})}">
+                                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+                                        <button class="availability-select-button" type="submit">Выбрать</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
             </div>
 
             <div class="action-panel">
                 <form th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
                     <input type="hidden" name="quantity" value="1">
-                    <button class="primary-action" type="submit">
+                    <button
+                            class="primary-action"
+                            type="submit"
+                            th:disabled="${currentShop != null ? (currentProductStock == null or currentProductStock <= 0) : (productShopCount == null or productShopCount <= 0)}">
                         Добавить в корзину
                     </button>
                 </form>

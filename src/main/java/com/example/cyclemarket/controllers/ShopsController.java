@@ -16,11 +16,15 @@ public class ShopsController {
 
     @PostMapping("/select")
     public String selectShop(HttpSession session,
-                             @RequestParam(required = false) Long shopId) {
+                             @RequestParam(required = false) Long shopId,
+                             @RequestParam(required = false) String redirectTo) {
         if (shopId == null) {
             shopContextService.clearSelectedShop(session);
         } else {
             shopContextService.setSelectedShop(shopId, session);
+        }
+        if (redirectTo != null && !redirectTo.isBlank()) {
+            return "redirect:" + redirectTo;
         }
         return "redirect:/products";
     }

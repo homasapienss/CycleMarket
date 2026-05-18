@@ -127,11 +127,32 @@
             <p class="product-manufacturer" th:text="${product.manufacturer.manufacturerName}">
                 Производитель
             </p>
+            <div class="product-availability" th:if="${currentShop != null}">
+                <span class="availability-label">Наличие</span>
+                <span
+                        class="availability-value"
+                        th:text="${productStockByShop != null and productStockByShop[product.id] != null and productStockByShop[product.id] > 0 ? productStockByShop[product.id] + ' шт. в наличии' : 'Нет в наличии'}">
+                    0 шт. в наличии
+                </span>
+            </div>
+            <div class="product-availability" th:if="${currentShop == null}">
+                <span class="availability-label">Наличие</span>
+                <span
+                        class="availability-value"
+                        th:classappend="${productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 0} ? ' availability-value-link'"
+                        th:text="${productShopCount != null and productShopCount[product.id] != null and productShopCount[product.id] > 0 ? 'Доступно в ' + productShopCount[product.id] + ' магазинах' : 'Нет в наличии'}">
+                    Доступно в 0 магазинах
+                </span>
+            </div>
             <div class="product-footer">
                 <span class="product-price" th:text="${product.productPrice + ' ₽'}">0 ₽</span>
                 <form class="product-cart-form" th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
                     <input type="hidden" name="quantity" value="1">
-                    <button class="product-cart-button" type="submit" aria-label="Добавить в корзину">
+                    <button
+                            class="product-cart-button"
+                            type="submit"
+                            aria-label="Добавить в корзину"
+                            th:disabled="${currentShop != null ? (productStockByShop == null or productStockByShop[product.id] == null or productStockByShop[product.id] <= 0) : (productShopCount == null or productShopCount[product.id] == null or productShopCount[product.id] <= 0)}">
                         В корзину
                     </button>
                 </form>
