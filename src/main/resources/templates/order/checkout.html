@@ -38,6 +38,13 @@
         <span class="breadcrumb-current">Оформление заказа</span>
     </section>
 
+    <section class="context-banner" th:if="${currentShop != null}">
+        <span class="context-banner-label">Текущий магазин</span>
+        <span class="context-banner-value" th:text="${'Заказ оформляется из магазина: ' + currentShop.shopName}">
+            Заказ оформляется из магазина: Название магазина
+        </span>
+    </section>
+
     <section class="checkout-layout" th:if="${cartInfo != null and !#lists.isEmpty(cartInfo.items)}">
         <div class="checkout-form-card">
             <div class="section-heading">

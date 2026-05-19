@@ -38,6 +38,10 @@
         <p>Здесь отображается история оформленных заказов текущего пользователя.</p>
     </section>
 
+    <section class="flash-message flash-message-success" th:if="${successMessage != null and !#strings.isEmpty(successMessage)}">
+        <span th:text="${successMessage}">Заказ успешно создан.</span>
+    </section>
+
     <section class="orders-list" th:if="${ordersViews != null and !#lists.isEmpty(ordersViews)}">
         <article class="order-card" th:each="order : ${ordersViews}">
             <div class="order-main">

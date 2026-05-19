@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/orders")
@@ -47,7 +48,8 @@ public class OrderController {
                               Authentication authentication,
                               @Valid @ModelAttribute("checkoutForm") CheckoutRequest checkoutRequest,
                               BindingResult bindingResult,
-                              Model model) {
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
         var currentShop = shopContextService.getSelectedShop(session);
         Long shopId = currentShop != null ? currentShop.getId() : null;
         if (bindingResult.hasErrors()) {
@@ -60,6 +62,7 @@ public class OrderController {
             return "order/checkout";
         }
         orderService.createOrder(authentication.getName(), session, checkoutRequest, shopId);
+        redirectAttributes.addFlashAttribute("successMessage", "Заказ успешно создан.");
         return "redirect:/orders";
     }
 

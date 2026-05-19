@@ -154,6 +154,31 @@ body {
     color: var(--danger-dark);
 }
 
+.context-banner {
+    margin-bottom: 22px;
+    padding: 16px 18px;
+    border: 1px solid rgba(184, 101, 42, 0.18);
+    border-radius: 18px;
+    background: rgba(184, 101, 42, 0.08);
+}
+
+.context-banner-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.context-banner-value {
+    display: block;
+    color: var(--accent-dark);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
 .cart-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
@@ -290,6 +315,12 @@ body {
 
 .quantity-button:hover {
     background: rgba(184, 101, 42, 0.22);
+}
+
+.quantity-button:disabled {
+    background: rgba(203, 190, 176, 0.8);
+    color: rgba(31, 41, 51, 0.45);
+    cursor: not-allowed;
 }
 
 .quantity-value {
