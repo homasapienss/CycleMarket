@@ -62,6 +62,11 @@
 
                     <div class="item-meta">
                         <span th:text="${item.price + ' ₽ за штуку'}">0 ₽ за штуку</span>
+                        <span
+                                th:if="${item.availableStock != null}"
+                                th:text="${item.availableStock > 0 ? 'В наличии: ' + item.availableStock + ' шт.' : 'Нет в наличии'}">
+                            В наличии: 0 шт.
+                        </span>
                     </div>
 
                     <div class="item-actions">

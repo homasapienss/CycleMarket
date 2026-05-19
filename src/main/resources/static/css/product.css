@@ -445,6 +445,12 @@ body {
     cursor: not-allowed;
 }
 
+.primary-action-disabled {
+    background: #cbbeb0;
+    color: rgba(255, 255, 255, 0.92);
+    cursor: not-allowed;
+}
+
 .secondary-action {
     border: 1px solid var(--line);
     background: #fff;

@@ -43,7 +43,9 @@ public class CartController {
     public String changeQuantity(@PathVariable Long productId,
                                  @RequestParam Integer delta,
                                  HttpSession session) {
-        sessionCartService.changeItemQuantity(productId, delta, session);
+        var currentShop = shopContextService.getSelectedShop(session);
+        Long shopId = currentShop != null ? currentShop.getId() : null;
+        sessionCartService.changeItemQuantity(productId, delta, session, shopId);
         return "redirect:/cart";
     }
 

@@ -5,6 +5,7 @@ import com.example.cyclemarket.dto.cart.CartSnapshotItem;
 import com.example.cyclemarket.dto.cart.CartView;
 import com.example.cyclemarket.dto.cart.CartItemView;
 import com.example.cyclemarket.entities.Product;
+import com.example.cyclemarket.exception.NotEnoughStockException;
 import com.example.cyclemarket.repos.ProductRepo;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,17 +36,27 @@ public class SessionCartService {
         getOrCreateCart(session).clear();
     }
 
-    public void changeItemQuantity(Long productId, Integer delta, HttpSession session) {
+    public void changeItemQuantity(Long productId, Integer delta, HttpSession session, Long shopId) {
         Map<Long, Integer> cart = getOrCreateCart(session);
 
         Integer currentQuantity = cart.get(productId);
         if (currentQuantity == null) {return;}
 
         int newQuantity = currentQuantity + delta;
+
+
         if (newQuantity <= 0) {
             cart.remove(productId);
             return;
         }
+        if (shopId == null) {
+            throw new IllegalStateException("No shop selected for cart");
+        }
+        Integer currentProductStock = stockService.getCurrentProductStock(productId, shopId);
+        if (delta > 0 && newQuantity > currentProductStock) {
+            throw new IllegalArgumentException("Нельзя добавить больше товара, чем есть в наличии");
+        }
+
         cart.put(productId, newQuantity);
     }
 

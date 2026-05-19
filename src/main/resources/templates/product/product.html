@@ -164,8 +164,16 @@
             </div>
 
             <div class="action-panel">
-                <form th:action="@{/cart/item/{id}(id=${product.id})}" method="post">
+                <form
+                        th:if="${currentShop != null or (productShopCount != null and productShopCount == 1)}"
+                        th:action="@{/cart/item/{id}(id=${product.id})}"
+                        method="post">
                     <input type="hidden" name="quantity" value="1">
+                    <input
+                            th:if="${currentShop == null}"
+                            type="hidden"
+                            name="shopId"
+                            th:value="${productAvailabilityByShop != null and !#lists.isEmpty(productAvailabilityByShop) ? productAvailabilityByShop[0].shopId : null}">
                     <button
                             class="primary-action"
                             type="submit"
@@ -173,6 +181,11 @@
                         Добавить в корзину
                     </button>
                 </form>
+                <span
+                        class="primary-action primary-action-disabled"
+                        th:if="${currentShop == null and productShopCount != null and productShopCount > 1}">
+                    Сначала выберите магазин
+                </span>
                 <a class="secondary-action" th:href="@{/products}">Вернуться в каталог</a>
             </div>
 
