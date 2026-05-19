@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -119,5 +121,19 @@ public class SessionCartService {
             session.setAttribute(CART_ATTRIBUTE, cart);
         }
         return cart;
+    }
+
+    public boolean isCartAvailableForCheckout(HttpSession session, Long shopId) {
+        Map<Long, Integer> cart = getOrCreateCart(session);
+        for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
+            Long productId = entry.getKey();
+            Integer cartQuantity = entry.getValue();
+
+            Integer currentProductStock = stockService.getCurrentProductStock(productId, shopId);
+            if (cartQuantity > currentProductStock) {
+                return false;
+            }
+        }
+        return true;
     }
 }

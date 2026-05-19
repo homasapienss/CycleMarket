@@ -36,6 +36,10 @@
         <span class="breadcrumb-current">Корзина</span>
     </section>
 
+    <section class="flash-message flash-message-error" th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}">
+        <span th:text="${errorMessage}">Количество одного или нескольких товаров превышает остаток на складе. Проверьте корзину.</span>
+    </section>
+
     <section class="cart-layout" th:if="${cartInfo != null and !#lists.isEmpty(cartInfo.items)}">
         <div class="cart-items-card">
             <div class="section-heading">
