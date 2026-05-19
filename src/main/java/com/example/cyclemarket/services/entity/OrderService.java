@@ -7,8 +7,10 @@ import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.dto.order.OrderItemView;
 import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.*;
+import com.example.cyclemarket.exception.NotEnoughStockException;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
+import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
 import com.example.cyclemarket.repos.OrderRepo;
 import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.services.SessionCartService;
@@ -29,14 +31,21 @@ public class OrderService {
     private final UserService userService;
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
+    private final StockService stockService;
 
     @Transactional
-    public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest) {
+    public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest, Long shopId) {
         CartSnapshot cartSnapshot = sessionCartService.getCartSnapshot(session);
 
+        if (shopId == null) {
+            throw new ShopNotFoundException();
+        }
         if (cartSnapshot.getItems().isEmpty()) {
             throw new IllegalStateException("Cannot create order from empty cart");
         }
+
+        cartSnapshot.getItems()
+                .forEach(item -> stockService.decreaseStock(item.getProductId(), shopId, item.getQuantity()));
 
         List<Long> productIds = cartSnapshot.getItems().stream()
                 .map(CartSnapshotItem::getProductId)

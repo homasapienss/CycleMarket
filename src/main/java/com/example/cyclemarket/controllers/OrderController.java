@@ -48,14 +48,18 @@ public class OrderController {
                               @Valid @ModelAttribute("checkoutForm") CheckoutRequest checkoutRequest,
                               BindingResult bindingResult,
                               Model model) {
+        var currentShop = shopContextService.getSelectedShop(session);
+        Long shopId = currentShop != null ? currentShop.getId() : null;
         if (bindingResult.hasErrors()) {
-            var currentShop = shopContextService.getSelectedShop(session);
+
 
             model.addAttribute("cartInfo",
-                    sessionCartService.getCartView(session, currentShop != null ? currentShop.getId() : null));
+                    sessionCartService.getCartView(session, shopId));
+            model.addAttribute("shops", shopContextService.getAllShops());
+            model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
             return "order/checkout";
         }
-        orderService.createOrder(authentication.getName(), session, checkoutRequest);
+        orderService.createOrder(authentication.getName(), session, checkoutRequest, shopId);
         return "redirect:/orders";
     }
 

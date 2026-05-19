@@ -2,6 +2,8 @@ package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductAvailabilityRow;
 import com.example.cyclemarket.entities.Stock;
+import com.example.cyclemarket.exception.NotEnoughStockException;
+import com.example.cyclemarket.exception.StockNotFoundException;
 import com.example.cyclemarket.repos.StockRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -101,5 +103,17 @@ public class StockService {
                         Map.Entry::getKey,
                         entry -> entry.getValue().get(0).getShop().getId()
                 ));
+    }
+
+    public void decreaseStock(Long productId, Long shopId, Integer quantity) {
+        Stock stock = stockRepo.findByShopIdAndProductId(shopId, productId)
+                .orElseThrow(StockNotFoundException::new);
+
+        if (stock.getQuantity() < quantity) {
+            throw new NotEnoughStockException();
+        }
+
+        stock.setQuantity(stock.getQuantity() - quantity);
+        stockRepo.save(stock);
     }
 }
