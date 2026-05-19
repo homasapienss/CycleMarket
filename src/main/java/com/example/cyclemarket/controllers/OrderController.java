@@ -49,7 +49,10 @@ public class OrderController {
                               BindingResult bindingResult,
                               Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("cartInfo", sessionCartService.getCartView(session));
+            var currentShop = shopContextService.getSelectedShop(session);
+
+            model.addAttribute("cartInfo",
+                    sessionCartService.getCartView(session, currentShop != null ? currentShop.getId() : null));
             return "order/checkout";
         }
         orderService.createOrder(authentication.getName(), session, checkoutRequest);

@@ -17,9 +17,13 @@ public class CartController {
 
     @GetMapping
     public String getCartItems(HttpSession session, Model model) {
-        model.addAttribute("cartInfo", sessionCartService.getCartView(session));
+        var currentShop = shopContextService.getSelectedShop(session);
+
+        model.addAttribute("cartInfo",
+                sessionCartService.getCartView(session, currentShop != null ? currentShop.getId() : null));
         model.addAttribute("shops", shopContextService.getAllShops());
-        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
+        model.addAttribute("currentShop", currentShop);
+
         return "cart";
     }
 

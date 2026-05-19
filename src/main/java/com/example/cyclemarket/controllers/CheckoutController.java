@@ -20,7 +20,10 @@ public class CheckoutController {
     @GetMapping
     public String getCheckout(Model model,
                               HttpSession session) {
-        model.addAttribute("cartInfo", sessionCartService.getCartView(session));
+        var currentShop = shopContextService.getSelectedShop(session);
+
+        model.addAttribute("cartInfo",
+                sessionCartService.getCartView(session, currentShop != null ? currentShop.getId() : null));
         model.addAttribute("checkoutForm", new CheckoutRequest());
         model.addAttribute("shops", shopContextService.getAllShops());
         model.addAttribute("currentShop", shopContextService.getSelectedShop(session));

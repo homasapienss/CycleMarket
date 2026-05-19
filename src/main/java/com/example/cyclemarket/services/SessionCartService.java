@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionCartService {
     private static final String CART_ATTRIBUTE = "cart";
     private final ProductRepo productRepo;
+    private final StockService stockService;
 
     public void addItem(Long id, Integer quantity, HttpSession session) {
         Map<Long, Integer> cart = getOrCreateCart(session);
@@ -69,7 +70,7 @@ public class SessionCartService {
         return new CartSnapshot(cartItems, total);
     }
 
-    public CartView getCartView(HttpSession session) {
+    public CartView getCartView(HttpSession session, Long shopId) {
         Map<Long, Integer> cart = getOrCreateCart(session);
 
         if (cart.isEmpty()) {
@@ -89,7 +90,8 @@ public class SessionCartService {
                             product.getProductPrice(),
                             quantity,
                             product.getProductPrice() * quantity,
-                            imageUrl
+                            imageUrl,
+                            stockService.getCurrentProductStock(product.getId(), shopId)
                     );
                 }).toList();
         Integer total = cartItems.stream()

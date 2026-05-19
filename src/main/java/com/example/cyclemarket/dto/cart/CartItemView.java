@@ -12,5 +12,5 @@ public class CartItemView {
     private Integer quantity;
     private Integer lineTotal;
     private String imageUrl;
-
+    private Integer availableStock;
 }
