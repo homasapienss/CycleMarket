@@ -30,17 +30,17 @@
         </div>
     </div>
 
-    <section class="hero">
-        <div class="hero-copy">
-            <span class="hero-kicker">CycleMarket</span>
-            <h1>Каталог велотоваров</h1>
-            <p>
-                Здесь отображаются все товары магазина. Страница ожидает, что контроллер положит
-                в модель атрибут <code>products</code> со списком объектов <code>Product</code>.
-            </p>
-        </div>
-        <a class="hero-action" th:href="@{/products/new}">Добавить товар</a>
-    </section>
+<!--    <section class="hero">-->
+<!--        <div class="hero-copy">-->
+<!--            <span class="hero-kicker">CycleMarket</span>-->
+<!--            <h1>Каталог велотоваров</h1>-->
+<!--            <p>-->
+<!--                Здесь отображаются все товары магазина. Страница ожидает, что контроллер положит-->
+<!--                в модель атрибут <code>products</code> со списком объектов <code>Product</code>.-->
+<!--            </p>-->
+<!--        </div>-->
+<!--        <a class="hero-action" th:href="@{/products/new}">Добавить товар</a>-->
+<!--    </section>-->
 
     <section class="catalog-filters" th:if="${rootCategories != null and !#lists.isEmpty(rootCategories)}">
         <div class="filters-header">
