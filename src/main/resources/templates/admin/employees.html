@@ -36,29 +36,72 @@
     <section class="dashboard-section">
         <div class="section-heading">
             <h2>Фильтр списка</h2>
-            <p>Переключайте представление списка, чтобы отдельно смотреть активных сотрудников, уволенных или всех сразу.</p>
+            <p>Переключайте представление списка, чтобы отдельно смотреть активных сотрудников, уволенных или всех сразу, а также ограничивать выбор конкретным магазином.</p>
         </div>
 
         <div class="filter-row">
             <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
                     class="filter-chip"
                     th:classappend="${param.filter == null or #lists.isEmpty(param.filter) or param.filter[0] == 'all'} ? ' filter-chip-active'"
                     th:href="@{/admin/employees}">
                 Все
             </a>
             <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.filter == null or #lists.isEmpty(param.filter) or param.filter[0] == 'all'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees(shopId=${param.shopId[0]})}">
+                Все
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
                     class="filter-chip"
                     th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'active'} ? ' filter-chip-active'"
                     th:href="@{/admin/employees(filter='active')}">
                 Активные
             </a>
             <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'active'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees(filter='active', shopId=${param.shopId[0]})}">
+                Активные
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
                     class="filter-chip"
                     th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'inactive'} ? ' filter-chip-active'"
                     th:href="@{/admin/employees(filter='inactive')}">
                 Уволенные
             </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'inactive'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees(filter='inactive', shopId=${param.shopId[0]})}">
+                Уволенные
+            </a>
         </div>
+
+        <form class="filter-select-form" th:action="@{/admin/employees}" method="get" th:if="${shops != null and !#lists.isEmpty(shops)}">
+            <input
+                    th:if="${param.filter != null and !#lists.isEmpty(param.filter)}"
+                    type="hidden"
+                    name="filter"
+                    th:value="${param.filter[0]}">
+            <label class="field-label filter-select-label" for="employees-shop-filter">Магазин</label>
+            <select class="field-input field-select filter-select" id="employees-shop-filter" name="shopId" onchange="this.form.submit()">
+                <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId)}">Все магазины</option>
+                <option
+                        th:each="shop : ${shops}"
+                        th:value="${shop.id}"
+                        th:text="${shop.shopName}"
+                        th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and param.shopId[0] == #strings.toString(shop.id)}">
+                    Магазин
+                </option>
+            </select>
+        </form>
     </section>
 
     <section class="dashboard-section">
@@ -67,48 +110,52 @@
             <p>Страница ожидает, что backend положит сотрудников в модель под атрибутом <code>employees</code>.</p>
         </div>
 
-        <div class="management-list" th:if="${employees != null and !#lists.isEmpty(employees)}">
-            <article class="management-card" th:each="employee : ${employees}">
-                <div class="management-main">
-                    <div class="management-title-row">
-                        <h3 th:text="${employee.lastName + ' ' + employee.firstName}">Фамилия Имя</h3>
-                        <span
-                                class="status-chip"
-                                th:classappend="${employee.active} ? ' status-chip-active' : ' status-chip-inactive'"
-                                th:text="${employee.active ? 'Активен' : 'Уволен'}">
-                            Активен
-                        </span>
-                    </div>
-                    <div class="management-meta">
-                        <div class="meta-block">
-                            <span class="meta-title">Роль</span>
-                            <span class="meta-value" th:text="${employee.roleName}">ROLE_MANAGER</span>
-                        </div>
-                        <div class="meta-block">
-                            <span class="meta-title">Магазин</span>
-                            <span class="meta-value" th:text="${employee.shopName}">Название магазина</span>
-                        </div>
-                        <div class="meta-block">
-                            <span class="meta-title">ID</span>
-                            <span class="meta-value" th:text="${'#' + employee.id}">#1</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="management-actions">
-                    <a class="action-button action-button-link action-button-muted" th:href="@{/admin/employees/edit/{id}(id=${employee.id})}">
-                        Редактировать
-                    </a>
-                    <form th:if="${employee.active}" th:action="@{/admin/employees/fire}" method="post">
-                        <input type="hidden" name="id" th:value="${employee.id}">
-                        <button class="action-button action-button-danger" type="submit">Уволить</button>
-                    </form>
-                    <form th:if="${!employee.active}" th:action="@{/admin/employees/hire}" method="post">
-                        <input type="hidden" name="id" th:value="${employee.id}">
-                        <button class="action-button action-button-success" type="submit">Нанять</button>
-                    </form>
-                </div>
-            </article>
+        <div class="table-card" th:if="${employees != null and !#lists.isEmpty(employees)}">
+            <div class="table-scroll">
+                <table class="management-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Сотрудник</th>
+                        <th>Роль</th>
+                        <th>Магазин</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="employee : ${employees}">
+                        <td th:text="${'#' + employee.id}">#1</td>
+                        <td th:text="${employee.lastName + ' ' + employee.firstName}">Фамилия Имя</td>
+                        <td th:text="${employee.roleName}">ROLE_MANAGER</td>
+                        <td th:text="${employee.shopName}">Название магазина</td>
+                        <td>
+                            <span
+                                    class="status-chip"
+                                    th:classappend="${employee.active} ? ' status-chip-active' : ' status-chip-inactive'"
+                                    th:text="${employee.active ? 'Активен' : 'Уволен'}">
+                                Активен
+                            </span>
+                        </td>
+                        <td>
+                            <div class="table-actions">
+                                <a class="action-button action-button-link action-button-muted" th:href="@{/admin/employees/edit/{id}(id=${employee.id})}">
+                                    Редактировать
+                                </a>
+                                <form th:if="${employee.active}" th:action="@{/admin/employees/fire}" method="post">
+                                    <input type="hidden" name="id" th:value="${employee.id}">
+                                    <button class="action-button action-button-danger" type="submit">Уволить</button>
+                                </form>
+                                <form th:if="${!employee.active}" th:action="@{/admin/employees/hire}" method="post">
+                                    <input type="hidden" name="id" th:value="${employee.id}">
+                                    <button class="action-button action-button-success" type="submit">Нанять</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <section class="dashboard-section-soft" th:if="${employees == null or #lists.isEmpty(employees)}">

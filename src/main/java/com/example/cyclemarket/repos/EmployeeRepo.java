@@ -14,4 +14,10 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     List<Employee> findAllByActiveIsTrue();
 
     List<Employee> findAllByActiveIsFalse();
+
+    List<Employee> findAllByShop_Id(Long shopId);
+
+    List<Employee> findAllByShop_IdAndActiveIsTrue(Long shopId);
+
+    List<Employee> findAllByShop_IdAndActiveIsFalse(Long shopId);
 }

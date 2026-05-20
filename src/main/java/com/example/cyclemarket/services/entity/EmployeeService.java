@@ -39,25 +39,40 @@ public class EmployeeService {
         employeeRepo.save(employee);
     }
 
-    public List<EmployeeView> getEmployeesView(String filter) {
-        if (filter == null || filter.isEmpty() || filter.equals("all")) {
-            return employeeRepo.findAll()
-                    .stream()
-                    .map(this::mapEmployeeToView).toList();
+    public List<EmployeeView> getEmployeesView(String filter, Long shopId) {
+        if (shopId == null) {
+            if (filter == null || filter.isEmpty() || filter.equals("all")) {
+                return employeeRepo.findAll()
+                        .stream()
+                        .map(this::mapEmployeeToView).toList();
+            }
+            if (filter.equals("active")) {
+                return employeeRepo.findAllByActiveIsTrue()
+                        .stream()
+                        .map(this::mapEmployeeToView).toList();
+            }
+            if (filter.equals("inactive")) {
+                return employeeRepo.findAllByActiveIsFalse()
+                        .stream()
+                        .map(this::mapEmployeeToView).toList();
+            }
         }
-        if (filter.equals("active")) {
-            return employeeRepo.findAllByActiveIsTrue()
-                    .stream()
-                    .map(this::mapEmployeeToView).toList();
+        if (filter!=null) {
+            if (filter.equals("active")) {
+                return employeeRepo.findAllByShop_IdAndActiveIsTrue(shopId).stream()
+                        .map(this::mapEmployeeToView)
+                        .toList();
+            }
+            if (filter.equals("inactive")) {
+                return employeeRepo.findAllByShop_IdAndActiveIsFalse(shopId).stream()
+                        .map(this::mapEmployeeToView)
+                        .toList();
+            }
         }
-        if (filter.equals("inactive")) {
-            return employeeRepo.findAllByActiveIsFalse()
-                    .stream()
-                    .map(this::mapEmployeeToView).toList();
-        }
-        return employeeRepo.findAll().stream()
+        return employeeRepo.findAllByShop_Id(shopId).stream()
                 .map(this::mapEmployeeToView)
                 .toList();
+
     }
 
     private EmployeeView mapEmployeeToView(Employee employee) {

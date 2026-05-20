@@ -83,7 +83,7 @@ public class AdminController {
 
     @PostMapping("/shops/fire")
     public String deactivateShop(@RequestParam("id") Long shopId,
-                               RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes) {
         shopService.deactivateShop(shopId);
         redirectAttributes.addFlashAttribute("successMessage", "Магазин деактивирован.");
         return "redirect:/admin/shops";
@@ -91,16 +91,18 @@ public class AdminController {
 
     @PostMapping("/shops/hire")
     public String activateShop(@RequestParam("id") Long shopId,
-                                 RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes) {
         shopService.activateShop(shopId);
-        redirectAttributes.addFlashAttribute("successMessage", "Магазин деактивирован.");
+        redirectAttributes.addFlashAttribute("successMessage", "Магазин вернулся к работе.");
         return "redirect:/admin/shops";
     }
 
     @GetMapping("/employees")
     public String getEmployeePanel(Model model,
-                                   @RequestParam(required = false) String filter) {
-        model.addAttribute("employees", employeeService.getEmployeesView(filter));
+                                   @RequestParam(required = false) String filter,
+                                   @RequestParam(required = false) Long shopId) {
+        model.addAttribute("employees", employeeService.getEmployeesView(filter, shopId));
+        model.addAttribute("shops", shopService.getAllShops());
         return "admin/employees";
     }
 
@@ -108,7 +110,6 @@ public class AdminController {
     public String getEmployeeEditPage(Model model,
                                       @PathVariable("id") Integer employeeId) {
         model.addAttribute("editEmployeeReq", employeeService.getEditEmployeeReq(employeeId));
-        model.addAttribute("shops", shopService.getAllShops());
         return "admin/employee-edit";
     }
 
