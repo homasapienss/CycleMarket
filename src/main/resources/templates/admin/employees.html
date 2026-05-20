@@ -99,7 +99,14 @@
                     <a class="action-button action-button-link action-button-muted" th:href="@{/admin/employees/edit/{id}(id=${employee.id})}">
                         Редактировать
                     </a>
-                    <button class="action-button action-button-danger" type="button" disabled>Уволить</button>
+                    <form th:if="${employee.active}" th:action="@{/admin/employees/fire}" method="post">
+                        <input type="hidden" name="id" th:value="${employee.id}">
+                        <button class="action-button action-button-danger" type="submit">Уволить</button>
+                    </form>
+                    <form th:if="${!employee.active}" th:action="@{/admin/employees/hire}" method="post">
+                        <input type="hidden" name="id" th:value="${employee.id}">
+                        <button class="action-button action-button-success" type="submit">Нанять</button>
+                    </form>
                 </div>
             </article>
         </div>

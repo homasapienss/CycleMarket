@@ -81,6 +81,22 @@ public class AdminController {
         return "redirect:/admin/shops";
     }
 
+    @PostMapping("/shops/fire")
+    public String deactivateShop(@RequestParam("id") Long shopId,
+                               RedirectAttributes redirectAttributes) {
+        shopService.deactivateShop(shopId);
+        redirectAttributes.addFlashAttribute("successMessage", "Магазин деактивирован.");
+        return "redirect:/admin/shops";
+    }
+
+    @PostMapping("/shops/hire")
+    public String activateShop(@RequestParam("id") Long shopId,
+                                 RedirectAttributes redirectAttributes) {
+        shopService.activateShop(shopId);
+        redirectAttributes.addFlashAttribute("successMessage", "Магазин деактивирован.");
+        return "redirect:/admin/shops";
+    }
+
     @GetMapping("/employees")
     public String getEmployeePanel(Model model,
                                    @RequestParam(required = false) String filter) {
@@ -101,6 +117,22 @@ public class AdminController {
                                RedirectAttributes redirectAttributes) {
         employeeService.editEmployee(editEmployeeReq);
         redirectAttributes.addFlashAttribute("successMessage", "Изменения сотрудника сохранены.");
+        return "redirect:/admin/employees";
+    }
+
+    @PostMapping("/employees/fire")
+    public String fireEmployee(@RequestParam("id") Integer employeeId,
+                               RedirectAttributes redirectAttributes) {
+        employeeService.fireEmployee(employeeId);
+        redirectAttributes.addFlashAttribute("successMessage", "Сотрудник уволен.");
+        return "redirect:/admin/employees";
+    }
+
+    @PostMapping("/employees/hire")
+    public String hireEmployee(@RequestParam("id") Integer employeeId,
+                               RedirectAttributes redirectAttributes) {
+        employeeService.hireEmployee(employeeId);
+        redirectAttributes.addFlashAttribute("successMessage", "Сотрудник нанят на работу.");
         return "redirect:/admin/employees";
     }
 

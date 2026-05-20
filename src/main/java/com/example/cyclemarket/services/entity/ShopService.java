@@ -89,4 +89,18 @@ public class ShopService {
     public Shop getShopByName(String shopName) {
         return shopRepo.findByShopName(shopName).orElseThrow(ShopNotFoundException::new);
     }
+
+    @Transactional
+    public void deactivateShop(Long shopId) {
+        Shop shop = shopRepo.findById(shopId).orElseThrow(ShopNotFoundException::new);
+        shop.setActive(false);
+        shopRepo.save(shop);
+    }
+
+    @Transactional
+    public void activateShop(Long shopId) {
+        Shop shop = shopRepo.findById(shopId).orElseThrow(ShopNotFoundException::new);
+        shop.setActive(true);
+        shopRepo.save(shop);
+    }
 }

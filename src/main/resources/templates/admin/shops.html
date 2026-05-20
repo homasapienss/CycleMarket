@@ -88,7 +88,14 @@
                     <a class="action-button action-button-link action-button-muted" th:href="@{/admin/shops/edit/{id}(id=${shop.id})}">
                         Редактировать
                     </a>
-                    <button class="action-button action-button-danger" type="button" disabled>Деактивировать</button>
+                    <form th:if="${shop.active}" th:action="@{/admin/shops/fire}" method="post">
+                        <input type="hidden" name="id" th:value="${shop.id}">
+                        <button class="action-button action-button-danger" type="submit">Деактивировать</button>
+                    </form>
+                    <form th:if="${!shop.active}" th:action="@{/admin/shops/hire}" method="post">
+                        <input type="hidden" name="id" th:value="${shop.id}">
+                        <button class="action-button action-button-success" type="submit">Активировать</button>
+                    </form>
                 </div>
             </article>
         </div>

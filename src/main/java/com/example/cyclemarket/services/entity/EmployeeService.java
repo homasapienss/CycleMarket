@@ -59,6 +59,7 @@ public class EmployeeService {
                 .map(this::mapEmployeeToView)
                 .toList();
     }
+
     private EmployeeView mapEmployeeToView(Employee employee) {
         return EmployeeView.builder()
                 .id(employee.getId())
@@ -81,6 +82,7 @@ public class EmployeeService {
                 .getShop()
                 .getId();
     }
+
     public Shop getCurrentManagerShop(String name) {
         return employeeRepo.findByUserEmail(name)
                 .orElseThrow(EmployeeNotFoundException::new)
@@ -105,6 +107,20 @@ public class EmployeeService {
         employee.setLastName(editEmployeeReq.getLastName());
         employee.setPhoneNumber(editEmployeeReq.getPhoneNumber());
         employee.setShop(shopService.getShopByName(editEmployeeReq.getShopName()));
+        employeeRepo.save(employee);
+    }
+
+    @Transactional
+    public void fireEmployee(Integer employeeId) {
+        Employee employee = employeeRepo.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+        employee.setActive(false);
+        employeeRepo.save(employee);
+    }
+
+    @Transactional
+    public void hireEmployee(Integer employeeId) {
+        Employee employee = employeeRepo.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+        employee.setActive(true);
         employeeRepo.save(employee);
     }
 }
