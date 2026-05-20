@@ -27,15 +27,59 @@
 
     <section class="dashboard-section">
         <div class="section-heading">
-            <h2>Все точки</h2>
-            <p>Если список пуст, значит в базе еще нет магазинов или сервис пока ничего не вернул.</p>
+            <h2>Управление магазинами</h2>
+            <p>Здесь можно просматривать действующие и закрытые точки, а позже управлять редактированием и мягкой деактивацией магазинов.</p>
         </div>
 
-        <div class="action-grid" th:if="${shops != null and !#lists.isEmpty(shops)}">
-            <article class="action-card" th:each="shop : ${shops}">
-                <span class="action-badge">Shop</span>
-                <h3 th:text="${shop.shopName}">Название магазина</h3>
-                <p th:text="${shop.address}">Адрес магазина</p>
+        <div class="filter-row">
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter == null or #lists.isEmpty(param.filter) or param.filter[0] == 'all'} ? ' filter-chip-active'"
+                    th:href="@{/admin/shops}">
+                Все
+            </a>
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'active'} ? ' filter-chip-active'"
+                    th:href="@{/admin/shops(filter='active')}">
+                Активные
+            </a>
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'inactive'} ? ' filter-chip-active'"
+                    th:href="@{/admin/shops(filter='inactive')}">
+                Закрытые
+            </a>
+        </div>
+
+        <div class="management-list" th:if="${shops != null and !#lists.isEmpty(shops)}">
+            <article class="management-card" th:each="shop : ${shops}">
+                <div class="management-main">
+                    <div class="management-title-row">
+                        <h3 th:text="${shop.name}">Название магазина</h3>
+                        <span
+                                class="status-chip"
+                                th:classappend="${shop.active} ? ' status-chip-active' : ' status-chip-inactive'"
+                                th:text="${shop.active ? 'Активен' : 'Закрыт'}">
+                            Активен
+                        </span>
+                    </div>
+                    <div class="management-meta">
+                        <div class="meta-block">
+                            <span class="meta-title">Адрес</span>
+                            <span class="meta-value" th:text="${shop.address}">Адрес магазина</span>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-title">ID</span>
+                            <span class="meta-value" th:text="${'#' + shop.id}">#1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="management-actions">
+                    <button class="action-button action-button-muted" type="button" disabled>Редактировать</button>
+                    <button class="action-button action-button-danger" type="button" disabled>Деактивировать</button>
+                </div>
             </article>
         </div>
 

@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1779269287134-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  valueBoolean: true
+            tableName: employees
+  - changeSet:
+      id: 1779269287134-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: active
+            tableName: employees
+  - changeSet:
+      id: 1779269287134-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  valueBoolean: true
+            tableName: shops
+  - changeSet:
+      id: 1779269287134-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: active
+            tableName: shops
+

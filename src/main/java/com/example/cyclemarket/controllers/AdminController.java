@@ -8,10 +8,7 @@ import com.example.cyclemarket.services.entity.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -60,9 +57,17 @@ public class AdminController {
     }
 
     @GetMapping("/shops")
-    public String getAllShopsPage(Model model) {
-        model.addAttribute("shops", shopService.getAllShops());
+    public String getShopsPanel(Model model,
+                                @RequestParam(required = false) String filter) {
+        model.addAttribute("shops", shopService.getShopsView(filter));
         return "admin/shops";
+    }
+
+    @GetMapping("/employees")
+    public String getEmployeePanel(Model model,
+                                   @RequestParam(required = false) String filter) {
+        model.addAttribute("employees", employeeService.getEmployeesView(filter));
+        return "admin/employees";
     }
 
 

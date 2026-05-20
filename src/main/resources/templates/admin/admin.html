@@ -37,30 +37,46 @@
 
     <section class="dashboard-section">
         <div class="section-heading">
-            <h2>Основные действия</h2>
-            <p>Навигация по первым экранам админки, которые уже можно привязывать к backend.</p>
+            <h2>Основные разделы</h2>
+            <p>Главная админка сейчас сфокусирована на двух ключевых контурах: сотрудники и магазины.</p>
         </div>
 
         <div class="action-grid">
             <article class="action-card action-card-primary">
                 <span class="action-badge">Employees</span>
+                <h3>Управление сотрудниками</h3>
+                <p>Просмотр текущих сотрудников, фильтрация активных и уволенных, переход к редактированию и деактивации.</p>
+                <a class="action-link" th:href="@{/admin/employees}">Открыть раздел</a>
+            </article>
+
+            <article class="action-card">
+                <span class="action-badge">Shops</span>
+                <h3>Управление магазинами</h3>
+                <p>Просмотр действующих и закрытых точек, переход к редактированию и мягкой деактивации магазинов.</p>
+                <a class="action-link" th:href="@{/admin/shops}">Открыть раздел</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Быстрые действия</h2>
+            <p>Отдельные короткие маршруты для первичного наполнения системы и служебных операций.</p>
+        </div>
+
+        <div class="action-grid action-grid-compact">
+            <article class="action-card">
+                <span class="action-badge">Employees</span>
                 <h3>Добавить сотрудника</h3>
-                <p>Создание служебной учетной записи и привязка сотрудника к конкретному магазину.</p>
+                <p>Создание новой служебной учетной записи и первичная привязка к магазину.</p>
                 <a class="action-link" th:href="@{/admin/employees/new}">Создать сотрудника</a>
             </article>
 
             <article class="action-card">
                 <span class="action-badge">Shops</span>
                 <h3>Добавить магазин</h3>
-                <p>Регистрация новой точки в системе, которая потом будет использоваться в остатках и назначениях.</p>
+                <p>Регистрация новой точки, которая потом будет участвовать в stock и заказах.</p>
                 <a class="action-link" th:href="@{/admin/shops/new}">Создать точку</a>
-            </article>
-
-            <article class="action-card">
-                <span class="action-badge">Shops</span>
-                <h3>Список магазинов</h3>
-                <p>Просмотр уже добавленных точек, чтобы проверять структуру магазинов и складов.</p>
-                <a class="action-link" th:href="@{/admin/shops}">Открыть список</a>
             </article>
 
             <article class="action-card">

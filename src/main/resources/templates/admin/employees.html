@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сотрудники | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Управление сотрудниками</h1>
+            <p>
+                Здесь администратор может просматривать сотрудников системы, разделять активных и уволенных,
+                а позже управлять редактированием и деактивацией без физического удаления записей.
+            </p>
+        </div>
+
+        <div class="hero-panel">
+            <span class="panel-title">Быстрые действия</span>
+            <p>Добавьте нового сотрудника или вернитесь на главный экран админки.</p>
+            <a class="hero-link" th:href="@{/admin/employees/new}">Добавить сотрудника</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Фильтр списка</h2>
+            <p>Переключайте представление списка, чтобы отдельно смотреть активных сотрудников, уволенных или всех сразу.</p>
+        </div>
+
+        <div class="filter-row">
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter == null or #lists.isEmpty(param.filter) or param.filter[0] == 'all'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees}">
+                Все
+            </a>
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'active'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees(filter='active')}">
+                Активные
+            </a>
+            <a
+                    class="filter-chip"
+                    th:classappend="${param.filter != null and !#lists.isEmpty(param.filter) and param.filter[0] == 'inactive'} ? ' filter-chip-active'"
+                    th:href="@{/admin/employees(filter='inactive')}">
+                Уволенные
+            </a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Сотрудники</h2>
+            <p>Страница ожидает, что backend положит сотрудников в модель под атрибутом <code>employees</code>.</p>
+        </div>
+
+        <div class="management-list" th:if="${employees != null and !#lists.isEmpty(employees)}">
+            <article class="management-card" th:each="employee : ${employees}">
+                <div class="management-main">
+                    <div class="management-title-row">
+                        <h3 th:text="${employee.lastName + ' ' + employee.firstName}">Фамилия Имя</h3>
+                        <span class="status-chip status-chip-neutral">Статус из backend</span>
+                    </div>
+                    <div class="management-meta">
+                        <div class="meta-block">
+                            <span class="meta-title">Роль</span>
+                            <span class="meta-value" th:text="${employee.roleName}">ROLE_MANAGER</span>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-title">Магазин</span>
+                            <span class="meta-value" th:text="${employee.shopName}">Название магазина</span>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-title">ID</span>
+                            <span class="meta-value" th:text="${'#' + employee.id}">#1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="management-actions">
+                    <button class="action-button action-button-muted" type="button" disabled>Редактировать</button>
+                    <button class="action-button action-button-danger" type="button" disabled>Уволить</button>
+                </div>
+            </article>
+        </div>
+
+        <section class="dashboard-section-soft" th:if="${employees == null or #lists.isEmpty(employees)}">
+            Сотрудники пока не найдены.
+        </section>
+    </section>
+</main>
+</body>
+</html>

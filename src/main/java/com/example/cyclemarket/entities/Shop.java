@@ -21,9 +21,10 @@ public class Shop {
     private Long id;
     @Column(nullable = false, unique = true)
     private String shopName;
-
     @Column(nullable = false)
     private String address;
+    @Column(nullable = false)
+    private boolean active = true;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> stockItems = new ArrayList<>();

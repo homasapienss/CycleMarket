@@ -1,6 +1,7 @@
 package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.dto.CreateShopReq;
+import com.example.cyclemarket.dto.ShopView;
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
 import com.example.cyclemarket.repos.ShopRepo;
@@ -23,6 +24,37 @@ public class ShopService {
         shopToCreate.setAddress(createShopReq.getAddress());
         shopToCreate.setShopName(createShopReq.getName());
         shopRepo.save(shopToCreate);
+    }
+
+    public List<ShopView> getShopsView(String filter) {
+        if (filter == null || filter.equals("") || filter.equals("all")) {
+            return shopRepo.findAll()
+                    .stream()
+                    .map(this::mapShopToView)
+                    .toList();
+        }
+        if (filter.equals("active")) {
+            return shopRepo.findAllByActiveIsTrue()
+                    .stream()
+                    .map(this::mapShopToView).toList();
+        }
+        if (filter.equals("inactive")) {
+            return shopRepo.findAllByActiveIsFalse()
+                    .stream()
+                    .map(this::mapShopToView).toList();
+        }
+        return shopRepo.findAll()
+                .stream()
+                .map(this::mapShopToView)
+                .toList();
+    }
+    private ShopView mapShopToView(Shop shop) {
+        return ShopView.builder()
+                .id(shop.getId())
+                .name(shop.getShopName())
+                .address(shop.getAddress())
+                .active(shop.isActive())
+                .build();
     }
 
     public List<Shop> getAllShops() {
