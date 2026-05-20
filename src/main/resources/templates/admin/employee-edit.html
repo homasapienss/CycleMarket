@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование сотрудника | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin-form.css}">
+</head>
+<body>
+<main class="admin-form-page">
+    <section class="form-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Редактирование сотрудника</h1>
+            <p>
+                Страница показывает текущие данные сотрудника и подготавливает форму для будущего
+                обновления без физического удаления записи из системы.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/admin/employees}">Вернуться к сотрудникам</a>
+    </section>
+
+    <section class="form-layout">
+        <form class="admin-form-card" th:action="@{/admin/employees/edit}" method="post">
+            <input
+                    th:if="${editEmployeeReq != null}"
+                    type="hidden"
+                    name="employeeId"
+                    th:value="${editEmployeeReq.employeeId}">
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="firstName">Имя</label>
+                    <input
+                            class="field-input"
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            maxlength="100"
+                            th:value="${editEmployeeReq != null ? editEmployeeReq.firstName : ''}"
+                            placeholder="Имя сотрудника">
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="lastName">Фамилия</label>
+                    <input
+                            class="field-input"
+                            id="lastName"
+                            name="lastName"
+                            type="text"
+                            maxlength="100"
+                            th:value="${editEmployeeReq != null ? editEmployeeReq.lastName : ''}"
+                            placeholder="Фамилия сотрудника">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-block">
+                    <label class="field-label" for="phoneNumber">Телефон</label>
+                    <input
+                            class="field-input"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            type="text"
+                            maxlength="50"
+                            th:value="${editEmployeeReq != null ? editEmployeeReq.phoneNumber : ''}"
+                            placeholder="+7 (900) 000-00-00">
+                </div>
+
+                <div class="form-block">
+                    <label class="field-label" for="shopName">Магазин</label>
+                    <select class="field-input field-select" id="shopName" name="shopName">
+                        <option value="">Выберите магазин</option>
+                        <option
+                                th:each="shop : ${shops}"
+                                th:value="${shop.shopName}"
+                                th:text="${shop.shopName}"
+                                th:selected="${editEmployeeReq != null and editEmployeeReq.shopName == shop.shopName}">
+                            Магазин
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Сохранить изменения</button>
+                <span class="form-note">
+                    Текущий экран ориентируется на модель <code>editEmployeeReq</code> и список <code>shops</code>.
+                </span>
+            </div>
+        </form>
+
+        <aside class="info-panel">
+            <div class="panel-card">
+                <h2>Что уже подключено</h2>
+                <ul class="tips-list">
+                    <li><code>GET /admin/employees/edit/{id}</code> открывает экран редактирования.</li>
+                    <li>Форма предзаполняется через <code>editEmployeeReq</code>.</li>
+                    <li>Список магазинов передается в модель атрибутом <code>shops</code>.</li>
+                    <li><code>POST /admin/employees/edit</code> должен принять <code>employeeId</code>, основные поля сотрудника и новое значение магазина.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Следующий шаг</h2>
+                <p>После сохранения можно добавить success-message и отдельный сценарий мягкого увольнения сотрудника.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

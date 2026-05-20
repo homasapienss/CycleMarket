@@ -1,6 +1,7 @@
 package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.dto.CreateEmployeeReq;
+import com.example.cyclemarket.dto.EditEmployeeReq;
 import com.example.cyclemarket.dto.EmployeeView;
 import com.example.cyclemarket.dto.auth.AuthReq;
 import com.example.cyclemarket.entities.Employee;
@@ -84,5 +85,26 @@ public class EmployeeService {
         return employeeRepo.findByUserEmail(name)
                 .orElseThrow(EmployeeNotFoundException::new)
                 .getShop();
+    }
+
+    public EditEmployeeReq getEditEmployeeReq(Integer employeeId) {
+        Employee byId = employeeRepo.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+        return EditEmployeeReq.builder()
+                .phoneNumber(byId.getPhoneNumber())
+                .firstName(byId.getFirstName())
+                .lastName(byId.getLastName())
+                .shopName(byId.getShop().getShopName())
+                .employeeId(byId.getId())
+                .build();
+    }
+
+    @Transactional
+    public void editEmployee(EditEmployeeReq editEmployeeReq) {
+        Employee employee = employeeRepo.findById(editEmployeeReq.getEmployeeId()).orElseThrow(EmployeeNotFoundException::new);
+        employee.setFirstName(editEmployeeReq.getFirstName());
+        employee.setLastName(editEmployeeReq.getLastName());
+        employee.setPhoneNumber(editEmployeeReq.getPhoneNumber());
+        employee.setShop(shopService.getShopByName(editEmployeeReq.getShopName()));
+        employeeRepo.save(employee);
     }
 }

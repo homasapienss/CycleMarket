@@ -25,6 +25,14 @@
         </div>
     </section>
 
+    <section class="flash-banner flash-banner-success" th:if="${successMessage != null and !#strings.isEmpty(successMessage)}">
+        <span th:text="${successMessage}">Изменения магазина успешно сохранены.</span>
+    </section>
+
+    <section class="flash-banner flash-banner-error" th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}">
+        <span th:text="${errorMessage}">Не удалось сохранить изменения магазина.</span>
+    </section>
+
     <section class="dashboard-section">
         <div class="section-heading">
             <h2>Управление магазинами</h2>
@@ -77,7 +85,9 @@
                 </div>
 
                 <div class="management-actions">
-                    <button class="action-button action-button-muted" type="button" disabled>Редактировать</button>
+                    <a class="action-button action-button-link action-button-muted" th:href="@{/admin/shops/edit/{id}(id=${shop.id})}">
+                        Редактировать
+                    </a>
                     <button class="action-button action-button-danger" type="button" disabled>Деактивировать</button>
                 </div>
             </article>

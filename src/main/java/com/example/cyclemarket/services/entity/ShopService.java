@@ -1,12 +1,14 @@
 package com.example.cyclemarket.services.entity;
 
 import com.example.cyclemarket.dto.CreateShopReq;
+import com.example.cyclemarket.dto.EditShopReq;
 import com.example.cyclemarket.dto.ShopView;
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
 import com.example.cyclemarket.repos.ShopRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class ShopService {
                 .map(this::mapShopToView)
                 .toList();
     }
+
     private ShopView mapShopToView(Shop shop) {
         return ShopView.builder()
                 .id(shop.getId())
@@ -64,5 +67,26 @@ public class ShopService {
     public Shop getByName(String selectedShopName) {
         return shopRepo.findByShopName(selectedShopName)
                 .orElseThrow(ShopNotFoundException::new);
+    }
+
+    public EditShopReq getEditShopReq(Long shopId) {
+        Shop shop = shopRepo.findById(shopId).orElseThrow(ShopNotFoundException::new);
+        return EditShopReq.builder()
+                .address(shop.getAddress())
+                .name(shop.getShopName())
+                .shopId(shop.getId())
+                .build();
+    }
+
+    @Transactional
+    public void editShop(EditShopReq editShopReq) {
+        Shop shop = shopRepo.findById(editShopReq.getShopId()).orElseThrow(ShopNotFoundException::new);
+        shop.setAddress(editShopReq.getAddress());
+        shop.setShopName(editShopReq.getName());
+        shopRepo.save(shop);
+    }
+
+    public Shop getShopByName(String shopName) {
+        return shopRepo.findByShopName(shopName).orElseThrow(ShopNotFoundException::new);
     }
 }

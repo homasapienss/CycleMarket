@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование магазина | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/admin-form.css}">
+</head>
+<body>
+<main class="admin-form-page">
+    <section class="form-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Admin</span>
+            <h1>Редактирование магазина</h1>
+            <p>
+                Здесь отображаются текущие данные магазина, чтобы администратор мог в дальнейшем
+                обновлять адрес, название и переводить точку в неактивный статус без удаления истории.
+            </p>
+        </div>
+        <a class="ghost-link" th:href="@{/admin/shops}">Вернуться к магазинам</a>
+    </section>
+
+    <section class="form-layout">
+        <form class="admin-form-card" th:action="@{/admin/shops/edit}" method="post">
+            <input
+                    th:if="${editShopReq != null}"
+                    type="hidden"
+                    name="shopId"
+                    th:value="${editShopReq.shopId}">
+            <div class="form-block">
+                <label class="field-label" for="name">Название магазина</label>
+                <input
+                        class="field-input"
+                        id="name"
+                        name="name"
+                        type="text"
+                        maxlength="255"
+                        th:value="${editShopReq != null ? editShopReq.name : ''}"
+                        placeholder="Название магазина">
+            </div>
+
+            <div class="form-block">
+                <label class="field-label" for="address">Адрес</label>
+                <input
+                        class="field-input"
+                        id="address"
+                        name="address"
+                        type="text"
+                        maxlength="255"
+                        th:value="${editShopReq != null ? editShopReq.address : ''}"
+                        placeholder="Адрес магазина">
+            </div>
+
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Сохранить изменения</button>
+                <span class="form-note">
+                    Экран ожидает, что backend положит в модель атрибут <code>editShopReq</code>.
+                </span>
+            </div>
+        </form>
+
+        <aside class="info-panel">
+            <div class="panel-card">
+                <h2>Что уже подключено</h2>
+                <ul class="tips-list">
+                    <li><code>GET /admin/shops/edit/{id}</code> открывает экран редактирования.</li>
+                    <li>Форма предзаполняется через <code>editShopReq</code>.</li>
+                    <li><code>POST /admin/shops/edit</code> должен принять <code>shopId</code>, название и адрес магазина.</li>
+                </ul>
+            </div>
+
+            <div class="panel-card accent-card">
+                <h2>Следующий шаг</h2>
+                <p>После обновления формы можно добавить отдельное действие для мягкой деактивации точки.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>
