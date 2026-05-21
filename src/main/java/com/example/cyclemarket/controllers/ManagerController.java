@@ -33,6 +33,16 @@ public class ManagerController {
         return "manager/stock";
     }
 
+    @GetMapping("/orders")
+    public String getOrdersShop(Model model,
+                               Authentication authentication,
+                               @RequestParam(required = false) String mode,
+                               @RequestParam(required = false) Long shopId) {
+        model.addAttribute("shopOrders", managerService.getOrdersByShop(authentication, shopId));
+        model.addAttribute("shops", shopService.getAllShops());
+        return "manager/orders";
+    }
+
     @GetMapping("/stock/new")
     public String getNotStockShop(Model model,
                                   Authentication authentication) {

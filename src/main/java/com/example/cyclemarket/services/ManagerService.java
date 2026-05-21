@@ -1,6 +1,7 @@
 package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductStock;
+import com.example.cyclemarket.entities.Order;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.entities.Stock;
@@ -8,6 +9,7 @@ import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.repos.StockRepo;
 import com.example.cyclemarket.services.entity.EmployeeService;
+import com.example.cyclemarket.services.entity.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -23,11 +25,12 @@ public class ManagerService {
     private final StockRepo stockRepo;
     private final ProductRepo productRepo;
     private final StockService stockService;
+    private final OrderService orderService;
+
 
     @Transactional
     public List<ProductStock> getStockByShop(Authentication authentication, Long shopId) {
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isAdmin = isAdmin(authentication);
         if (isAdmin) {
             return shopId != null ?
                     stockService.getProductStockByShop(shopId)
@@ -73,7 +76,7 @@ public class ManagerService {
                                         .build();
                             })
                             .toList();
-                }else throw new RuntimeException("не твой магазин");
+                } else throw new RuntimeException("не твой магазин");
             } else {
                 Map<Long, Integer> productStockByShop = stockService.getProductStockByShop(managerShop);
                 return productStockByShop.entrySet()
@@ -114,5 +117,18 @@ public class ManagerService {
         stock.setQuantity(quantity);
         stock.setShop(shop);
         stockRepo.save(stock);
+    }
+
+    public List<Order> getOrdersByShop(Authentication authentication, Long shopId) {
+        boolean isAdmin = isAdmin(authentication);
+        if (!isAdmin) {
+
+        }
+        return  orderService.getOrdersByShop(shopId);
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }

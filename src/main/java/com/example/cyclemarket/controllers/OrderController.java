@@ -26,7 +26,7 @@ public class OrderController {
     public String order(Model model,
                         Authentication authentication,
                         HttpSession session) {
-        model.addAttribute("ordersViews", orderService.getOrders(authentication.getName()));
+        model.addAttribute("ordersViews", orderService.getOrderViewsByEmail(authentication.getName()));
         model.addAttribute("shops", shopContextService.getAllShops());
         model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/orders";
@@ -37,7 +37,7 @@ public class OrderController {
                         Model model,
                         Authentication authentication,
                         HttpSession session) {
-        model.addAttribute("orderView", orderService.getOrder(id, authentication.getName()));
+        model.addAttribute("orderView", orderService.getOrderDetailsByUser(id, authentication.getName()));
         model.addAttribute("shops", shopContextService.getAllShops());
         model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/order";

@@ -7,7 +7,6 @@ import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.dto.order.OrderItemView;
 import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.*;
-import com.example.cyclemarket.exception.NotEnoughStockException;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
@@ -83,8 +82,8 @@ public class OrderService {
         sessionCartService.clearCart(session);
     }
 
-    @Transactional
-    public OrderDetailsView getOrder(Long id, String email) {
+    @Transactional(readOnly = true)
+    public OrderDetailsView getOrderDetailsByUser(Long id, String email) {
         Order order = orderRepo.findById(id).orElseThrow(OrderNotFoundException::new);
         if (!order.getUser().getEmail().equals(email)) {
             throw new OrderNotFoundException();
@@ -117,8 +116,8 @@ public class OrderService {
         );
     }
 
-    @Transactional
-    public List<OrderView> getOrders(String email) {
+    @Transactional(readOnly = true)
+    public List<OrderView> getOrderViewsByEmail(String email) {
         List<Order> ordersByUser = orderRepo.findOrdersByUser(userService.getByEmail(email));
 
         return ordersByUser.stream().map(
@@ -130,5 +129,9 @@ public class OrderService {
                         order.getRecipientFullName()
                 )
         ).toList();
+    }
+
+    public List<Order> getOrdersByShop(Long shopId) {
+        return List.of();
     }
 }
