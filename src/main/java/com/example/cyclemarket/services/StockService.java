@@ -1,6 +1,7 @@
 package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductAvailabilityRow;
+import com.example.cyclemarket.dto.ProductStock;
 import com.example.cyclemarket.entities.Stock;
 import com.example.cyclemarket.exception.NotEnoughStockException;
 import com.example.cyclemarket.exception.StockNotFoundException;
@@ -115,5 +116,13 @@ public class StockService {
 
         stock.setQuantity(stock.getQuantity() - quantity);
         stockRepo.save(stock);
+    }
+
+    public List<Stock> getStockAllShops() {
+        return stockRepo.findAll();
+    }
+
+    public List<Stock> getStockByShopId(Long shopId) {
+        return stockRepo.findStocksByShop_Id(shopId);
     }
 }

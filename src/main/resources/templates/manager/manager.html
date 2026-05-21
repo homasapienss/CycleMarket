@@ -13,15 +13,19 @@
             <span class="hero-kicker">CycleMarket Manager</span>
             <h1>Панель менеджера точки</h1>
             <p>
-                Эта панель используется для работы с остатками. Набор доступных действий зависит
-                от роли текущего пользователя: менеджер работает только со своей точкой, а администратор
-                может управлять остатками по всем магазинам и складам.
+                Эта панель используется для работы с остатками. Менеджер работает только со своей
+                точкой, а администратор может открыть общий список остатков или посмотреть остатки
+                выбранного магазина.
             </p>
 
             <div class="hero-meta">
                 <div class="meta-chip" th:if="${managerShopName != null}">
                     <span class="meta-label">Точка</span>
                     <span class="meta-value" th:text="${managerShopName}">Название магазина</span>
+                </div>
+                <div class="meta-chip" th:if="${operationShopName != null}">
+                    <span class="meta-label">Рабочая точка</span>
+                    <span class="meta-value" th:text="${operationShopName}">Название магазина</span>
                 </div>
                 <div class="meta-chip" th:if="${managerUsername != null}">
                     <span class="meta-label">Пользователь</span>
@@ -33,8 +37,8 @@
         <div class="hero-panel">
             <span class="panel-title">Основной сценарий</span>
             <p>
-                Для менеджера backend должен брать магазин из текущего сотрудника. Для администратора
-                здесь можно открывать более общий сценарий без жесткой привязки к одной точке.
+                Для менеджера backend берет магазин из текущего сотрудника. Для администратора
+                просмотр остатков доступен либо по всем магазинам сразу, либо по явно выбранной точке.
             </p>
             <a class="hero-link" th:href="@{/products}">Перейти в каталог</a>
         </div>
@@ -43,7 +47,33 @@
     <section class="dashboard-section">
         <div class="section-heading">
             <h2>Управление остатками</h2>
-            <p>Ниже разделены действия для менеджера своей точки и расширенные действия администратора.</p>
+            <p>Ниже разделены действия для менеджера своей точки и сценарий просмотра остатков для администратора.</p>
+        </div>
+
+        <div class="role-block" sec:authorize="hasRole('ADMIN')">
+            <div class="role-block-head">
+                <span class="role-badge">Admin</span>
+                <h3>Выбор магазина для операций</h3>
+                <p>Администратор может открыть общий список остатков по всем магазинам или выбрать конкретную точку.</p>
+            </div>
+
+            <form class="shop-choice-form" th:if="${shops != null and !#lists.isEmpty(shops)}" th:action="@{/manager}" method="get">
+                <label class="shop-choice-label" for="manager-shop-select">Магазин</label>
+                <select class="shop-choice-select" id="manager-shop-select" name="shopId" onchange="this.form.submit()">
+                    <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId)}">Выберите магазин</option>
+                    <option
+                            th:each="shop : ${shops}"
+                            th:value="${shop.id}"
+                            th:text="${shop.shopName}"
+                            th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and param.shopId[0] == #strings.toString(shop.id)}">
+                        Магазин
+                    </option>
+                </select>
+            </form>
+
+            <div class="dashboard-section-soft manager-hint" th:if="${shops == null or #lists.isEmpty(shops)}">
+                Для административного сценария backend должен передать список магазинов в атрибуте <code>shops</code>.
+            </div>
         </div>
 
         <div class="role-block" sec:authorize="hasRole('MANAGER')">
@@ -80,31 +110,28 @@
         <div class="role-block role-block-admin" sec:authorize="hasRole('ADMIN')">
             <div class="role-block-head">
                 <span class="role-badge">Admin</span>
-                <h3>Расширенное управление остатками</h3>
-                <p>Администратор не ограничен одной точкой и должен иметь доступ к управлению остатками по всем магазинам и складам.</p>
+                <h3>Просмотр остатков</h3>
+                <p>Текущий backend для администратора уже поддерживает просмотр всех остатков и остатков выбранного магазина.</p>
             </div>
 
             <div class="action-grid action-grid-admin">
                 <article class="action-card action-card-admin">
                     <span class="action-badge">Stock</span>
-                    <h3>Все остатки по точкам</h3>
-                    <p>Общий список наличия с возможностью выбирать конкретный магазин или склад для дальнейших действий.</p>
-                    <a class="action-link" th:href="@{/admin/stock}">Открыть все остатки</a>
+                    <h3>Все остатки магазинов</h3>
+                    <p>Открыть единый список stock по всем магазинам. Полезно для быстрого обзора текущих остатков.</p>
+                    <a class="action-link" th:href="@{/manager/stock}">Открыть все остатки</a>
                 </article>
 
-                <article class="action-card action-card-admin">
+                <article class="action-card action-card-admin" th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}">
                     <span class="action-badge">Stock</span>
-                    <h3>Добавить наличие в любую точку</h3>
-                    <p>Администратор сам выбирает магазин и товар, после чего задает начальное количество.</p>
-                    <a class="action-link" th:href="@{/admin/stock/new}">Добавить наличие</a>
+                    <h3>Остатки выбранной точки</h3>
+                    <p>Просмотр товаров и количеств по магазину, который выбран в верхнем селекторе.</p>
+                    <a class="action-link" th:href="@{/manager/stock(shopId=${param.shopId[0]})}">Открыть остатки точки</a>
                 </article>
+            </div>
 
-                <article class="action-card action-card-admin">
-                    <span class="action-badge">Stock</span>
-                    <h3>Изменить остатки точки</h3>
-                    <p>Корректировка наличия по любой точке без ограничений текущим магазином менеджера.</p>
-                    <a class="action-link" th:href="@{/admin/stock/edit}">Управлять остатками</a>
-                </article>
+            <div class="dashboard-section-soft manager-hint" th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}">
+                Магазин выше можно выбрать, если нужен не общий список stock, а остатки конкретной точки.
             </div>
         </div>
     </section>
@@ -117,7 +144,7 @@
 
         <div class="rule-list">
             <div class="rule-item">Менеджер работает только с остатками своей точки.</div>
-            <div class="rule-item">Администратор может управлять остатками любой точки без привязки к одному магазину.</div>
+            <div class="rule-item">Администратор сейчас просматривает либо все остатки сразу, либо остатки выбранной точки.</div>
             <div class="rule-item">Менеджер не должен менять свои учетные данные и привязку к магазину.</div>
             <div class="rule-item">Создание и управление сотрудниками остается в зоне ответственности администратора.</div>
         </div>

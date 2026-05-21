@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +11,36 @@
     <section class="stock-hero">
         <div class="hero-copy">
             <span class="hero-kicker">CycleMarket Manager</span>
-            <h1>Товары моего магазина</h1>
+            <h1 sec:authorize="hasRole('MANAGER')">Товары моего магазина</h1>
+            <h1 sec:authorize="hasRole('ADMIN')" th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}">Остатки выбранной точки</h1>
+            <h1 sec:authorize="hasRole('ADMIN')" th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}">Остатки всех магазинов</h1>
             <p>
-                Здесь отображаются товары, которые уже привязаны к текущей точке через таблицу
-                <code>stock</code>. Страница ожидает список <code>shopStock</code> в модели.
+                Здесь отображаются товары из таблицы <code>stock</code>, которые backend вернул в атрибуте
+                <code>shopStock</code>. Для менеджера это остатки только его точки, для администратора
+                это либо выбранный магазин, либо общий список по всем магазинам.
             </p>
         </div>
 
         <div class="hero-actions">
-            <a class="ghost-link" th:href="@{/manager}">Назад в панель</a>
-            <a class="primary-link" th:href="@{/manager/stock/new}">Добавить новый товар</a>
+            <a class="ghost-link"
+               th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+               th:href="@{/manager}">
+                Назад в панель
+            </a>
+            <a class="ghost-link"
+               th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+               th:href="@{/manager(shopId=${param.shopId[0]})}">
+                Назад в панель
+            </a>
+            <a class="primary-link" sec:authorize="hasRole('MANAGER')" th:href="@{/manager/stock/new}">Добавить новый товар</a>
         </div>
     </section>
 
     <section class="stock-section" th:if="${shopStock != null and !#lists.isEmpty(shopStock)}">
         <div class="section-head">
             <h2>Текущие остатки</h2>
-            <p>Каждая строка показывает товар и количество, которое числится за магазином менеджера.</p>
+            <p sec:authorize="hasRole('MANAGER')">Каждая строка показывает товар и количество, которое числится за вашей точкой.</p>
+            <p sec:authorize="hasRole('ADMIN')">Каждая строка показывает товар и количество, которое backend вернул для текущего административного режима просмотра.</p>
         </div>
 
         <div class="stock-table-shell">
@@ -64,9 +77,23 @@
     </section>
 
     <section class="empty-state" th:if="${shopStock == null or #lists.isEmpty(shopStock)}">
-        <h2>В этой точке пока нет привязанных товаров</h2>
-        <p>Сначала добавь товары из общего каталога в наличие магазина, а потом они появятся в списке остатков.</p>
-        <a class="primary-link" th:href="@{/manager/stock/new}">Перейти к добавлению товаров</a>
+        <h2 sec:authorize="hasRole('MANAGER')">В этой точке пока нет привязанных товаров</h2>
+        <h2 sec:authorize="hasRole('ADMIN')">По текущему запросу остатки не найдены</h2>
+        <p sec:authorize="hasRole('MANAGER')">Сначала добавьте товары из общего каталога в наличие магазина, а потом они появятся в списке остатков.</p>
+        <p sec:authorize="hasRole('ADMIN')">Попробуйте открыть другой магазин через панель менеджера или вернуться к общему просмотру всех остатков.</p>
+        <a class="primary-link" sec:authorize="hasRole('MANAGER')" th:href="@{/manager/stock/new}">Перейти к добавлению товаров</a>
+        <a class="primary-link"
+           sec:authorize="hasRole('ADMIN')"
+           th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+           th:href="@{/manager}">
+            Вернуться назад
+        </a>
+        <a class="primary-link"
+           sec:authorize="hasRole('ADMIN')"
+           th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+           th:href="@{/manager/stock}">
+            Вернуться назад
+        </a>
     </section>
 </main>
 </body>

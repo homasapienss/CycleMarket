@@ -149,6 +149,38 @@ body {
     margin-top: 26px;
 }
 
+.shop-choice-form {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.shop-choice-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.shop-choice-select {
+    min-width: 280px;
+    min-height: 50px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--text);
+    font: inherit;
+}
+
+.shop-choice-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(47, 125, 86, 0.10);
+}
+
 .section-heading {
     margin-bottom: 18px;
 }
@@ -239,6 +271,10 @@ body {
     margin-top: 26px;
     padding: 26px;
     background: var(--surface);
+}
+
+.manager-hint {
+    margin-top: 0;
 }
 
 .rule-list {
