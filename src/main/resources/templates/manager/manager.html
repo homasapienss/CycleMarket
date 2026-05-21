@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,19 +13,14 @@
             <span class="hero-kicker">CycleMarket Manager</span>
             <h1>Панель менеджера точки</h1>
             <p>
-                Эта панель используется для работы с остатками. Менеджер работает только со своей
-                точкой, а администратор может открыть общий список остатков или посмотреть остатки
-                выбранного магазина.
+                Это нейтральная входная точка в операционный контур магазина. Детальная логика
+                роли и выбор магазина должны начинаться уже на экранах заказов и остатков.
             </p>
 
             <div class="hero-meta">
                 <div class="meta-chip" th:if="${managerShopName != null}">
                     <span class="meta-label">Точка</span>
                     <span class="meta-value" th:text="${managerShopName}">Название магазина</span>
-                </div>
-                <div class="meta-chip" th:if="${operationShopName != null}">
-                    <span class="meta-label">Рабочая точка</span>
-                    <span class="meta-value" th:text="${operationShopName}">Название магазина</span>
                 </div>
                 <div class="meta-chip" th:if="${managerUsername != null}">
                     <span class="meta-label">Пользователь</span>
@@ -37,9 +32,9 @@
         <div class="hero-panel">
             <span class="panel-title">Основной сценарий</span>
             <p>
-                Для менеджера backend берет магазин из текущего сотрудника. Для администратора
-                магазин выбирается на этой странице, а затем используется для перехода к операциям
-                с остатками и заказами.
+                На этой странице только навигация. Если пользователь менеджер, рабочий магазин
+                определяется на следующих экранах автоматически. Если администратор, нужный магазин
+                выбирается уже внутри конкретного раздела.
             </p>
             <a class="hero-link" th:href="@{/products}">Перейти в каталог</a>
         </div>
@@ -48,83 +43,30 @@
     <section class="dashboard-section">
         <div class="section-heading">
             <h2>Операционный контур точки</h2>
-            <p>Менеджер сразу работает со своей точкой. Администратор сначала выбирает магазин, а затем переходит к нужному разделу.</p>
+            <p>Одинаковая стартовая панель для менеджера и администратора. Различия начинаются уже внутри выбранного раздела.</p>
         </div>
 
-        <div class="role-block" sec:authorize="hasRole('ADMIN')">
+        <div class="role-block">
             <div class="role-block-head">
-                <span class="role-badge">Admin</span>
-                <h3>Выбор рабочей точки</h3>
-                <p>Выберите магазин один раз, а затем откройте нужный раздел. Тот же `shopId` уйдет и в заказы, и в остатки.</p>
-            </div>
-
-            <div class="dashboard-section-soft manager-hint" th:if="${shops == null or #lists.isEmpty(shops)}">
-                Для административного сценария backend должен передать список магазинов в атрибуте <code>shops</code>.
-            </div>
-        </div>
-
-        <div class="role-block" sec:authorize="hasRole('MANAGER')">
-            <div class="role-block-head">
-                <span class="role-badge">Manager</span>
-                <h3>Сценарий менеджера своей точки</h3>
-                <p>Эти действия должны работать только в рамках магазина, к которому привязан текущий сотрудник.</p>
+                <span class="role-badge">Operations</span>
+                <h3>Основные разделы</h3>
+                <p>Выбери раздел, в котором хочешь работать. Дальше backend уже сам определит нужный сценарий для роли.</p>
             </div>
 
             <div class="action-grid">
                 <article class="action-card action-card-primary">
                     <span class="action-badge">Orders</span>
                     <h3>Управление заказами</h3>
-                    <p>Здесь позже будет операционный сценарий по заказам текущей точки: просмотр, обработка и смена статусов.</p>
-                    <span class="action-link action-link-disabled">Скоро</span>
+                    <p>Просмотр, обработка и фильтрация заказов. Для менеджера только своя точка, для администратора расширенный режим.</p>
+                    <a class="action-link" th:href="@{/manager/orders}">Открыть заказы</a>
                 </article>
 
                 <article class="action-card">
                     <span class="action-badge">Stock</span>
                     <h3>Управление остатками</h3>
-                    <p>Просмотр текущих остатков и дальнейшие действия по stock в рамках магазина, к которому привязан менеджер.</p>
+                    <p>Просмотр текущих остатков и дальнейшие действия по stock. Для администратора фильтр по магазинам находится внутри раздела.</p>
                     <a class="action-link" th:href="@{/manager/stock}">Открыть остатки</a>
                 </article>
-            </div>
-        </div>
-
-        <div class="role-block role-block-admin" sec:authorize="hasRole('ADMIN')">
-            <div class="role-block-head">
-                <span class="role-badge">Admin</span>
-                <h3>Действия для выбранной точки</h3>
-                <p>После выбора магазина администратор открывает тот же операционный контур точки, но уже в явно выбранном контексте.</p>
-            </div>
-
-            <form class="admin-operation-form" th:action="@{/manager/stock}" method="get">
-                <label class="shop-choice-label" for="admin-operation-shop-select">Магазин</label>
-                <select class="shop-choice-select" id="admin-operation-shop-select" name="shopId">
-                    <option value="">Все доступные точки</option>
-                    <option
-                            th:each="shop : ${shops}"
-                            th:value="${shop.id}"
-                            th:text="${shop.shopName}">
-                        Магазин
-                    </option>
-                </select>
-
-                <div class="action-grid action-grid-admin">
-                    <article class="action-card action-card-admin">
-                        <span class="action-badge">Orders</span>
-                        <h3>Управление заказами</h3>
-                        <p>Открывает контур заказов. Если магазин выбран, `shopId` уйдет в запрос; если нет, backend сам решит общий сценарий.</p>
-                        <button class="action-link" th:formaction="@{/manager/orders}" type="submit">Открыть заказы</button>
-                    </article>
-
-                    <article class="action-card action-card-admin">
-                        <span class="action-badge">Stock</span>
-                        <h3>Управление остатками</h3>
-                        <p>Открывает остатки. Если магазин выбран, он уйдет в `shopId`; если нет, backend сам обработает общий сценарий.</p>
-                        <button class="action-link" th:formaction="@{/manager/stock}" type="submit">Открыть остатки</button>
-                    </article>
-                </div>
-            </form>
-
-            <div class="dashboard-section-soft manager-hint">
-                Один и тот же выбор магазина используется для обоих переходов. Если магазин не выбран, форма отправит запрос без `shopId`.
             </div>
         </div>
     </section>
@@ -137,7 +79,7 @@
 
         <div class="rule-list">
             <div class="rule-item">Менеджер работает только с остатками своей точки.</div>
-            <div class="rule-item">Администратор сначала выбирает магазин, а затем открывает операции уже для выбранной точки.</div>
+            <div class="rule-item">Администратор получает расширенную фильтрацию уже внутри экранов заказов и остатков.</div>
             <div class="rule-item">Менеджер не должен менять свои учетные данные и привязку к магазину.</div>
             <div class="rule-item">Создание и управление сотрудниками остается в зоне ответственности администратора.</div>
         </div>

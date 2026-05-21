@@ -8,6 +8,7 @@
     --accent: #2f7d56;
     --accent-dark: #1f5e3f;
     --accent-soft: rgba(47, 125, 86, 0.12);
+    --danger: #b44738;
     --shadow: 0 24px 52px rgba(31, 61, 45, 0.08);
 }
 
@@ -31,9 +32,8 @@ body {
 }
 
 .stock-hero,
-.stock-table-shell,
-.product-card,
-.empty-state {
+.table-card,
+.dashboard-section-soft {
     border: 1px solid var(--line);
     border-radius: 28px;
     background: var(--surface);
@@ -41,22 +41,15 @@ body {
 }
 
 .stock-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(240px, 0.65fr);
     gap: 24px;
     padding: 30px;
 }
 
-.hero-copy {
-    max-width: 780px;
-}
-
-.hero-kicker,
-.card-badge,
-.card-id {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+.hero-copy h1,
+.section-heading h2 {
+    margin: 0;
 }
 
 .hero-kicker {
@@ -68,13 +61,8 @@ body {
     color: var(--accent-dark);
     font-size: 0.76rem;
     font-weight: 700;
-}
-
-.hero-copy h1,
-.section-head h2,
-.empty-state h2,
-.product-card h3 {
-    margin: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .hero-copy h1 {
@@ -83,9 +71,7 @@ body {
 }
 
 .hero-copy p,
-.section-head p,
-.empty-state p,
-.product-meta,
+.section-heading p,
 .helper-note {
     color: var(--muted);
     line-height: 1.65;
@@ -93,154 +79,92 @@ body {
 
 .hero-actions {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-end;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .ghost-link,
-.primary-link,
-.table-link {
+.action-button,
+.submit-button,
+.quantity-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 46px;
     padding: 0 18px;
     border-radius: 15px;
-    text-decoration: none;
+    font: inherit;
     font-weight: 700;
+    text-decoration: none;
 }
 
-.ghost-link,
-.table-link {
+.ghost-link {
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.8);
     color: var(--text);
 }
 
-.primary-link {
+.dashboard-section {
+    margin-top: 26px;
+}
+
+.section-heading {
+    margin-bottom: 18px;
+}
+
+.section-heading h2 {
+    font-size: 1.7rem;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.filter-chip-active {
+    border-color: var(--accent);
     background: var(--accent);
     color: #fff;
 }
 
-.stock-section {
-    margin-top: 26px;
-}
-
-.section-head {
-    margin-bottom: 18px;
-}
-
-.section-head h2 {
-    font-size: 1.65rem;
-}
-
-.stock-table-shell {
-    overflow-x: auto;
-}
-
-.stock-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.stock-table th,
-.stock-table td {
-    padding: 18px 20px;
-    border-bottom: 1px solid rgba(202, 216, 206, 0.8);
-    text-align: left;
-    vertical-align: middle;
-}
-
-.stock-table th {
-    font-size: 0.82rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-.stock-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.quantity-badge {
-    display: inline-flex;
-    min-width: 52px;
-    justify-content: center;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    font-weight: 700;
-}
-
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-}
-
-.product-card {
+.filter-select-form {
     display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 24px;
-    background: var(--surface-strong);
-}
-
-.product-card-head {
-    display: flex;
-    justify-content: space-between;
+    align-items: end;
     gap: 12px;
-    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
 }
 
-.card-badge {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--accent-dark);
+.filter-select-label {
+    margin-bottom: 0;
 }
 
-.card-id {
-    font-size: 0.72rem;
-    color: var(--muted);
-}
-
-.product-card h3 {
-    font-size: 1.25rem;
-}
-
-.product-price {
-    margin: 0;
-    font-size: 1.08rem;
-    font-weight: 700;
-}
-
-.product-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: auto;
-}
-
-.stock-add-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+.field-label,
 .quantity-label {
     font-size: 0.92rem;
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--text);
 }
 
-.quantity-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
+.field-input,
 .quantity-input {
-    width: 110px;
     min-height: 46px;
     padding: 0 14px;
     border: 1px solid var(--line);
@@ -251,84 +175,161 @@ body {
     outline: none;
 }
 
+.field-input:focus,
 .quantity-input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 4px rgba(47, 125, 86, 0.12);
 }
 
+.filter-select {
+    min-width: 260px;
+}
+
+.table-card {
+    overflow: hidden;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.management-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.management-table th,
+.management-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(202, 216, 206, 0.8);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.management-table th {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.management-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.product-link {
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.product-link:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
+}
+
+.quantity-badge,
+.quantity-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.quantity-badge {
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+}
+
+.quantity-value {
+    border: 1px solid var(--line);
+    background: #fff;
+}
+
+.quantity-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.quantity-actions form,
+.stock-add-inline {
+    margin: 0;
+}
+
+.quantity-button {
+    min-width: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.quantity-button:hover,
+.submit-button:hover,
+.ghost-link:hover,
+.filter-chip:hover {
+    filter: brightness(0.97);
+}
+
+.stock-add-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stock-add-inline .quantity-input {
+    width: 110px;
+}
+
 .submit-button {
-    min-height: 46px;
-    padding: 0 18px;
-    border: none;
-    border-radius: 15px;
+    border: 1px solid var(--accent);
     background: var(--accent);
     color: #fff;
-    font: inherit;
-    font-weight: 700;
     cursor: pointer;
+}
+
+.dashboard-section-soft {
+    margin-top: 18px;
+    padding: 24px;
 }
 
 .helper-note {
     font-size: 0.94rem;
 }
 
-.empty-state {
-    margin-top: 26px;
-    padding: 30px;
-}
-
-.empty-state .primary-link {
-    margin-top: 12px;
-}
-
-.ghost-link:hover,
-.primary-link:hover,
-.table-link:hover {
-    filter: brightness(0.97);
-}
-
 @media (max-width: 960px) {
-    .stock-hero,
-    .card-grid {
-        flex-direction: column;
+    .stock-hero {
         grid-template-columns: 1fr;
     }
-
-    .stock-hero {
-        align-items: flex-start;
-    }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
     .stock-page {
         width: min(100% - 20px, 100%);
         padding: 20px 0 34px;
     }
 
     .stock-hero,
-    .stock-table-shell,
-    .product-card,
-    .empty-state {
+    .table-card,
+    .dashboard-section-soft {
         border-radius: 22px;
     }
 
-    .stock-hero,
-    .product-card,
-    .empty-state {
+    .stock-hero {
         padding: 20px;
     }
 
-    .stock-table th,
-    .stock-table td {
+    .management-table th,
+    .management-table td {
         padding: 14px 16px;
-    }
-
-    .quantity-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .quantity-input {
-        width: 100%;
     }
 }

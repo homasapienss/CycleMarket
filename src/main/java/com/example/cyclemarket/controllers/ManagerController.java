@@ -1,7 +1,6 @@
 package com.example.cyclemarket.controllers;
 
 import com.example.cyclemarket.services.ManagerService;
-import com.example.cyclemarket.services.entity.EmployeeService;
 import com.example.cyclemarket.services.entity.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,31 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ManagerController {
     private final ManagerService managerService;
     private final ShopService shopService;
-    private final EmployeeService employeeService;
 
     @GetMapping
-    public String getManagerPage(Model model, Authentication authentication) {
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("managerUsername", authentication.getName());
-
-        if (isAdmin) {
-            model.addAttribute("shops", shopService.getAllShops());
-        } else {
-            model.addAttribute("managerShopName",
-                    employeeService.getCurrentManagerShop(authentication.getName()).getShopName());
-        }
-
+    public String getManagerPage() {
         return "manager/manager";
     }
 
     @GetMapping("/stock")
     public String getStockShop(Model model,
                                Authentication authentication,
+                               @RequestParam(required = false) String mode,
                                @RequestParam(required = false) Long shopId) {
         model.addAttribute("shopStock", managerService.getStockByShop(authentication, shopId));
+        model.addAttribute("shops", shopService.getAllShops());
         return "manager/stock";
     }
 
@@ -50,7 +37,7 @@ public class ManagerController {
     public String getNotStockShop(Model model,
                                   Authentication authentication) {
         model.addAttribute("notShopStock", managerService.getNotStockByShop(authentication.getName()));
-        return "manager/new-stock";
+        return "manager/stock";
     }
 
     @PostMapping("/stock/new")
