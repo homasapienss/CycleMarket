@@ -38,7 +38,8 @@
             <span class="panel-title">Основной сценарий</span>
             <p>
                 Для менеджера backend берет магазин из текущего сотрудника. Для администратора
-                просмотр остатков доступен либо по всем магазинам сразу, либо по явно выбранной точке.
+                магазин выбирается на этой странице, а затем используется для перехода к операциям
+                с остатками и заказами.
             </p>
             <a class="hero-link" th:href="@{/products}">Перейти в каталог</a>
         </div>
@@ -46,30 +47,16 @@
 
     <section class="dashboard-section">
         <div class="section-heading">
-            <h2>Управление остатками</h2>
-            <p>Ниже разделены действия для менеджера своей точки и сценарий просмотра остатков для администратора.</p>
+            <h2>Операционный контур точки</h2>
+            <p>Менеджер сразу работает со своей точкой. Администратор сначала выбирает магазин, а затем переходит к нужному разделу.</p>
         </div>
 
         <div class="role-block" sec:authorize="hasRole('ADMIN')">
             <div class="role-block-head">
                 <span class="role-badge">Admin</span>
-                <h3>Выбор магазина для операций</h3>
-                <p>Администратор может открыть общий список остатков по всем магазинам или выбрать конкретную точку.</p>
+                <h3>Выбор рабочей точки</h3>
+                <p>Выберите магазин один раз, а затем откройте нужный раздел. Тот же `shopId` уйдет и в заказы, и в остатки.</p>
             </div>
-
-            <form class="shop-choice-form" th:if="${shops != null and !#lists.isEmpty(shops)}" th:action="@{/manager}" method="get">
-                <label class="shop-choice-label" for="manager-shop-select">Магазин</label>
-                <select class="shop-choice-select" id="manager-shop-select" name="shopId" onchange="this.form.submit()">
-                    <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId)}">Выберите магазин</option>
-                    <option
-                            th:each="shop : ${shops}"
-                            th:value="${shop.id}"
-                            th:text="${shop.shopName}"
-                            th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and param.shopId[0] == #strings.toString(shop.id)}">
-                        Магазин
-                    </option>
-                </select>
-            </form>
 
             <div class="dashboard-section-soft manager-hint" th:if="${shops == null or #lists.isEmpty(shops)}">
                 Для административного сценария backend должен передать список магазинов в атрибуте <code>shops</code>.
@@ -85,24 +72,17 @@
 
             <div class="action-grid">
                 <article class="action-card action-card-primary">
+                    <span class="action-badge">Orders</span>
+                    <h3>Управление заказами</h3>
+                    <p>Здесь позже будет операционный сценарий по заказам текущей точки: просмотр, обработка и смена статусов.</p>
+                    <span class="action-link action-link-disabled">Скоро</span>
+                </article>
+
+                <article class="action-card">
                     <span class="action-badge">Stock</span>
-                    <h3>Остатки моей точки</h3>
-                    <p>Список всех товаров, которые уже привязаны к текущему магазину или складу.</p>
+                    <h3>Управление остатками</h3>
+                    <p>Просмотр текущих остатков и дальнейшие действия по stock в рамках магазина, к которому привязан менеджер.</p>
                     <a class="action-link" th:href="@{/manager/stock}">Открыть остатки</a>
-                </article>
-
-                <article class="action-card">
-                    <span class="action-badge">Stock</span>
-                    <h3>Добавить товар в наличие</h3>
-                    <p>Привязка существующего товара каталога к текущей точке и ввод начального количества.</p>
-                    <a class="action-link" th:href="@{/manager/stock/new}">Добавить наличие</a>
-                </article>
-
-                <article class="action-card">
-                    <span class="action-badge">Stock</span>
-                    <h3>Товары каталога для привязки</h3>
-                    <p>Список товаров, которых еще нет в stock текущей точки и которые можно добавить в магазин.</p>
-                    <a class="action-link" th:href="@{/manager/stock/new}">Открыть список</a>
                 </article>
             </div>
         </div>
@@ -110,28 +90,41 @@
         <div class="role-block role-block-admin" sec:authorize="hasRole('ADMIN')">
             <div class="role-block-head">
                 <span class="role-badge">Admin</span>
-                <h3>Просмотр остатков</h3>
-                <p>Текущий backend для администратора уже поддерживает просмотр всех остатков и остатков выбранного магазина.</p>
+                <h3>Действия для выбранной точки</h3>
+                <p>После выбора магазина администратор открывает тот же операционный контур точки, но уже в явно выбранном контексте.</p>
             </div>
 
-            <div class="action-grid action-grid-admin">
-                <article class="action-card action-card-admin">
-                    <span class="action-badge">Stock</span>
-                    <h3>Все остатки магазинов</h3>
-                    <p>Открыть единый список stock по всем магазинам. Полезно для быстрого обзора текущих остатков.</p>
-                    <a class="action-link" th:href="@{/manager/stock}">Открыть все остатки</a>
-                </article>
+            <form class="admin-operation-form" th:action="@{/manager/stock}" method="get">
+                <label class="shop-choice-label" for="admin-operation-shop-select">Магазин</label>
+                <select class="shop-choice-select" id="admin-operation-shop-select" name="shopId">
+                    <option value="">Все доступные точки</option>
+                    <option
+                            th:each="shop : ${shops}"
+                            th:value="${shop.id}"
+                            th:text="${shop.shopName}">
+                        Магазин
+                    </option>
+                </select>
 
-                <article class="action-card action-card-admin" th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}">
-                    <span class="action-badge">Stock</span>
-                    <h3>Остатки выбранной точки</h3>
-                    <p>Просмотр товаров и количеств по магазину, который выбран в верхнем селекторе.</p>
-                    <a class="action-link" th:href="@{/manager/stock(shopId=${param.shopId[0]})}">Открыть остатки точки</a>
-                </article>
-            </div>
+                <div class="action-grid action-grid-admin">
+                    <article class="action-card action-card-admin">
+                        <span class="action-badge">Orders</span>
+                        <h3>Управление заказами</h3>
+                        <p>Открывает контур заказов. Если магазин выбран, `shopId` уйдет в запрос; если нет, backend сам решит общий сценарий.</p>
+                        <button class="action-link" th:formaction="@{/manager/orders}" type="submit">Открыть заказы</button>
+                    </article>
 
-            <div class="dashboard-section-soft manager-hint" th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}">
-                Магазин выше можно выбрать, если нужен не общий список stock, а остатки конкретной точки.
+                    <article class="action-card action-card-admin">
+                        <span class="action-badge">Stock</span>
+                        <h3>Управление остатками</h3>
+                        <p>Открывает остатки. Если магазин выбран, он уйдет в `shopId`; если нет, backend сам обработает общий сценарий.</p>
+                        <button class="action-link" th:formaction="@{/manager/stock}" type="submit">Открыть остатки</button>
+                    </article>
+                </div>
+            </form>
+
+            <div class="dashboard-section-soft manager-hint">
+                Один и тот же выбор магазина используется для обоих переходов. Если магазин не выбран, форма отправит запрос без `shopId`.
             </div>
         </div>
     </section>
@@ -144,7 +137,7 @@
 
         <div class="rule-list">
             <div class="rule-item">Менеджер работает только с остатками своей точки.</div>
-            <div class="rule-item">Администратор сейчас просматривает либо все остатки сразу, либо остатки выбранной точки.</div>
+            <div class="rule-item">Администратор сначала выбирает магазин, а затем открывает операции уже для выбранной точки.</div>
             <div class="rule-item">Менеджер не должен менять свои учетные данные и привязку к магазину.</div>
             <div class="rule-item">Создание и управление сотрудниками остается в зоне ответственности администратора.</div>
         </div>

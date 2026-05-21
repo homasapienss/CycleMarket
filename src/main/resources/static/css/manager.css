@@ -154,6 +154,14 @@ body {
     align-items: end;
     gap: 12px;
     flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.stock-action-form,
+.admin-operation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .shop-choice-label {
@@ -260,6 +268,20 @@ body {
     border: 1px solid var(--line);
     color: var(--text);
     background: #fff;
+}
+
+.stock-action-form .action-link,
+.admin-operation-form .action-link {
+    width: 100%;
+    cursor: pointer;
+}
+
+.action-link-disabled {
+    pointer-events: none;
+    border-color: rgba(201, 215, 205, 0.92);
+    background: #eef2ef;
+    color: #7a877f;
+    cursor: not-allowed;
 }
 
 .action-link:hover,
