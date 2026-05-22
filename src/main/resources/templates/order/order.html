@@ -85,6 +85,54 @@
                 </span>
             </div>
 
+            <div class="status-form" th:if="${staffView != null and staffView}">
+                <span class="details-label status-form-label">Действия по заказу</span>
+
+                <div class="status-form-row">
+                    <form
+                            class="status-action-form"
+                            th:if="${orderView.statusCssClass == 'status-new'}"
+                            th:action="@{/manager/orders/{id}/status(id=${orderView.orderId})}"
+                            method="post">
+                        <input type="hidden" name="status" value="PROCESSING">
+                        <button class="toolbar-button status-submit" type="submit">Взять в обработку</button>
+                    </form>
+
+                    <form
+                            class="status-action-form"
+                            th:if="${orderView.statusCssClass == 'status-processing'}"
+                            th:action="@{/manager/orders/{id}/status(id=${orderView.orderId})}"
+                            method="post">
+                        <input type="hidden" name="status" value="READY">
+                        <button class="toolbar-button status-submit" type="submit">Готов к выдаче</button>
+                    </form>
+
+                    <form
+                            class="status-action-form"
+                            th:if="${orderView.statusCssClass == 'status-ready'}"
+                            th:action="@{/manager/orders/{id}/status(id=${orderView.orderId})}"
+                            method="post">
+                        <input type="hidden" name="status" value="COMPLETED">
+                        <button class="toolbar-button status-submit" type="submit">Завершить заказ</button>
+                    </form>
+
+                    <form
+                            class="status-action-form"
+                            th:if="${orderView.statusCssClass != 'status-completed' and orderView.statusCssClass != 'status-cancelled'}"
+                            th:action="@{/manager/orders/{id}/status(id=${orderView.orderId})}"
+                            method="post">
+                        <input type="hidden" name="status" value="CANCELLED">
+                        <button class="toolbar-button status-submit status-submit-danger" type="submit">Отменить заказ</button>
+                    </form>
+                </div>
+
+                <p
+                        class="status-form-note"
+                        th:if="${orderView.statusCssClass == 'status-completed' or orderView.statusCssClass == 'status-cancelled'}">
+                    Для текущего статуса дальнейшие действия недоступны.
+                </p>
+            </div>
+
             <div class="details-block">
                 <span class="details-label">Получатель</span>
                 <span class="details-value" th:text="${orderView.recipientFullName}">Иванов Иван Иванович</span>

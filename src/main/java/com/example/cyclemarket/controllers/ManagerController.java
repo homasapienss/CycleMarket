@@ -42,8 +42,9 @@ public class ManagerController {
 
     @GetMapping("/orders/{id}")
     public String getOrder(Model model,
-                           @PathVariable("id") Long orderId) {
-        model.addAttribute("orderView", managerService.getOrderViewForStaff(orderId));
+                           @PathVariable("id") Long orderId,
+                           Authentication authentication) {
+        model.addAttribute("orderView", managerService.getOrderViewForStaff(orderId, authentication));
         model.addAttribute("staffView", true);
         return "order/order";
     }

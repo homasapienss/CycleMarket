@@ -12,7 +12,6 @@ import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.repos.StockRepo;
 import com.example.cyclemarket.services.entity.EmployeeService;
 import com.example.cyclemarket.services.entity.OrderService;
-import com.example.cyclemarket.services.entity.ShopService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ public class ManagerService {
     private final ProductRepo productRepo;
     private final StockService stockService;
     private final OrderService orderService;
-    private final ShopService shopService;
 
 
     @Transactional
@@ -155,8 +153,18 @@ public class ManagerService {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
+    private boolean isManager(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
+    }
+
     @Transactional(readOnly = true)
-    public OrderDetailsView getOrderViewForStaff(Long orderId) {
-        return orderService.getOrderDetailsForStaff(orderId);
+    public OrderDetailsView getOrderViewForStaff(Long orderId, Authentication authentication) {
+        if (isAdmin(authentication)) return orderService.getOrderDetailsForStaff(orderId);
+
+        Long managerShopId = employeeService.getShopIdByEmployeeName(authentication.getName());
+        Order orderByIdAndShopId = orderService.getOrderByIdAndShopId(orderId, managerShopId);
+
+        return orderService.getOrderDetailsByOrder(orderByIdAndShopId);
     }
 }

@@ -22,4 +22,6 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
     Long shopId(Long shopId);
 
     List<Order> findOrdersByShop_Id(Long shopId);
+
+    Optional<Order> findOrderByIdAndShop_Id(Long id, Long shopId);
 }

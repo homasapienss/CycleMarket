@@ -16,6 +16,7 @@ import com.example.cyclemarket.services.SessionCartService;
 import com.example.cyclemarket.services.StockService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,7 +132,7 @@ public class OrderService {
         return getOrderDetailsByOrder(order);
     }
 
-    private OrderDetailsView getOrderDetailsByOrder(Order order) {
+    public OrderDetailsView getOrderDetailsByOrder(Order order) {
         return new OrderDetailsView(
                 order.getId(),
                 order.getCreatedAt(),
@@ -158,5 +159,14 @@ public class OrderService {
                 order.getStatus().getCssClass(),
                 order.getShop().getShopName()
         );
+    }
+
+    public Order getOrder(Long orderId) {
+        return orderRepo.findById(orderId).orElseThrow(OrderNotFoundException::new);
+    }
+
+    public Order getOrderByIdAndShopId(Long orderId, Long managerShopId) {
+        return orderRepo.findOrderByIdAndShop_Id(orderId, managerShopId)
+                .orElseThrow(()->new AccessDeniedException("Нет доступа к заказу другого магазина"));
     }
 }
