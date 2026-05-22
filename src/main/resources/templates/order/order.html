@@ -86,16 +86,14 @@
                 <span class="details-value" th:text="${orderView.recipientFullName}">Иванов Иван Иванович</span>
             </div>
 
-            <div class="details-block">
-                <span class="details-label">Телефон</span>
-                <span class="details-value" th:text="${orderView.recipientPhone}">+7 (900) 123-45-67</span>
+            <div class="details-block" th:if="${orderView.shopName != null and !#strings.isEmpty(orderView.shopName)}">
+                <span class="details-label">Магазин</span>
+                <span class="details-value" th:text="${orderView.shopName}">Название магазина</span>
             </div>
 
             <div class="details-block">
-                <span class="details-label">Адрес доставки</span>
-                <span class="details-value details-value-multiline" th:text="${orderView.deliveryAddress}">
-                    Город, улица, дом, квартира
-                </span>
+                <span class="details-label">Телефон</span>
+                <span class="details-value" th:text="${orderView.recipientPhone}">+7 (900) 123-45-67</span>
             </div>
 
             <div class="details-block" th:if="${orderView.comment != null and !#strings.isEmpty(orderView.comment)}">

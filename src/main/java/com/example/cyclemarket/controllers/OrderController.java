@@ -23,23 +23,17 @@ public class OrderController {
     private final ShopContextService shopContextService;
 
     @GetMapping
-    public String order(Model model,
-                        Authentication authentication,
-                        HttpSession session) {
+    public String getOrders(Model model,
+                            Authentication authentication) {
         model.addAttribute("ordersViews", orderService.getOrderViewsByEmail(authentication.getName()));
-//        model.addAttribute("shops", shopContextService.getAllShops());
-//        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/orders";
     }
 
     @GetMapping("/{id}")
     public String order(@PathVariable Long id,
                         Model model,
-                        Authentication authentication,
-                        HttpSession session) {
+                        Authentication authentication) {
         model.addAttribute("orderView", orderService.getOrderDetailsByUser(id, authentication.getName()));
-//        model.addAttribute("shops", shopContextService.getAllShops());
-//        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/order";
     }
 
@@ -55,8 +49,7 @@ public class OrderController {
         if (bindingResult.hasErrors()) {
 
 
-            model.addAttribute("cartInfo",
-                    sessionCartService.getCartView(session, shopId));
+            model.addAttribute("cartInfo", sessionCartService.getCartView(session, shopId));
             model.addAttribute("shops", shopContextService.getAllShops());
             model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
             return "order/checkout";

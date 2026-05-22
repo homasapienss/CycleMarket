@@ -31,6 +31,7 @@ public class OrderService {
     private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
     private final StockService stockService;
+    private final ShopService shopService;
 
     @Transactional
     public void createOrder(String email, HttpSession session, CheckoutRequest checkoutRequest, Long shopId) {
@@ -55,7 +56,7 @@ public class OrderService {
                 .collect(Collectors.toMap(Product::getId, product -> product));
 
         Order order = new Order();
-        order.setDeliveryAddress(checkoutRequest.getDeliveryAddress());
+        order.setShop(shopService.getById(shopId));
         order.setRecipientFullName(checkoutRequest.getRecipientFullName());
         order.setRecipientPhone(checkoutRequest.getRecipientPhone());
         order.setComment(checkoutRequest.getComment());
@@ -84,10 +85,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDetailsView getOrderDetailsByUser(Long id, String email) {
-        Order order = orderRepo.findById(id).orElseThrow(OrderNotFoundException::new);
-        if (!order.getUser().getEmail().equals(email)) {
-            throw new OrderNotFoundException();
-        }
+        Order order = orderRepo.findByIdAndUser_Email(id, email).orElseThrow(OrderNotFoundException::new);
         return new OrderDetailsView(
                 order.getId(),
                 order.getCreatedAt(),
@@ -109,10 +107,10 @@ public class OrderService {
                         }).toList(),
                 order.getRecipientFullName(),
                 order.getRecipientPhone(),
-                order.getDeliveryAddress(),
                 order.getComment(),
                 order.getStatus().getDisplayName(),
-                order.getStatus().getCssClass()
+                order.getStatus().getCssClass(),
+                order.getShop().getShopName()
         );
     }
 
@@ -126,12 +124,14 @@ public class OrderService {
                         order.getCreatedAt(),
                         order.getTotalPrice(),
                         order.getItems().size(),
-                        order.getRecipientFullName()
+                        order.getRecipientFullName(),
+                        order.getShop().getShopName()
                 )
         ).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<Order> getOrdersByShop(Long shopId) {
-        return List.of();
+        return orderRepo.getOrdersByShop_Id(shopId);
     }
 }

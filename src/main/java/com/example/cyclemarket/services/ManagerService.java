@@ -124,7 +124,7 @@ public class ManagerService {
         if (!isAdmin) {
 
         }
-        return  orderService.getOrdersByShop(shopId);
+        return orderService.getOrdersByShop(shopId);
     }
 
     private boolean isAdmin(Authentication authentication) {

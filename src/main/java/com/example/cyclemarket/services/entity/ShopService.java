@@ -3,6 +3,7 @@ package com.example.cyclemarket.services.entity;
 import com.example.cyclemarket.dto.CreateShopReq;
 import com.example.cyclemarket.dto.EditShopReq;
 import com.example.cyclemarket.dto.ShopView;
+import com.example.cyclemarket.entities.Order;
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
 import com.example.cyclemarket.repos.ShopRepo;
@@ -102,5 +103,11 @@ public class ShopService {
         Shop shop = shopRepo.findById(shopId).orElseThrow(ShopNotFoundException::new);
         shop.setActive(true);
         shopRepo.save(shop);
+    }
+
+    public List<Order> getOrdersByShopId(Long byId) {
+        return shopRepo.findById(byId)
+                .orElseThrow(ShopNotFoundException::new)
+                .getOrders();
     }
 }

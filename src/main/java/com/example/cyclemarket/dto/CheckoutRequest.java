@@ -20,10 +20,6 @@ public class CheckoutRequest {
     @Size(min = 10, max = 30, message = "Телефон должен содержать от 10 до 30 символов")
     private String recipientPhone;
 
-    @NotBlank(message = "Введите адрес доставки")
-    @Size(min = 10, max = 255, message = "Адрес доставки должен содержать от 10 до 255 символов")
-    private String deliveryAddress;
-
     @Size(max = 500, message = "Комментарий не должен превышать 500 символов")
     private String comment;
 }

@@ -19,8 +19,8 @@ public class OrderDetailsView {
     private List<OrderItemView> items;
     private String recipientFullName;
     private String recipientPhone;
-    private String deliveryAddress;
     private String comment;
     private String statusDisplayName;
     private String statusCssClass;
+    private String shopName;
 }

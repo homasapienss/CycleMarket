@@ -17,4 +17,5 @@ public class OrderView {
     private Integer totalPrice;
     private Integer itemsCount;
     private String recipientFullName;
+    private String shopName;
 }

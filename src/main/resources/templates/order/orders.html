@@ -42,6 +42,10 @@
                     <span class="meta-title">Позиций</span>
                     <span class="meta-value" th:text="${order.itemsCount}">0</span>
                 </div>
+                <div class="meta-block" th:if="${order.shopName != null and !#strings.isEmpty(order.shopName)}">
+                    <span class="meta-title">Магазин</span>
+                    <span class="meta-value" th:text="${order.shopName}">Название магазина</span>
+                </div>
                 <div class="meta-block">
                     <span class="meta-title">Получатель</span>
                     <span class="meta-value" th:text="${order.recipientFullName}">Иванов Иван</span>

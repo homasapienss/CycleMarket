@@ -49,8 +49,8 @@
         <div class="checkout-form-card">
             <div class="section-heading">
                 <span class="section-chip">Шаг 2</span>
-                <h1>Данные для доставки</h1>
-                <p>Заполните контактные данные получателя и адрес, после чего заказ можно будет подтвердить.</p>
+                <h1>Данные для самовывоза</h1>
+                <p>Заполните контактные данные получателя. После подтверждения заказ будет оформлен в выбранном магазине на самовывоз.</p>
             </div>
 
             <form class="checkout-form" th:action="@{/orders}" th:object="${checkoutForm}" method="post">
@@ -85,26 +85,13 @@
                 </label>
 
                 <label class="field">
-                    <span class="field-label">Адрес доставки</span>
-                    <textarea
-                            class="field-textarea"
-                            th:classappend="${#fields.hasErrors('deliveryAddress')} ? ' field-input-error'"
-                            th:field="*{deliveryAddress}"
-                            rows="4"
-                            placeholder="Город, улица, дом, квартира, подъезд, этаж"></textarea>
-                    <span class="field-error" th:if="${#fields.hasErrors('deliveryAddress')}" th:errors="*{deliveryAddress}">
-                        Ошибка поля
-                    </span>
-                </label>
-
-                <label class="field">
                     <span class="field-label">Комментарий к заказу</span>
                     <textarea
                             class="field-textarea"
                             th:classappend="${#fields.hasErrors('comment')} ? ' field-input-error'"
                             th:field="*{comment}"
                             rows="3"
-                            placeholder="Например: позвонить за 30 минут, не звонить в домофон и т.д."></textarea>
+                            placeholder="Например: подготовить заказ к вечеру или связаться перед выдачей"></textarea>
                     <span class="field-error" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
                         Ошибка поля
                     </span>

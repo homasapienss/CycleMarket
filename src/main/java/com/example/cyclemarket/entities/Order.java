@@ -34,8 +34,6 @@ public class Order {
     private String recipientFullName;
     @Column(nullable = false)
     private String recipientPhone;
-    @Column(nullable = false)
-    private String deliveryAddress;
     private String comment;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
