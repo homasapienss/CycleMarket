@@ -86,6 +86,52 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDetailsView getOrderDetailsByUser(Long id, String email) {
         Order order = orderRepo.findByIdAndUser_Email(id, email).orElseThrow(OrderNotFoundException::new);
+        return getOrderDetailsByOrder(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderView> getOrderViewsByEmail(String email) {
+        List<Order> ordersByUser = orderRepo.findOrdersByUser(userService.getByEmail(email));
+
+        return ordersByUser.stream().map(
+                order -> new OrderView(
+                        order.getId(),
+                        order.getCreatedAt(),
+                        order.getTotalPrice(),
+                        order.getItems().size(),
+                        order.getRecipientFullName(),
+                        order.getShop().getShopName()
+                )
+        ).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersByShop(Long shopId) {
+        return orderRepo.getOrdersByShop_Id(shopId);
+    }
+
+    public List<Order> getOrdersByManagersShop(Long shopId) {
+        return orderRepo.findOrdersByShop_Id(shopId);
+    }
+
+    public List<Order> getOrders() {
+        return orderRepo.findAll();
+    }
+
+    public List<Order> getOrdersByShopIdAndStatus(Long shopId, String status) {
+        return orderRepo.findOrdersByShop_IdAndStatus(shopId, OrderStatus.valueOf(status));
+    }
+
+    public List<Order> getOrdersByStatus(String status) {
+        return orderRepo.findOrdersByStatus(OrderStatus.valueOf(status));
+    }
+
+    public OrderDetailsView getOrderDetailsForStaff(Long orderId) {
+        Order order = orderRepo.findById(orderId).orElseThrow(OrderNotFoundException::new);
+        return getOrderDetailsByOrder(order);
+    }
+
+    private OrderDetailsView getOrderDetailsByOrder(Order order) {
         return new OrderDetailsView(
                 order.getId(),
                 order.getCreatedAt(),
@@ -112,26 +158,5 @@ public class OrderService {
                 order.getStatus().getCssClass(),
                 order.getShop().getShopName()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderView> getOrderViewsByEmail(String email) {
-        List<Order> ordersByUser = orderRepo.findOrdersByUser(userService.getByEmail(email));
-
-        return ordersByUser.stream().map(
-                order -> new OrderView(
-                        order.getId(),
-                        order.getCreatedAt(),
-                        order.getTotalPrice(),
-                        order.getItems().size(),
-                        order.getRecipientFullName(),
-                        order.getShop().getShopName()
-                )
-        ).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Order> getOrdersByShop(Long shopId) {
-        return orderRepo.getOrdersByShop_Id(shopId);
     }
 }

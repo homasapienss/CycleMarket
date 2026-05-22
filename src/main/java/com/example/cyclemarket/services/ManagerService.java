@@ -1,15 +1,18 @@
 package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductStock;
+import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.entities.Order;
 import com.example.cyclemarket.entities.Product;
 import com.example.cyclemarket.entities.Shop;
 import com.example.cyclemarket.entities.Stock;
+import com.example.cyclemarket.exception.ApplicationException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.repos.StockRepo;
 import com.example.cyclemarket.services.entity.EmployeeService;
 import com.example.cyclemarket.services.entity.OrderService;
+import com.example.cyclemarket.services.entity.ShopService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class ManagerService {
     private final ProductRepo productRepo;
     private final StockService stockService;
     private final OrderService orderService;
+    private final ShopService shopService;
 
 
     @Transactional
@@ -119,16 +123,40 @@ public class ManagerService {
         stockRepo.save(stock);
     }
 
-    public List<Order> getOrdersByShop(Authentication authentication, Long shopId) {
+    public List<Order> getOrdersByShop(Authentication authentication, Long shopId, String status) {
         boolean isAdmin = isAdmin(authentication);
+        String managerName = authentication.getName();
         if (!isAdmin) {
-
+            Long managerShopId = employeeService.getShopIdByEmployeeName(managerName);
+            if (shopId != null && !shopId.equals(managerShopId)) {
+                throw new ApplicationException("не твой магазин");
+            }
+            if (status != null && !status.isBlank()) {
+                return orderService.getOrdersByShopIdAndStatus(managerShopId, status);
+            }
+            return orderService.getOrdersByManagersShop(managerShopId);
+        } else {
+            if (shopId != null) {
+                if (status != null && !status.isBlank()) {
+                    return orderService.getOrdersByShopIdAndStatus(shopId, status);
+                }
+                return orderService.getOrdersByShop(shopId);
+            } else {
+                if (status != null && !status.isBlank()) {
+                    return orderService.getOrdersByStatus(status);
+                }
+                return orderService.getOrders();
+            }
         }
-        return orderService.getOrdersByShop(shopId);
     }
 
     private boolean isAdmin(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDetailsView getOrderViewForStaff(Long orderId) {
+        return orderService.getOrderDetailsForStaff(orderId);
     }
 }

@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/manager")
@@ -35,12 +32,20 @@ public class ManagerController {
 
     @GetMapping("/orders")
     public String getOrdersShop(Model model,
-                               Authentication authentication,
-                               @RequestParam(required = false) String mode,
-                               @RequestParam(required = false) Long shopId) {
-        model.addAttribute("shopOrders", managerService.getOrdersByShop(authentication, shopId));
+                                Authentication authentication,
+                                @RequestParam(required = false) String status,
+                                @RequestParam(required = false) Long shopId) {
+        model.addAttribute("shopOrders", managerService.getOrdersByShop(authentication, shopId, status));
         model.addAttribute("shops", shopService.getAllShops());
         return "manager/orders";
+    }
+
+    @GetMapping("/orders/{id}")
+    public String getOrder(Model model,
+                           @PathVariable("id") Long orderId) {
+        model.addAttribute("orderView", managerService.getOrderViewForStaff(orderId));
+        model.addAttribute("staffView", true);
+        return "order/order";
     }
 
     @GetMapping("/stock/new")

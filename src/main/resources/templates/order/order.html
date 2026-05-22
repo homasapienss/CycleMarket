@@ -10,9 +10,12 @@
 <main class="page">
     <div class="page-toolbar">
         <div class="toolbar-actions">
-            <a class="toolbar-link" th:href="@{/products}">Каталог</a>
-            <a class="toolbar-link" th:href="@{/cart}">Корзина</a>
-            <a class="toolbar-link" th:href="@{/orders}">Заказы</a>
+            <a class="toolbar-link" th:if="${staffView == null or !staffView}" th:href="@{/products}">Каталог</a>
+            <a class="toolbar-link" th:if="${staffView == null or !staffView}" th:href="@{/cart}">Корзина</a>
+            <a class="toolbar-link" th:if="${staffView == null or !staffView}" th:href="@{/orders}">Заказы</a>
+            <a class="toolbar-link" th:if="${staffView != null and staffView}" th:href="@{/manager}">Панель</a>
+            <a class="toolbar-link" th:if="${staffView != null and staffView}" th:href="@{/manager/orders}">Заказы точки</a>
+            <a class="toolbar-link" th:if="${staffView != null and staffView}" th:href="@{/manager/stock}">Остатки</a>
             <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
                 <button class="toolbar-button" type="submit">Выйти из аккаунта</button>
             </form>
@@ -20,7 +23,8 @@
     </div>
 
     <section class="breadcrumbs">
-        <a class="breadcrumb-link" th:href="@{/orders}">Заказы</a>
+        <a class="breadcrumb-link" th:if="${staffView == null or !staffView}" th:href="@{/orders}">Заказы</a>
+        <a class="breadcrumb-link" th:if="${staffView != null and staffView}" th:href="@{/manager/orders}">Заказы точки</a>
         <span class="breadcrumb-divider">/</span>
         <span class="breadcrumb-current" th:text="${orderView != null ? '#' + orderView.orderId : 'Детали заказа'}">#1</span>
     </section>
@@ -28,7 +32,7 @@
     <section class="order-layout" th:if="${orderView != null}">
         <div class="order-items-card">
             <div class="section-heading">
-                <div class="order-label">Детали заказа</div>
+                <div class="order-label" th:text="${staffView != null and staffView ? 'Заказ точки' : 'Детали заказа'}">Детали заказа</div>
                 <h1 th:text="${'#' + orderView.orderId}">#1</h1>
                 <p th:text="${#temporals.format(orderView.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026 10:00</p>
             </div>
@@ -108,15 +112,22 @@
                 <span th:text="${orderView.totalPrice + ' ₽'}">0 ₽</span>
             </div>
 
-            <a class="secondary-action" th:href="@{/orders}">Вернуться к списку</a>
-            <a class="ghost-action" th:href="@{/products}">Продолжить покупки</a>
+            <div class="staff-note" th:if="${staffView != null and staffView}">
+                Эта версия страницы открыта из панели магазина. Здесь можно безопасно переиспользовать общую карточку заказа для менеджера и администратора.
+            </div>
+
+            <a class="secondary-action" th:if="${staffView == null or !staffView}" th:href="@{/orders}">Вернуться к списку</a>
+            <a class="secondary-action" th:if="${staffView != null and staffView}" th:href="@{/manager/orders}">Вернуться к заказам точки</a>
+            <a class="ghost-action" th:if="${staffView == null or !staffView}" th:href="@{/products}">Продолжить покупки</a>
+            <a class="ghost-action" th:if="${staffView != null and staffView}" th:href="@{/manager}">Вернуться в панель</a>
         </aside>
     </section>
 
     <section class="empty-card" th:if="${orderView == null}">
         <h1>Заказ не найден</h1>
         <p>Либо заказа с таким идентификатором не существует, либо контроллер не передал модель для страницы.</p>
-        <a class="secondary-action" th:href="@{/orders}">Вернуться к списку заказов</a>
+        <a class="secondary-action" th:if="${staffView == null or !staffView}" th:href="@{/orders}">Вернуться к списку заказов</a>
+        <a class="secondary-action" th:if="${staffView != null and staffView}" th:href="@{/manager/orders}">Вернуться к заказам точки</a>
     </section>
 </main>
 </body>
