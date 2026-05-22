@@ -25,6 +25,9 @@ public class Order {
     private LocalDateTime createdAt;
     @Column(nullable = false)
     private Integer totalPrice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id", nullable = false)
+    private Shop shop;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
     @Column(nullable = false)

@@ -27,8 +27,8 @@ public class OrderController {
                         Authentication authentication,
                         HttpSession session) {
         model.addAttribute("ordersViews", orderService.getOrderViewsByEmail(authentication.getName()));
-        model.addAttribute("shops", shopContextService.getAllShops());
-        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
+//        model.addAttribute("shops", shopContextService.getAllShops());
+//        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/orders";
     }
 
@@ -38,8 +38,8 @@ public class OrderController {
                         Authentication authentication,
                         HttpSession session) {
         model.addAttribute("orderView", orderService.getOrderDetailsByUser(id, authentication.getName()));
-        model.addAttribute("shops", shopContextService.getAllShops());
-        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
+//        model.addAttribute("shops", shopContextService.getAllShops());
+//        model.addAttribute("currentShop", shopContextService.getSelectedShop(session));
         return "order/order";
     }
 

@@ -28,4 +28,7 @@ public class Shop {
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> stockItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "shop")
+    private List<Order> orders = new ArrayList<>();
 }

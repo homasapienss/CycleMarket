@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1779443875661-1
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: HALT
+        - sqlCheck:
+            expectedResult: 1
+            sql: SELECT COUNT(*) FROM shops WHERE id = 2
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: shop_id
+                  type: BIGINT
+            tableName: orders
+  - changeSet:
+      id: 1779443875661-2
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - update:
+            tableName: orders
+            columns:
+              - column:
+                  name: shop_id
+                  valueNumeric: 2
+  - changeSet:
+      id: 1779443875661-3
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: shop_id
+            baseTableName: orders
+            constraintName: FK_ORDERS_ON_SHOP
+            referencedColumnNames: id
+            referencedTableName: shops
+  - changeSet:
+      id: 1779443875661-4
+      author: HOMASAPIENSS
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addNotNullConstraint:
+            columnName: shop_id
+            tableName: orders
