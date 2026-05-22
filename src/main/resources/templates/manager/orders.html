@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление заказами | CycleMarket</title>
+    <link rel="stylesheet" th:href="@{/css/manager-orders.css}">
+</head>
+<body>
+<main class="orders-page">
+    <section class="orders-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker">CycleMarket Manager</span>
+            <h1>Управление заказами</h1>
+            <p>
+                Единый staff-экран для просмотра заказов магазина. Менеджер должен видеть только
+                свою точку, а администратор может переключать магазин или смотреть все магазины сразу.
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            <a class="ghost-link" th:href="@{/manager}">Назад в панель</a>
+        </div>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Фильтры</h2>
+            <p>Фильтрация по статусу должна работать и для менеджера, и для администратора. Выбор магазина нужен только администратору.</p>
+        </div>
+
+        <div class="filter-row">
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status == null or #lists.isEmpty(param.status) or param.status[0] == 'all'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders}">
+                Все
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status == null or #lists.isEmpty(param.status) or param.status[0] == 'all'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(shopId=${param.shopId[0]})}">
+                Все
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'NEW'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='NEW')}">
+                Новые
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'NEW'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='NEW', shopId=${param.shopId[0]})}">
+                Новые
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'PROCESSING'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='PROCESSING')}">
+                В обработке
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'PROCESSING'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='PROCESSING', shopId=${param.shopId[0]})}">
+                В обработке
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'READY'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='READY')}">
+                Готовы к выдаче
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'READY'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='READY', shopId=${param.shopId[0]})}">
+                Готовы к выдаче
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'COMPLETED'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='COMPLETED')}">
+                Завершены
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'COMPLETED'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='COMPLETED', shopId=${param.shopId[0]})}">
+                Завершены
+            </a>
+            <a
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'CANCELLED'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='CANCELLED')}">
+                Отменены
+            </a>
+            <a
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    class="filter-chip"
+                    th:classappend="${param.status != null and !#lists.isEmpty(param.status) and param.status[0] == 'CANCELLED'} ? ' filter-chip-active'"
+                    th:href="@{/manager/orders(status='CANCELLED', shopId=${param.shopId[0]})}">
+                Отменены
+            </a>
+        </div>
+
+        <form
+                class="filter-select-form"
+                sec:authorize="hasRole('ADMIN')"
+                th:action="@{/manager/orders}"
+                method="get"
+                th:if="${shops != null and !#lists.isEmpty(shops)}">
+            <input
+                    th:if="${param.status != null and !#lists.isEmpty(param.status)}"
+                    type="hidden"
+                    name="status"
+                    th:value="${param.status[0]}">
+            <label class="field-label filter-select-label" for="orders-shop-filter">Магазин</label>
+            <select class="field-input field-select filter-select" id="orders-shop-filter" name="shopId" onchange="this.form.submit()">
+                <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId)}">Все магазины</option>
+                <option
+                        th:each="shop : ${shops}"
+                        th:value="${shop.id}"
+                        th:text="${shop.shopName}"
+                        th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and param.shopId[0] == #strings.toString(shop.id)}">
+                    Магазин
+                </option>
+            </select>
+        </form>
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-heading">
+            <h2>Заказы</h2>
+            <p>Страница пока ожидает список <code>shopOrders</code> как список сущностей <code>Order</code>.</p>
+        </div>
+
+        <div class="table-card" th:if="${shopOrders != null and !#lists.isEmpty(shopOrders)}">
+            <div class="table-scroll">
+                <table class="management-table">
+                    <thead>
+                    <tr>
+                        <th>Заказ</th>
+                        <th>Дата</th>
+                        <th sec:authorize="hasRole('ADMIN')">Магазин</th>
+                        <th>Получатель</th>
+                        <th>Телефон</th>
+                        <th>Позиций</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${shopOrders}">
+                        <td th:text="${'#' + order.id}">#1</td>
+                        <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2026 10:00</td>
+                        <td sec:authorize="hasRole('ADMIN')" th:text="${order.shop != null ? order.shop.shopName : '-'}">Магазин</td>
+                        <td th:text="${order.recipientFullName}">Иванов Иван Иванович</td>
+                        <td th:text="${order.recipientPhone}">+7 (900) 123-45-67</td>
+                        <td th:text="${order.items != null ? #lists.size(order.items) : 0}">0</td>
+                        <td th:text="${order.totalPrice + ' ₽'}">0 ₽</td>
+                        <td>
+                            <span
+                                    class="status-chip"
+                                    th:classappend="${' ' + order.status.cssClass}"
+                                    th:text="${order.status.displayName}">
+                                Заказ создан, ожидает обработки
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <section class="dashboard-section-soft" th:if="${shopOrders == null or #lists.isEmpty(shopOrders)}">
+            По текущим фильтрам заказы не найдены.
+        </section>
+    </section>
+</main>
+</body>
+</html>
