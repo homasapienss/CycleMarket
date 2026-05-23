@@ -7,6 +7,7 @@ import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.dto.order.OrderItemView;
 import com.example.cyclemarket.dto.order.OrderView;
 import com.example.cyclemarket.entities.*;
+import com.example.cyclemarket.exception.ApplicationException;
 import com.example.cyclemarket.exception.notfound.OrderNotFoundException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.exception.notfound.ShopNotFoundException;
@@ -168,5 +169,34 @@ public class OrderService {
     public Order getOrderByIdAndShopId(Long orderId, Long managerShopId) {
         return orderRepo.findOrderByIdAndShop_Id(orderId, managerShopId)
                 .orElseThrow(()->new AccessDeniedException("Нет доступа к заказу другого магазина"));
+    }
+
+    @Transactional
+    public void changeOrderStatus(Order order, OrderStatus newStatus) {
+        validateStatusTransition(order.getStatus(), newStatus);
+        order.setStatus(newStatus);
+        orderRepo.save(order);
+    }
+    private void validateStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        if (newStatus == null) {
+            throw new ApplicationException("Новый статус заказа не передан");
+        }
+
+        if (currentStatus == newStatus) {
+            throw new ApplicationException("Заказ уже находится в этом статусе");
+        }
+
+        boolean allowed = switch (currentStatus) {
+            case NEW -> newStatus == OrderStatus.PROCESSING || newStatus == OrderStatus.CANCELLED;
+            case PROCESSING -> newStatus == OrderStatus.READY || newStatus == OrderStatus.CANCELLED;
+            case READY -> newStatus == OrderStatus.COMPLETED || newStatus == OrderStatus.CANCELLED;
+            case COMPLETED, CANCELLED -> false;
+        };
+
+        if (!allowed) {
+            throw new ApplicationException(
+                    "Недопустимый переход статуса: " + currentStatus + " -> " + newStatus
+            );
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.cyclemarket.controllers;
 
+import com.example.cyclemarket.entities.OrderStatus;
 import com.example.cyclemarket.services.ManagerService;
 import com.example.cyclemarket.services.entity.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,14 @@ public class ManagerController {
         return "order/order";
     }
 
+    @PostMapping("/orders/{id}/status")
+    public String setOrderStatus(@PathVariable("id") Long orderId,
+                                 @RequestParam(name = "status") OrderStatus status,
+                                 Authentication authentication) {
+        managerService.setOrderStatus(orderId, status, authentication);
+        return "redirect:/manager/orders/" + orderId;
+    }
+
     @GetMapping("/stock/new")
     public String getNotStockShop(Model model,
                                   Authentication authentication) {
@@ -61,6 +70,6 @@ public class ManagerController {
                              @RequestParam("productId") Long productId,
                              @RequestParam("quantity") Integer quantity) {
         managerService.addToStock(authentication.getName(), productId, quantity);
-        return "redirect:/manager";
+        return "redirect:/manager/stock";
     }
 }

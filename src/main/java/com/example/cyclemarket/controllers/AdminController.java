@@ -42,6 +42,7 @@ public class AdminController {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("employeeForm", createEmployeeReq);
             model.addAttribute("registerForm", authReq);
+            model.addAttribute("shops", shopService.getAllShops());
             return "admin/employee-new";
         }
         return "redirect:/admin";

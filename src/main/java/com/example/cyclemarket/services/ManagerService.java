@@ -2,10 +2,7 @@ package com.example.cyclemarket.services;
 
 import com.example.cyclemarket.dto.ProductStock;
 import com.example.cyclemarket.dto.order.OrderDetailsView;
-import com.example.cyclemarket.entities.Order;
-import com.example.cyclemarket.entities.Product;
-import com.example.cyclemarket.entities.Shop;
-import com.example.cyclemarket.entities.Stock;
+import com.example.cyclemarket.entities.*;
 import com.example.cyclemarket.exception.ApplicationException;
 import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ProductRepo;
@@ -153,11 +150,6 @@ public class ManagerService {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    private boolean isManager(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
-    }
-
     @Transactional(readOnly = true)
     public OrderDetailsView getOrderViewForStaff(Long orderId, Authentication authentication) {
         if (isAdmin(authentication)) return orderService.getOrderDetailsForStaff(orderId);
@@ -166,5 +158,19 @@ public class ManagerService {
         Order orderByIdAndShopId = orderService.getOrderByIdAndShopId(orderId, managerShopId);
 
         return orderService.getOrderDetailsByOrder(orderByIdAndShopId);
+    }
+
+    @Transactional
+    public void setOrderStatus(Long orderId, OrderStatus status, Authentication authentication) {
+        Order order;
+
+        if (isAdmin(authentication)) {
+            order = orderService.getOrder(orderId);
+        } else {
+            Long managerShopId = employeeService.getShopIdByEmployeeName(authentication.getName());
+            order = orderService.getOrderByIdAndShopId(orderId, managerShopId);
+        }
+
+        orderService.changeOrderStatus(order, status);
     }
 }
