@@ -56,6 +56,6 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public String createProduct(@ModelAttribute("productForm") ProductCreateRequest productForm) throws Exception {
         productManagementService.createProduct(productForm);
-        return "redirect:/products";
+        return "redirect:/products/new";
     }
 }
