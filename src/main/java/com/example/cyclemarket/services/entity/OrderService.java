@@ -112,10 +112,6 @@ public class OrderService {
         return orderRepo.getOrdersByShop_Id(shopId);
     }
 
-    public List<Order> getOrdersByManagersShop(Long shopId) {
-        return orderRepo.findOrdersByShop_Id(shopId);
-    }
-
     public List<Order> getOrders() {
         return orderRepo.findAll();
     }
@@ -174,9 +170,21 @@ public class OrderService {
     @Transactional
     public void changeOrderStatus(Order order, OrderStatus newStatus) {
         validateStatusTransition(order.getStatus(), newStatus);
+        if (newStatus == OrderStatus.CANCELLED) {
+            returnStockToShop(order);
+        }
         order.setStatus(newStatus);
         orderRepo.save(order);
     }
+
+    private void returnStockToShop(Order order) {
+        Long shopId = order.getShop().getId();
+
+        for (OrderItem item : order.getItems()) {
+            stockService.increaseStock(item.getProduct().getId(), shopId, item.getQuantity());
+        }
+    }
+
     private void validateStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
         if (newStatus == null) {
             throw new ApplicationException("Новый статус заказа не передан");

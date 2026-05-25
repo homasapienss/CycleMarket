@@ -107,14 +107,19 @@ public class StockService {
     }
 
     public void decreaseStock(Long productId, Long shopId, Integer quantity) {
-        Stock stock = stockRepo.findByShopIdAndProductId(shopId, productId)
-                .orElseThrow(StockNotFoundException::new);
+        Stock stock = getStockByShopAndProduct(shopId, productId);
 
         if (stock.getQuantity() < quantity) {
             throw new NotEnoughStockException();
         }
 
         stock.setQuantity(stock.getQuantity() - quantity);
+        stockRepo.save(stock);
+    }
+
+    public void increaseStock(Long productId, Long shopId, Integer quantity) {
+        Stock stock = getStockByShopAndProduct(shopId, productId);
+        stock.setQuantity(stock.getQuantity() + quantity);
         stockRepo.save(stock);
     }
 
@@ -129,4 +134,6 @@ public class StockService {
     public Stock getStockByShopAndProduct(Long shopId, Long productId) {
         return stockRepo.findByShopIdAndProductId(shopId, productId).orElseThrow(StockNotFoundException::new);
     }
+
+
 }
