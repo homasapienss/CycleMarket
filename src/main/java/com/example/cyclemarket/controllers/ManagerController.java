@@ -26,9 +26,28 @@ public class ManagerController {
                                Authentication authentication,
                                @RequestParam(required = false) String mode,
                                @RequestParam(required = false) Long shopId) {
-        model.addAttribute("shopStock", managerService.getStockByShop(authentication, shopId));
+        boolean admin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if ("missing".equals(mode)) {
+            if (admin && shopId == null) {
+                model.addAttribute("shopSelectionRequired", true);
+                model.addAttribute("shops", shopService.getAllShops());
+                return "manager/stock";
+            }
+            model.addAttribute("notShopStock", managerService.getMissingProductsByShop(authentication, shopId));
+        } else {
+            model.addAttribute("shopStock", managerService.getStockByShop(authentication, shopId));
+        }
         model.addAttribute("shops", shopService.getAllShops());
         return "manager/stock";
+    }
+
+    @PostMapping("/stock/new")
+    public String addToStock(@RequestParam Long productId,
+                             @RequestParam(required = false) Long shopId,
+                             @RequestParam Integer quantity, Authentication auth) {
+        managerService.addToStock(productId, shopId, quantity, auth);
+        return "redirect:/manager/stock";
     }
 
     @GetMapping("/orders")
@@ -36,7 +55,7 @@ public class ManagerController {
                                 Authentication authentication,
                                 @RequestParam(required = false) String status,
                                 @RequestParam(required = false) Long shopId) {
-        model.addAttribute("shopOrders", managerService.getOrdersByShop(authentication, shopId, status));
+        model.addAttribute("shopOrders", managerService.getOrdersForScope(authentication, shopId, status));
         model.addAttribute("shops", shopService.getAllShops());
         return "manager/orders";
     }
@@ -56,20 +75,5 @@ public class ManagerController {
                                  Authentication authentication) {
         managerService.setOrderStatus(orderId, status, authentication);
         return "redirect:/manager/orders/" + orderId;
-    }
-
-    @GetMapping("/stock/new")
-    public String getNotStockShop(Model model,
-                                  Authentication authentication) {
-        model.addAttribute("notShopStock", managerService.getNotStockByShop(authentication.getName()));
-        return "manager/stock";
-    }
-
-    @PostMapping("/stock/new")
-    public String addToStock(Authentication authentication,
-                             @RequestParam("productId") Long productId,
-                             @RequestParam("quantity") Integer quantity) {
-        managerService.addToStock(authentication.getName(), productId, quantity);
-        return "redirect:/manager/stock";
     }
 }

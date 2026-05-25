@@ -32,28 +32,28 @@
 
         <div class="filter-row">
             <a
-                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])}"
                     class="filter-chip"
                     th:classappend="${param.mode == null or #lists.isEmpty(param.mode) or param.mode[0] == 'existing'} ? ' filter-chip-active'"
                     th:href="@{/manager/stock}">
                 Добавлены
             </a>
             <a
-                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId) and !#strings.isEmpty(param.shopId[0])}"
                     class="filter-chip"
                     th:classappend="${param.mode == null or #lists.isEmpty(param.mode) or param.mode[0] == 'existing'} ? ' filter-chip-active'"
                     th:href="@{/manager/stock(shopId=${param.shopId[0]})}">
                 Добавлены
             </a>
             <a
-                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId)}"
+                    th:if="${param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])}"
                     class="filter-chip"
                     th:classappend="${param.mode != null and !#lists.isEmpty(param.mode) and param.mode[0] == 'missing'} ? ' filter-chip-active'"
                     th:href="@{/manager/stock(mode='missing')}">
                 Не добавлены
             </a>
             <a
-                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                    th:if="${param.shopId != null and !#lists.isEmpty(param.shopId) and !#strings.isEmpty(param.shopId[0])}"
                     class="filter-chip"
                     th:classappend="${param.mode != null and !#lists.isEmpty(param.mode) and param.mode[0] == 'missing'} ? ' filter-chip-active'"
                     th:href="@{/manager/stock(mode='missing', shopId=${param.shopId[0]})}">
@@ -74,19 +74,21 @@
                     th:value="${param.mode[0]}">
             <label class="field-label filter-select-label" for="stock-shop-filter">Магазин</label>
             <select class="field-input field-select filter-select" id="stock-shop-filter" name="shopId" onchange="this.form.submit()">
-                <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId)}">Все магазины</option>
+                <option value="" th:selected="${param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])}">Все магазины</option>
                 <option
                         th:each="shop : ${shops}"
                         th:value="${shop.id}"
                         th:text="${shop.shopName}"
-                        th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and param.shopId[0] == #strings.toString(shop.id)}">
+                        th:selected="${param.shopId != null and !#lists.isEmpty(param.shopId) and !#strings.isEmpty(param.shopId[0]) and param.shopId[0] == #strings.toString(shop.id)}">
                     Магазин
                 </option>
             </select>
         </form>
     </section>
 
-    <section class="dashboard-section" th:if="${param.mode == null or #lists.isEmpty(param.mode) or param.mode[0] == 'existing'}">
+    <section
+            class="dashboard-section"
+            th:if="${param.mode == null or #lists.isEmpty(param.mode) or param.mode[0] == 'existing'}">
         <div class="section-heading">
             <h2>Текущие остатки</h2>
             <p>Название товара ведет на его карточку, а кнопки <code>+</code> и <code>-</code> меняют количество на складе.</p>
@@ -97,8 +99,8 @@
                 <table class="management-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Товар</th>
+                        <th th:if="${param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])}">Магазин</th>
                         <th>Цена</th>
                         <th>Остаток</th>
                         <th>Действия</th>
@@ -106,15 +108,19 @@
                     </thead>
                     <tbody>
                     <tr th:each="item : ${shopStock}">
-                        <td th:text="${'#' + item.id}">#1</td>
                         <td>
                             <a class="product-link"
-                               th:if="${item.id != null}"
-                               th:href="@{/products/{id}(id=${item.id})}"
+                               th:if="${item.productId != null}"
+                               th:href="@{/products/{id}(id=${item.productId})}"
                                th:text="${item.productName != null ? item.productName : 'Товар не найден'}">
                                 Товар
                             </a>
-                            <span th:if="${item.id == null}" th:text="${item.productName != null ? item.productName : 'Товар не найден'}">Товар</span>
+                            <span th:if="${item.productId == null}" th:text="${item.productName != null ? item.productName : 'Товар не найден'}">Товар</span>
+                            <div class="table-meta" th:if="${item.productId != null}" th:text="${'ID товара: #' + item.productId}">ID товара: #1</div>
+                        </td>
+                        <td th:if="${param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])}">
+                            <span class="shop-name" th:text="${item.shopName != null ? item.shopName : 'Магазин не указан'}">Магазин</span>
+                            <div class="table-meta" th:if="${item.shopId != null}" th:text="${'ID магазина: #' + item.shopId}">ID магазина: #1</div>
                         </td>
                         <td th:text="${item.productPrice != null ? item.productPrice + ' ₽' : '-'}">0 ₽</td>
                         <td>
@@ -123,24 +129,16 @@
                         <td>
                             <div class="quantity-actions">
                                 <form th:action="@{/manager/stock/quantity}" method="post">
-                                    <input type="hidden" name="productId" th:value="${item.id}">
+                                    <input type="hidden" name="productId" th:value="${item.productId}">
                                     <input type="hidden" name="delta" value="-1">
-                                    <input
-                                            th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
-                                            type="hidden"
-                                            name="shopId"
-                                            th:value="${param.shopId[0]}">
+                                    <input type="hidden" name="shopId" th:value="${item.shopId}">
                                     <button class="quantity-button" type="submit">-</button>
                                 </form>
                                 <span class="quantity-value" th:text="${item.quantity}">0</span>
                                 <form th:action="@{/manager/stock/quantity}" method="post">
-                                    <input type="hidden" name="productId" th:value="${item.id}">
+                                    <input type="hidden" name="productId" th:value="${item.productId}">
                                     <input type="hidden" name="delta" value="1">
-                                    <input
-                                            th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
-                                            type="hidden"
-                                            name="shopId"
-                                            th:value="${param.shopId[0]}">
+                                    <input type="hidden" name="shopId" th:value="${item.shopId}">
                                     <button class="quantity-button" type="submit">+</button>
                                 </form>
                             </div>
@@ -156,7 +154,18 @@
         </section>
     </section>
 
-    <section class="dashboard-section" th:if="${param.mode != null and !#lists.isEmpty(param.mode) and param.mode[0] == 'missing'}">
+    <section
+            class="dashboard-section-soft"
+            sec:authorize="hasRole('ADMIN')"
+            th:if="${param.mode != null and !#lists.isEmpty(param.mode) and param.mode[0] == 'missing'
+            and (param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0]))}">
+        Для режима товаров, не добавленных в остатки, сначала выберите конкретный магазин в фильтре выше.
+    </section>
+
+    <section
+            class="dashboard-section"
+            th:if="${param.mode != null and !#lists.isEmpty(param.mode) and param.mode[0] == 'missing'
+            and !(#authorization.expression('hasRole(''ADMIN'')') and (param.shopId == null or #lists.isEmpty(param.shopId) or #strings.isEmpty(param.shopId[0])))}">
         <div class="section-heading">
             <h2>Товары, которых еще нет в остатках</h2>
             <p>Для таких позиций можно сразу указать стартовое количество и создать запись в <code>stock</code>.</p>
@@ -186,10 +195,10 @@
                         </td>
                         <td th:text="${product.productPrice != null ? product.productPrice + ' ₽' : '-'}">0 ₽</td>
                         <td>
-                            <form class="stock-add-inline" th:action="@{/manager/stock/add}" method="post">
+                            <form class="stock-add-inline" th:action="@{/manager/stock/new}" method="post">
                                 <input type="hidden" name="productId" th:value="${product.id}">
                                 <input
-                                        th:if="${param.shopId != null and !#lists.isEmpty(param.shopId)}"
+                                        th:if="${param.shopId != null and !#lists.isEmpty(param.shopId) and !#strings.isEmpty(param.shopId[0])}"
                                         type="hidden"
                                         name="shopId"
                                         th:value="${param.shopId[0]}">

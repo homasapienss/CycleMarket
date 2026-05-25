@@ -4,18 +4,18 @@ import com.example.cyclemarket.dto.ProductStock;
 import com.example.cyclemarket.dto.order.OrderDetailsView;
 import com.example.cyclemarket.entities.*;
 import com.example.cyclemarket.exception.ApplicationException;
-import com.example.cyclemarket.exception.notfound.ProductNotFoundException;
 import com.example.cyclemarket.repos.ProductRepo;
 import com.example.cyclemarket.repos.StockRepo;
 import com.example.cyclemarket.services.entity.EmployeeService;
 import com.example.cyclemarket.services.entity.OrderService;
+import com.example.cyclemarket.services.entity.ProductService;
+import com.example.cyclemarket.services.entity.ShopService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -25,124 +25,102 @@ public class ManagerService {
     private final ProductRepo productRepo;
     private final StockService stockService;
     private final OrderService orderService;
+    private final ShopService shopService;
+    private final ProductService productService;
 
-
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ProductStock> getStockByShop(Authentication authentication, Long shopId) {
-        boolean isAdmin = isAdmin(authentication);
-        if (isAdmin) {
-            return shopId != null ?
-                    stockService.getProductStockByShop(shopId)
-                            .entrySet()
-                            .stream()
-                            .map(entry -> {
-                                Product product = productRepo.findById(entry.getKey()).orElseThrow(ProductNotFoundException::new);
-                                return ProductStock.builder()
-                                        .id(product.getId())
-                                        .productName(product.getProductName())
-                                        .productPrice(product.getProductPrice())
-                                        .quantity(entry.getValue())
-                                        .build();
+        Long accessibleShopId = resolveAccessibleShopId(authentication, shopId);
 
-                            }).toList()
-                    :
-                    stockService.getStockAllShops()
-                            .stream()
-                            .map(stock -> {
-                                Product product = stock.getProduct();
-                                return ProductStock.builder()
-                                        .id(product.getId())
-                                        .productName(product.getProductName())
-                                        .productPrice(product.getProductPrice())
-                                        .quantity(stock.getQuantity())
-                                        .build();
-                            })
-                            .toList();
-        } else {
-            String managerName = authentication.getName();
-            Long managerShop = employeeService.getShopIdByEmployeeName(managerName);
-            if (shopId != null) {
-                if (shopId.equals(managerShop)) {
-                    return stockService.getStockByShopId(managerShop)
-                            .stream()
-                            .map(stock -> {
-                                Product product = stock.getProduct();
-                                return ProductStock.builder()
-                                        .id(product.getId())
-                                        .productName(product.getProductName())
-                                        .productPrice(product.getProductPrice())
-                                        .quantity(stock.getQuantity())
-                                        .build();
-                            })
-                            .toList();
-                } else throw new RuntimeException("не твой магазин");
-            } else {
-                Map<Long, Integer> productStockByShop = stockService.getProductStockByShop(managerShop);
-                return productStockByShop.entrySet()
-                        .stream()
-                        .map(entry -> {
-                            Product product = productRepo.findById(entry.getKey()).orElseThrow(ProductNotFoundException::new);
-                            return ProductStock.builder()
-                                    .id(product.getId())
-                                    .productName(product.getProductName())
-                                    .productPrice(product.getProductPrice())
-                                    .quantity(entry.getValue())
-                                    .build();
+        List<Stock> stocks = accessibleShopId == null
+                ? stockService.getStockAllShops()
+                : stockService.getStockByShopId(accessibleShopId);
 
-                        }).toList();
-            }
-        }
+        return stocks.stream()
+                .map(this::toProductStock)
+                .toList();
+    }
+
+    private ProductStock toProductStock(Stock stock) {
+        Product product = stock.getProduct();
+        Shop shop = stock.getShop();
+
+        return ProductStock.builder()
+                .productName(product.getProductName())
+                .productPrice(product.getProductPrice())
+                .quantity(stock.getQuantity())
+                .shopName(shop.getShopName())
+                .productId(product.getId())
+                .shopId(shop.getId())
+                .id(stock.getId())
+                .build();
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getNotStockByShop(String name) {
-        Long shopId = employeeService.getShopIdByEmployeeName(name);
-        return productRepo.findProductsNotInShopStock(shopId);
+    public List<Product> getMissingProductsByShop(Authentication authentication, Long shopId) {
+        Long accessibleShopId = resolveAccessibleShopId(authentication, shopId);
+        return productRepo.findProductsNotInShopStock(accessibleShopId);
     }
 
     @Transactional
-    public void addToStock(String name, Long productId, Integer quantity) {
-        if (quantity == null || quantity <= 0) {
-            throw new IllegalArgumentException("Кол-во не может быть отрицательным");
-        }
-        Shop shop = employeeService.getCurrentManagerShop(name);
-        Product product = productRepo.findById(productId).orElseThrow(ProductNotFoundException::new);
+    public void addToStock(Long productId, Long shopId, Integer quantity, Authentication auth) {
+        Long targetShopId;
 
-        if (stockRepo.existsByShopIdAndProductId(shop.getId(), productId)) {
-            throw new IllegalStateException("Продукт уже добавлен на склад");
+        if (isAdmin(auth)) {
+            if (shopId == null) {
+                throw new ApplicationException("Администратор должен выбрать магазин");
+            }
+            targetShopId = shopId;
+        } else {
+            targetShopId = employeeService.getShopIdByEmployeeName(auth.getName());
         }
+
+        Product product = productService.getById(productId);
+
+        if (stockRepo.existsByShopIdAndProductId(targetShopId, productId)) {
+            throw new ApplicationException("Продукт уже добавлен на склад");
+        }
+
+        Shop shop = shopService.getById(targetShopId);
+
         Stock stock = new Stock();
         stock.setProduct(product);
-        stock.setQuantity(quantity);
         stock.setShop(shop);
+        stock.setQuantity(quantity);
         stockRepo.save(stock);
     }
 
-    public List<Order> getOrdersByShop(Authentication authentication, Long shopId, String status) {
-        boolean isAdmin = isAdmin(authentication);
-        String managerName = authentication.getName();
-        if (!isAdmin) {
-            Long managerShopId = employeeService.getShopIdByEmployeeName(managerName);
-            if (shopId != null && !shopId.equals(managerShopId)) {
-                throw new ApplicationException("не твой магазин");
-            }
-            if (status != null && !status.isBlank()) {
-                return orderService.getOrdersByShopIdAndStatus(managerShopId, status);
-            }
-            return orderService.getOrdersByManagersShop(managerShopId);
-        } else {
-            if (shopId != null) {
-                if (status != null && !status.isBlank()) {
-                    return orderService.getOrdersByShopIdAndStatus(shopId, status);
-                }
-                return orderService.getOrdersByShop(shopId);
-            } else {
-                if (status != null && !status.isBlank()) {
-                    return orderService.getOrdersByStatus(status);
-                }
-                return orderService.getOrders();
-            }
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersForScope(Authentication authentication, Long shopId, String status) {
+        Long accessibleShopId = resolveAccessibleOrderShopId(authentication, shopId);
+
+        if (accessibleShopId != null) {
+            return hasStatus(status)
+                    ? orderService.getOrdersByShopIdAndStatus(accessibleShopId, status)
+                    : orderService.getOrdersByShop(accessibleShopId);
         }
+
+        return hasStatus(status)
+                ? orderService.getOrdersByStatus(status)
+                : orderService.getOrders();
+    }
+
+    private Long resolveAccessibleOrderShopId(Authentication authentication, Long shopId) {
+        if (isAdmin(authentication)) {
+            return shopId;
+        }
+
+        Long managerShopId = employeeService.getShopIdByEmployeeName(authentication.getName());
+
+        if (shopId != null && !shopId.equals(managerShopId)) {
+            throw new ApplicationException("не твой магазин");
+        }
+
+        return managerShopId;
+    }
+
+    private boolean hasStatus(String status) {
+        return status != null && !status.isBlank();
     }
 
     private boolean isAdmin(Authentication authentication) {
@@ -172,5 +150,22 @@ public class ManagerService {
         }
 
         orderService.changeOrderStatus(order, status);
+    }
+
+    private Long resolveAccessibleShopId(Authentication authentication, Long shopId) {
+        if (isAdmin(authentication)) {
+//            if (shopId == null) {
+//                throw new ApplicationException("Для этого режима нужно выбрать магазин");
+//            }
+            return shopId;
+        }
+
+        Long managerShopId = employeeService.getShopIdByEmployeeName(authentication.getName());
+
+        if (shopId != null && !shopId.equals(managerShopId)) {
+            throw new ApplicationException("не твой магазин");
+        }
+
+        return managerShopId;
     }
 }
