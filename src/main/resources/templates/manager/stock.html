@@ -91,7 +91,7 @@
             th:if="${param.mode == null or #lists.isEmpty(param.mode) or param.mode[0] == 'existing'}">
         <div class="section-heading">
             <h2>Текущие остатки</h2>
-            <p>Название товара ведет на его карточку, а кнопки <code>+</code> и <code>-</code> меняют количество на складе.</p>
+            <p>Название товара ведет на его карточку, а кнопки <code>+</code> и <code>-</code> быстро меняют количество, либо можно ввести точное значение вручную.</p>
         </div>
 
         <div class="table-card" th:if="${shopStock != null and !#lists.isEmpty(shopStock)}">
@@ -127,20 +127,47 @@
                             <span class="quantity-badge" th:text="${item.quantity}">0</span>
                         </td>
                         <td>
-                            <div class="quantity-actions">
-                                <form th:action="@{/manager/stock/quantity}" method="post">
-                                    <input type="hidden" name="productId" th:value="${item.productId}">
-                                    <input type="hidden" name="delta" value="-1">
-                                    <input type="hidden" name="shopId" th:value="${item.shopId}">
-                                    <button class="quantity-button" type="submit">-</button>
-                                </form>
-                                <span class="quantity-value" th:text="${item.quantity}">0</span>
-                                <form th:action="@{/manager/stock/quantity}" method="post">
-                                    <input type="hidden" name="productId" th:value="${item.productId}">
-                                    <input type="hidden" name="delta" value="1">
-                                    <input type="hidden" name="shopId" th:value="${item.shopId}">
-                                    <button class="quantity-button" type="submit">+</button>
-                                </form>
+                            <div class="quantity-actions-stack">
+                                <div class="quantity-actions">
+                                    <form th:action="@{/manager/stock/quantity}" method="post">
+                                        <input type="hidden" name="productId" th:value="${item.productId}">
+                                        <input type="hidden" name="delta" value="-1">
+                                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+                                        <button class="quantity-button" type="submit">-</button>
+                                    </form>
+
+                                    <form
+                                            class="quantity-edit-form"
+                                            th:action="@{/manager/stock/edit}"
+                                            method="post"
+                                            th:id="${'quantity-edit-form-' + item.productId + '-' + item.shopId}">
+                                        <input type="hidden" name="productId" th:value="${item.productId}">
+                                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+                                        <input
+                                                class="quantity-input quantity-input-compact"
+                                                th:id="${'edit-quantity-' + item.productId + '-' + item.shopId}"
+                                                name="quantity"
+                                                type="number"
+                                                min="0"
+                                                step="1"
+                                                th:value="${item.quantity}"
+                                                required>
+                                    </form>
+
+                                    <form th:action="@{/manager/stock/quantity}" method="post">
+                                        <input type="hidden" name="productId" th:value="${item.productId}">
+                                        <input type="hidden" name="delta" value="1">
+                                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+                                        <button class="quantity-button" type="submit">+</button>
+                                    </form>
+                                </div>
+
+                                <button
+                                        class="submit-button submit-button-compact submit-button-full"
+                                        type="submit"
+                                        th:attr="form=${'quantity-edit-form-' + item.productId + '-' + item.shopId}">
+                                    Сохранить
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -179,7 +206,6 @@
                         <th>ID</th>
                         <th>Товар</th>
                         <th>Цена</th>
-                        <th>Количество</th>
                         <th>Действие</th>
                     </tr>
                     </thead>
@@ -213,8 +239,6 @@
                                         required>
                                 <button class="submit-button" type="submit">Добавить</button>
                             </form>
-                        </td>
-                        <td>
                             <span class="helper-note">Будет создана новая запись stock для выбранного магазина.</span>
                         </td>
                     </tr>

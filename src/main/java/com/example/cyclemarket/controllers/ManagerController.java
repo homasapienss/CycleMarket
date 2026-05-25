@@ -50,6 +50,24 @@ public class ManagerController {
         return "redirect:/manager/stock";
     }
 
+    @PostMapping("/stock/quantity")
+    public String changeStockQuantity(Authentication authentication,
+                                      @RequestParam Long productId,
+                                      @RequestParam(required = false) Long shopId,
+                                      @RequestParam Integer delta) {
+        managerService.changeStockQuantity(authentication, productId, shopId, delta);
+        return "redirect:/manager/stock";
+    }
+
+    @PostMapping("/stock/edit")
+    public String editStockQuantity(Authentication authentication,
+                                    @RequestParam Long productId,
+                                    @RequestParam(required = false) Long shopId,
+                                    @RequestParam Integer quantity) {
+        managerService.editStockQuantity(authentication, productId, shopId, quantity);
+        return "redirect:/manager/stock";
+    }
+
     @GetMapping("/orders")
     public String getOrdersShop(Model model,
                                 Authentication authentication,

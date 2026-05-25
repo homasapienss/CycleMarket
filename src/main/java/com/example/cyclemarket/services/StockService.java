@@ -125,4 +125,8 @@ public class StockService {
     public List<Stock> getStockByShopId(Long shopId) {
         return stockRepo.findStocksByShop_Id(shopId);
     }
+
+    public Stock getStockByShopAndProduct(Long shopId, Long productId) {
+        return stockRepo.findByShopIdAndProductId(shopId, productId).orElseThrow(StockNotFoundException::new);
+    }
 }

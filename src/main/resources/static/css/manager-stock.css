@@ -270,8 +270,30 @@ body {
     flex-wrap: wrap;
 }
 
+.quantity-actions-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
 .quantity-actions form,
 .stock-add-inline {
+    margin: 0;
+}
+
+.stock-quantity-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.quantity-edit-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
     margin: 0;
 }
 
@@ -303,11 +325,26 @@ body {
     width: 110px;
 }
 
+.quantity-input-compact {
+    width: 96px;
+    min-height: 40px;
+}
+
 .submit-button {
     border: 1px solid var(--accent);
     background: var(--accent);
     color: #fff;
     cursor: pointer;
+}
+
+.submit-button-compact {
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+}
+
+.submit-button-full {
+    width: 100%;
 }
 
 .dashboard-section-soft {

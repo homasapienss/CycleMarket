@@ -1,10 +1,7 @@
 package com.example.cyclemarket.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,6 +14,7 @@ import lombok.Setter;
                 @UniqueConstraint(name = "uk_stock_shop_product", columnNames = {"shop_id", "product_id"})
         }
 )
+@Builder
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

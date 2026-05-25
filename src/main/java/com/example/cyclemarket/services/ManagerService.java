@@ -41,21 +41,6 @@ public class ManagerService {
                 .toList();
     }
 
-    private ProductStock toProductStock(Stock stock) {
-        Product product = stock.getProduct();
-        Shop shop = stock.getShop();
-
-        return ProductStock.builder()
-                .productName(product.getProductName())
-                .productPrice(product.getProductPrice())
-                .quantity(stock.getQuantity())
-                .shopName(shop.getShopName())
-                .productId(product.getId())
-                .shopId(shop.getId())
-                .id(stock.getId())
-                .build();
-    }
-
     @Transactional(readOnly = true)
     public List<Product> getMissingProductsByShop(Authentication authentication, Long shopId) {
         Long accessibleShopId = resolveAccessibleShopId(authentication, shopId);
@@ -64,35 +49,54 @@ public class ManagerService {
 
     @Transactional
     public void addToStock(Long productId, Long shopId, Integer quantity, Authentication auth) {
-        Long targetShopId;
-
-        if (isAdmin(auth)) {
-            if (shopId == null) {
-                throw new ApplicationException("Администратор должен выбрать магазин");
-            }
-            targetShopId = shopId;
-        } else {
-            targetShopId = employeeService.getShopIdByEmployeeName(auth.getName());
-        }
-
-        Product product = productService.getById(productId);
-
+        Long targetShopId = resolveAccessibleShopId(auth, shopId);
         if (stockRepo.existsByShopIdAndProductId(targetShopId, productId)) {
             throw new ApplicationException("Продукт уже добавлен на склад");
         }
-
+        if (targetShopId == null) {
+            throw new ApplicationException("Выберите магазин");
+        }
+        Product product = productService.getById(productId);
         Shop shop = shopService.getById(targetShopId);
 
-        Stock stock = new Stock();
-        stock.setProduct(product);
-        stock.setShop(shop);
-        stock.setQuantity(quantity);
-        stockRepo.save(stock);
+        stockRepo.save(Stock.builder()
+                .product(product)
+                .shop(shop)
+                .quantity(quantity)
+                .build());
+    }
+
+    @Transactional
+    public void changeStockQuantity(Authentication authentication, Long productId, Long shopId, Integer delta) {
+        Stock stock = getAccessibleStock(authentication, productId, shopId);
+        updateStockQuantity(stock, stock.getQuantity() + delta);
+    }
+
+    @Transactional
+    public void editStockQuantity(Authentication authentication, Long productId, Long shopId, Integer newQuantity) {
+        Stock stock = getAccessibleStock(authentication, productId, shopId);
+        updateStockQuantity(stock, newQuantity);
+    }
+
+    private Stock getAccessibleStock(Authentication authentication, Long productId, Long shopId) {
+        Long accessibleShopId = resolveAccessibleShopId(authentication, shopId);
+        if (accessibleShopId == null) {
+            throw new ApplicationException("Выберите магазин");
+        }
+
+        return stockService.getStockByShopAndProduct(accessibleShopId, productId);
+    }
+
+    private void updateStockQuantity(Stock stock, Integer newQuantity) {
+        if (newQuantity < 0) {
+            throw new ApplicationException("Нельзя сделать кол-во товара отрицательным");
+        }
+        stock.setQuantity(newQuantity);
     }
 
     @Transactional(readOnly = true)
     public List<Order> getOrdersForScope(Authentication authentication, Long shopId, String status) {
-        Long accessibleShopId = resolveAccessibleOrderShopId(authentication, shopId);
+        Long accessibleShopId = resolveAccessibleShopId(authentication, shopId);
 
         if (accessibleShopId != null) {
             return hasStatus(status)
@@ -103,29 +107,6 @@ public class ManagerService {
         return hasStatus(status)
                 ? orderService.getOrdersByStatus(status)
                 : orderService.getOrders();
-    }
-
-    private Long resolveAccessibleOrderShopId(Authentication authentication, Long shopId) {
-        if (isAdmin(authentication)) {
-            return shopId;
-        }
-
-        Long managerShopId = employeeService.getShopIdByEmployeeName(authentication.getName());
-
-        if (shopId != null && !shopId.equals(managerShopId)) {
-            throw new ApplicationException("не твой магазин");
-        }
-
-        return managerShopId;
-    }
-
-    private boolean hasStatus(String status) {
-        return status != null && !status.isBlank();
-    }
-
-    private boolean isAdmin(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
     @Transactional(readOnly = true)
@@ -152,11 +133,33 @@ public class ManagerService {
         orderService.changeOrderStatus(order, status);
     }
 
+    private boolean hasStatus(String status) {
+        return status != null && !status.isBlank();
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private ProductStock toProductStock(Stock stock) {
+        Product product = stock.getProduct();
+        Shop shop = stock.getShop();
+
+        return ProductStock.builder()
+                .productName(product.getProductName())
+                .productPrice(product.getProductPrice())
+                .quantity(stock.getQuantity())
+                .shopName(shop.getShopName())
+                .productId(product.getId())
+                .shopId(shop.getId())
+                .id(stock.getId())
+                .build();
+    }
+
+
     private Long resolveAccessibleShopId(Authentication authentication, Long shopId) {
         if (isAdmin(authentication)) {
-//            if (shopId == null) {
-//                throw new ApplicationException("Для этого режима нужно выбрать магазин");
-//            }
             return shopId;
         }
 
@@ -168,4 +171,6 @@ public class ManagerService {
 
         return managerShopId;
     }
+
+
 }
