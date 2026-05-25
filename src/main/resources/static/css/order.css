@@ -180,6 +180,7 @@ body {
 
 .item-media {
     display: block;
+    padding: 8px;
     border-radius: 18px;
     overflow: hidden;
     background:
@@ -195,7 +196,8 @@ body {
 
 .item-image {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
 }
 
 .item-fallback {
